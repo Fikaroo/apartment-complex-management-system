@@ -19,7 +19,7 @@ const Navbar = () => {
       icon: "/navbaricon/customers.svg",
     },
     {
-      name: "SOS",
+      name: "Sos",
       path: "/sos",
       icon: "/navbaricon/sos.svg",
     },
