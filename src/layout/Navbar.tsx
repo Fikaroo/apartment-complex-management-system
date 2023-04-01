@@ -42,14 +42,16 @@ const Navbar = () => {
 
   return (
     <div className="navbar ">
-      <div className="nav-head"></div>
+      <div className="nav-head">
+        <img src="/navbaricon/navheadicon.svg" alt="" />
+      </div>
 
       <div className="nav-sidebar">
         <ul>
           {sidebarItems.map((item) => (
             <li key={item.path}>
               <NavLink to={item.path}>
-                {item.icon}
+               <img src={item.icon} alt="" />
                 <span>{item.name}</span>
               </NavLink>
             </li>
