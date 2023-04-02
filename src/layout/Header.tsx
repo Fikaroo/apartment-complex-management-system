@@ -15,6 +15,8 @@ const Header = () => {
 
       case "/deals":
         return setHeaderName("Sifarişlər");
+        case "/sos":
+          return setHeaderName("Sos bildirişləri");
       default:
         return setHeaderName("");
     }
