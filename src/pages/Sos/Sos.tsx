@@ -1,41 +1,59 @@
-import React from "react";
-import Tables from '../../../components/Table/Tables'
-import {
-MagnifyingGlassIcon
-} from "@heroicons/react/24/outline";
-const Sos:React.FC = () => {
-const headers:string[]=['Tarix','YK','Bina','Mənzil','D']
+import { Fragment } from "react";
+import Tables, { IHeaders } from "../../components/Table/Tables";
+import { MagnifyingGlassIcon, FunnelIcon } from "@heroicons/react/24/outline";
+
+const Sos = () => {
+  const headers: IHeaders[] = [
+    {
+      id: 1,
+      isAccess: true,
+      icon: <FunnelIcon className="w-5 h-5" />,
+    },
+    {
+      id: 2,
+      title: "Tarix",
+    },
+    {
+      id: 3,
+      title: "YK",
+    },
+    {
+      id: 4,
+      title: "Bina",
+    },
+    {
+      id: 5,
+      title: "Mənzil",
+    },
+    {
+      id: 6,
+      title: "D",
+    },
+  ];
 
   return (
-    <React.Fragment>
-      <div className="flex flex-row w-full p-10">
-        <div className="basis-3/4">
-          <p className="font-inter font-bold text-16 leading-30 text-dark">
-            Ümumi: 23 bildiriş
-          </p>
-        </div>
-        <div className="basis-1/4 flex flex-row">
-          <div className=" basis-1/2 relative flex flex-row items-center">
+    <div className="w-full">
+      <div className="flex items-center justify-between">
+        <p className="font-bold font-inter text-16 leading-30 text-dark">
+          Ümumi: 23 bildiriş
+        </p>
+        <div className="flex gap-4">
+          <div className="relative flex items-center">
             <input
               type="text"
-              className="px-3 py-2 bg-white border border-gray-300 rounded-3xl pl-12 focus:outline-none focus:bg-white focus:border-purple-500"
+              className="w-full px-4 py-2 bg-white border border-gray-300 rounded-full focus:outline-none focus:bg-white focus:border-purple-500"
               placeholder="Search"
             />
-           <MagnifyingGlassIcon className="w-5 h-5 absolute right-5 "/>
+            <MagnifyingGlassIcon className="absolute w-5 h-5 right-5 stroke-icon" />
           </div>
-          <div className="basis-1/2 relative flex flex-row items-start px-3 py-2 bg-white border border-gray-300 rounded-3xl pl-12 ml-3">
-            <img
-              src="/icons/filter.svg"
-              alt="Search Icon"
-              className="absolute right-3 top-2"
-            />
+          <div className="relative flex items-center justify-between gap-2 px-4 py-2 bg-white border border-gray-300 rounded-full">
+            <span>Filter</span>
+            <FunnelIcon className="w-5 h-5 stroke-icon" />
           </div>
         </div>
       </div>
-
-<Tables headers={headers}/>
-    
-    </React.Fragment>
+      <Tables headers={headers} />
+    </div>
   );
 };
 
