@@ -24,7 +24,7 @@ const Header = () => {
     getPathName(pathname);
   }, [pathname]);
   return (
-    <div className="flex justify-between w-full h-24 p-6 bg-transparent">
+    <div className="flex items-center justify-between w-full h-24 p-6 bg-transparent border-b border-line">
       <h1 className="text-2xl font-bold text-dark">{headerName}</h1>
       <div className="w-12 h-12 rounded-full bg-slate-200"></div>
     </div>
