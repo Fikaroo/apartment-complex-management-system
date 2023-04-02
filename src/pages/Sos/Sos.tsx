@@ -4,7 +4,7 @@ import {
 MagnifyingGlassIcon
 } from "@heroicons/react/24/outline";
 const Sos:React.FC = () => {
-const headers:string[]=['Tarix','YK','Bina','Mənzil','D']
+const headers:string[]=['Tarix','YK','Bina','Mənzil','Düzəlt']
 
   return (
     <React.Fragment>
