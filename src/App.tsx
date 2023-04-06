@@ -3,6 +3,7 @@ import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard/Dashboard";
 import Layout from "./layout/Layout";
 import Sos from "./pages/Sos/Sos";
+import Customers from "./pages/Customers/Customers";
 
 const App = () => {
   return (
@@ -11,7 +12,8 @@ const App = () => {
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route index element={<Dashboard />} />
-          <Route path="/sos" index element={<Sos />} />
+          <Route path="/sos" element={<Sos />} />
+          <Route path="/customers" element={<Customers />} />
         </Routes>
       </Layout>
     </div>

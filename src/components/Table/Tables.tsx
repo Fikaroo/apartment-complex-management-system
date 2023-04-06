@@ -1,6 +1,6 @@
-import { Dialog, Transition } from '@headlessui/react'
-import { Fragment, useState } from 'react'
-import SosModal from '../Modals/SosModal';
+import { Dialog, Transition } from "@headlessui/react";
+import { Fragment, useState } from "react";
+import SosModal from "../Modals/SosModal";
 export interface IHeaders {
   isStatus?: boolean;
   isAvatar?: boolean;
@@ -12,22 +12,17 @@ export interface IHeaders {
 
 type PropsType = {
   headers: IHeaders[];
+  modal: JSX.Element;
+  openModal: () => void;
 };
-const Tables = ({ headers }: PropsType) => {
-  let [isOpen, setIsOpen] = useState<boolean>(false)
-  function closeModal():void {
-    setIsOpen(false)
-  }
 
-  function openModal():void {
-    setIsOpen(true)
-  }
+const Tables = ({ headers, modal, openModal }: PropsType) => {
   return (
     <div className="w-full mt-8 overflow-x-auto">
       <table className="table w-full table-auto">
         <thead>
           <tr>
-            {headers.map(({ id, isAccess, isAvatar, icon, title }) => (
+            {headers.map(({ id, icon, isAccess, isAvatar, title }) => (
               <th
                 key={id}
                 className="px-6 py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-500 uppercase border-b border-gray-200 bg-gray-50"
@@ -50,7 +45,7 @@ const Tables = ({ headers }: PropsType) => {
                 </div>
               </div>
             </td>
-            <td>
+            <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
               <div className="ml-4">
                 <div className="text-sm font-medium leading-5 text-gray-900">
                   31.03.2023
@@ -67,7 +62,11 @@ const Tables = ({ headers }: PropsType) => {
               Menzil
             </td>
             <td className="px-6 py-4 text-sm font-medium leading-5 text-right whitespace-no-wrap border-b border-gray-200">
-              <img onClick={openModal} className="ml-4 cursor-pointer" src="/icons/edit.svg" />
+              <img
+                onClick={() => openModal()}
+                className="ml-4 cursor-pointer"
+                src="/icons/edit.svg"
+              />
             </td>
           </tr>
           <tr>
@@ -82,7 +81,7 @@ const Tables = ({ headers }: PropsType) => {
                 </div>
               </div>
             </td>
-            <td>
+            <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
               <div className="ml-4">
                 <div className="text-sm font-medium leading-5 text-gray-900">
                   Bernard Lane
@@ -105,7 +104,7 @@ const Tables = ({ headers }: PropsType) => {
         </tbody>
       </table>
 
-      <SosModal isOpen={isOpen} closeModal={closeModal} />
+      {modal}
     </div>
   );
 };

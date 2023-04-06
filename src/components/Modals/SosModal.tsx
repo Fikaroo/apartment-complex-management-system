@@ -1,16 +1,17 @@
-import { Dialog, Transition } from '@headlessui/react'
-import { Fragment, useState } from 'react'
+import { Dialog, Transition } from "@headlessui/react";
+import { CheckIcon } from "@heroicons/react/24/solid";
+import { XCircleIcon } from "@heroicons/react/24/solid";
+import { Fragment, useState } from "react";
 
 type Props = {
-    isOpen:boolean,
-    closeModal:()=>void
+  isOpen: boolean;
+  closeModal: () => void;
+};
 
-}
-
-const SosModal:React.FC<Props> = ({isOpen,closeModal}) => {
+const SosModal: React.FC<Props> = ({ isOpen, closeModal }) => {
   return (
     <div>
-          <Transition appear show={isOpen} as={Fragment}>
+      <Transition appear show={isOpen} as={Fragment}>
         <Dialog as="div" className="relative z-10" onClose={closeModal}>
           <Transition.Child
             as={Fragment}
@@ -25,7 +26,7 @@ const SosModal:React.FC<Props> = ({isOpen,closeModal}) => {
           </Transition.Child>
 
           <div className="fixed inset-0 overflow-y-auto">
-            <div className="flex min-h-full items-center justify-center p-4 text-center">
+            <div className="flex items-center justify-center min-h-full p-4 text-center">
               <Transition.Child
                 as={Fragment}
                 enter="ease-out duration-300"
@@ -35,51 +36,54 @@ const SosModal:React.FC<Props> = ({isOpen,closeModal}) => {
                 leaveFrom="opacity-100 scale-100"
                 leaveTo="opacity-0 scale-95"
               >
-                <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
+                <Dialog.Panel className="w-full max-w-md p-6 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl rounded-2xl">
                   <Dialog.Title
                     as="h3"
-                    className="font-bold font-inter text-16 leading-30 text-dark flex justify-between items-center"
+                    className="flex items-center justify-between font-bold font-inter text-16 leading-30 text-dark"
                   >
-               Düzəliş et
-               <button
-                      type="button"
-                      className="inline-flex justify-center rounded-full border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none"
+                    Düzəliş et
+                    <XCircleIcon
                       onClick={closeModal}
-                    >
-                     x
-                    </button>
+                      className="w-6 h-6 cursor-pointer fill-icon"
+                    />
                   </Dialog.Title>
-                  <div className="mt-10 font-bold font-inter text-16 leading-30 text-dark flex justify-between items-center">
-  Həll olundu?
-  <label htmlFor="solution" className="inline-flex items-center cursor-pointer w-[26px] h-[26px] rounded-6 border-2 border-gray ">
-    <input id="solution" type="checkbox" className="form-checkbox  h-6 w-6 text-green-500 transition duration-150 ease-in-out" />
-  </label>
-</div>
-
-<div className="mt-10 font-bold font-inter text-16 leading-30 text-dark flex justify-between items-center">
-    Məlumat
-</div>
-<div className="mt-5 w-full h-[80px] rounded-lg border-gray-100 border-2 flex justify-center items-center px-5 bg-slate-100">
-Lorem ipsum dolor sit amet consectetur adisipisicing elit
-</div>
-
-
-<div className="mt-10 font-bold font-inter text-16 leading-30 text-dark flex justify-around items-center">
-<button
-                      type="button"
-                      className="inline-flex justify-center  text-sm font-inter font-medium text-red-400 focus:outline-none"
-                     
+                  <div className="flex items-center justify-between mt-10 font-bold font-inter text-16 leading-30 text-dark">
+                    Həll olundu?
+                    <label
+                      htmlFor="solution"
+                      className="inline-flex relative justify-center items-center cursor-pointer w-[26px] h-[26px]"
                     >
-                     Sil
+                      <input
+                        id="solution"
+                        type="checkbox"
+                        className="w-6 h-6 transition duration-150 ease-in-out border rounded-md outline-none appearance-none checked:border-0 checked:bg-success"
+                      />
+
+                      <CheckIcon className="absolute w-4 h-4 fill-white" />
+                    </label>
+                  </div>
+
+                  <div className="flex items-center justify-between mt-10 font-bold font-inter text-16 leading-30 text-dark">
+                    Məlumat
+                  </div>
+                  <textarea className="mt-5 w-full h-[80px] rounded-lg border-line border flex justify-center items-center px-5 py-1 bg-background">
+                    Lorem ipsum dolor sit amet consectetur adisipisicing elit
+                  </textarea>
+
+                  <div className="flex items-center justify-between gap-4 mt-10 font-bold font-inter text-16 leading-30 text-dark">
+                    <button
+                      type="button"
+                      className="inline-flex items-center justify-center w-1/2 px-2 py-4 text-sm font-medium text-red-400 rounded-full outline font-inter"
+                    >
+                      Sil
                     </button>
                     <button
                       type="button"
-                      className="flex justify-center items-center w-1/2 h-[60px] rounded-full border border-transparent bg-primary px-4 py-2 text-sm font-medium text-white hover:bg-primary-200 focus:outline-none"
-                     
+                      className="flex items-center justify-center w-1/2 px-2 py-4 text-sm font-medium text-white border border-transparent rounded-full bg-primary hover:bg-primary-200 focus:outline-none"
                     >
-                     Saxla
+                      Saxla
                     </button>
-</div>
+                  </div>
                 </Dialog.Panel>
               </Transition.Child>
             </div>
@@ -87,6 +91,6 @@ Lorem ipsum dolor sit amet consectetur adisipisicing elit
         </Dialog>
       </Transition>
     </div>
-  )
-}
-export default SosModal
+  );
+};
+export default SosModal;

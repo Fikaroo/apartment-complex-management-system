@@ -21,8 +21,10 @@ import {
 } from "@heroicons/react/24/solid";
 
 import { ReactComponent as Logo } from "../assets/logo.svg";
+import { useState } from "react";
 const Navbar = () => {
   const { pathname } = useLocation();
+
   const sidebarItems = [
     {
       name: "Dashboard",
@@ -69,7 +71,9 @@ const Navbar = () => {
   ];
 
   return (
-    <div className="min-h-screen border-r border-line">
+    <div
+      className={`fixed group z-10 sidebar-overlay transition-all w-[88px] hover:w-2/12 duration-300 min-h-screen border-r bg-background border-line`}
+    >
       <div className="px-5 py-[23.5px] border-b border-line">
         <div className="flex items-center justify-center w-12 h-12 rounded bg-dark">
           <Logo />
@@ -81,7 +85,7 @@ const Navbar = () => {
           <NavLink
             key={item.path}
             to={item.path}
-            className={`flex group items-center relative justify-center w-12 h-12 border border-line rounded-full ${
+            className={`flex items-center relative justify-center w-12 h-12 border border-line rounded-full ${
               item.path === pathname ? "bg-primary" : "bg-white"
             }`}
           >
@@ -94,9 +98,11 @@ const Navbar = () => {
                 )}
               </div>
               <div
-                className={`absolute left-0 top-0 scale-0 flex items-center h-full pr-6 font-semibold  ${
-                  item.path === pathname ? "text-white bg-primary" : "bg-white"
-                }  transition-all rounded-full pl-14  group-hover:scale-100`}
+                className={`absolute left-0 top-0 scale-0 group-hover:scale-100 duration-400 flex items-center h-full pr-6 font-semibold  ${
+                  item.path === pathname
+                    ? "text-white bg-primary"
+                    : "bg-transparent"
+                }  transition-all rounded-full pl-14`}
               >
                 {item.name}
               </div>
