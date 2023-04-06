@@ -9,11 +9,11 @@ interface ILayout {
 const Layout = ({ children }: ILayout) => {
   return (
     <Fragment>
-      <div className="fixed z-10 flex w-full">
+      <div className="fixed flex w-full">
         <Navbar />
         <Header />
       </div>
-      <div className="flex-1 mt-24 ml-[90px]">{children}</div>
+      <div className="flex-1 relative mt-24 p-6 ml-[90px]">{children}</div>
     </Fragment>
   );
 };

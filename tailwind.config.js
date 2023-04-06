@@ -1,4 +1,5 @@
 /** @type {import('tailwindcss').Config} */
+
 module.exports = {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
@@ -12,6 +13,7 @@ module.exports = {
         error: "#FE8084",
         dark: "#092C4C",
         line: "#EAEEF4",
+        icon: "#7E92A2",
       },
     },
   },
