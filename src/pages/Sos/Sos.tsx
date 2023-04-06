@@ -1,6 +1,8 @@
 import { Fragment,useState } from "react";
 import Tables, { IHeaders } from "../../components/Table/Tables";
 import { MagnifyingGlassIcon, FunnelIcon } from "@heroicons/react/24/outline";
+import Input from "../../components/Input";
+import Filter from "../../components/Filter";
 
 const Sos = () => {
   
@@ -37,20 +39,10 @@ const Sos = () => {
       <div className="flex items-center justify-between">
         <p className="font-bold font-inter text-16 leading-30 text-dark">
           Ümumi: 23 bildiriş
-        </p>
+        </p>{" "}
         <div className="flex gap-4">
-          <div className="relative flex items-center">
-            <input
-              type="text"
-              className="w-full px-4 py-2 bg-white border border-gray-300 rounded-full focus:outline-none focus:bg-white focus:border-purple-500"
-              placeholder="Search"
-            />
-            <MagnifyingGlassIcon className="absolute w-5 h-5 right-5 stroke-icon" />
-          </div>
-          <div className="relative flex items-center justify-between gap-2 px-4 py-2 bg-white border border-gray-300 rounded-full">
-            <span>Filter</span>
-            <FunnelIcon className="w-5 h-5 stroke-icon" />
-          </div>
+          <Input />
+          <Filter />
         </div>
       </div>
       <Tables headers={headers} />
