@@ -4,6 +4,7 @@ import Dashboard from "./pages/Dashboard/Dashboard";
 import Layout from "./layout/Layout";
 import Sos from "./pages/Sos/Sos";
 import Customers from "./pages/Customers/Customers";
+import CustomerDetail from "./pages/CustomerDetail/CustomerDetail";
 
 const App = () => {
   return (
@@ -14,6 +15,7 @@ const App = () => {
           <Route index element={<Dashboard />} />
           <Route path="/sos" element={<Sos />} />
           <Route path="/customers" element={<Customers />} />
+          <Route path="/customers/:customerId" element={<CustomerDetail />} />
         </Routes>
       </Layout>
     </div>

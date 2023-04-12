@@ -1,6 +1,7 @@
 import { Dialog, Transition } from "@headlessui/react";
 import { Fragment, useState } from "react";
 import SosModal from "../Modals/SosModal";
+import { Link } from "react-router-dom";
 export interface IHeaders {
   isStatus?: boolean;
   isAvatar?: boolean;
@@ -35,7 +36,8 @@ const Tables = ({ headers, modal, openModal }: PropsType) => {
         <tbody>
           <tr>
             <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-              <div className="flex items-center">
+              
+              <Link to="/customers/detail/1" className="flex items-center">
                 <div className="flex-shrink-0 w-10 h-10">
                   <img
                     className="rounded-full"
@@ -43,7 +45,7 @@ const Tables = ({ headers, modal, openModal }: PropsType) => {
                     alt=""
                   />
                 </div>
-              </div>
+              </Link>
             </td>
             <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
               <div className="ml-4">

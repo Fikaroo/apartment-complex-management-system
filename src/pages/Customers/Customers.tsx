@@ -2,16 +2,25 @@ import React, { Fragment, useState } from "react";
 import Tables, { IHeaders } from "../../components/Table/Tables";
 import SearchInput from "../../components/SearchInput";
 import Filter from "../../components/Filter";
-
+import OrderDate from "../../components/OrderDate";
+import AddBtn from "../../components/AddBtn";
+import SosModal from "../../components/Modals/SosModal";
+import AddCustomerModal from "../../components/Modals/AddCustomerModal";
 const Customers = () => {
   let [isOpen, setIsOpen] = useState<boolean>(false);
+  let [isOpenAdd, setIsOpenAdd] = useState<boolean>(false);
 
   const closeModal = (): void => {
     setIsOpen(false);
   };
-
+  const closeModalAdd = (): void => {
+    setIsOpenAdd(false);
+  };
   const openModal = (): void => {
     setIsOpen(true);
+  };
+  const openModalAdd = (): void => {
+    setIsOpenAdd(true);
   };
 
   const headers: IHeaders[] = [
@@ -59,18 +68,23 @@ const Customers = () => {
     <Fragment>
       <div className="flex items-center justify-between">
         <p className="font-bold font-inter text-16 leading-30 text-dark">
-          Ümumi: 23 bildiriş
+          Ümumi: 178 Sakin
         </p>{" "}
-        <div className="flex gap-4">
-          <SearchInput />
+        <div className="flex gap-4 items-center">
+        <AddBtn openModal={openModalAdd}
+         modal={<AddCustomerModal isOpen={isOpenAdd} closeModal={closeModalAdd} />}
+        />
+          <OrderDate/>
+          
           <Filter />
+        
         </div>
       </div>
-      {/* <Tables
+      <Tables
         openModal={openModal}
         modal={<SosModal isOpen={isOpen} closeModal={closeModal} />}
         headers={headers}
-      /> */}
+      />
     </Fragment>
   );
 };
