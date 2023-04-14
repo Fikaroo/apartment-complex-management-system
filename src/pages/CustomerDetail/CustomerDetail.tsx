@@ -1,11 +1,12 @@
-import React from 'react'
+import React from "react";
+import { useParams } from "react-router-dom";
 
-type Props = {}
+type Props = {};
 
 const CustomerDetail = (props: Props) => {
-  return (
-    <div>CustomerDetail</div>
-  )
-}
+  const p = useParams();
+  console.log(p);
+  return <div>CustomerDetail</div>;
+};
 
-export default CustomerDetail
+export default CustomerDetail;

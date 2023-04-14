@@ -5,6 +5,8 @@ import Layout from "./layout/Layout";
 import Sos from "./pages/Sos/Sos";
 import Customers from "./pages/Customers/Customers";
 import CustomerDetail from "./pages/CustomerDetail/CustomerDetail";
+import Blog from "./pages/Blog/Blog";
+import Notification from "./pages/Notifications/Notifications";
 
 const App = () => {
   return (
@@ -15,7 +17,12 @@ const App = () => {
           <Route index element={<Dashboard />} />
           <Route path="/sos" element={<Sos />} />
           <Route path="/customers" element={<Customers />} />
-          <Route path="/customers/:customerId" element={<CustomerDetail />} />
+          <Route
+            path="/customers/detail/:customerId"
+            element={<CustomerDetail />}
+          />
+          <Route path="/blog" element={<Blog />} />
+          <Route path="/notification" element={<Notification />} />
         </Routes>
       </Layout>
     </div>

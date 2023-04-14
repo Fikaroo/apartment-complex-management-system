@@ -15,8 +15,8 @@ const Header = () => {
 
       case "/deals":
         return setHeaderName("Sifarişlər");
-        case "/sos":
-          return setHeaderName("Sos bildirişləri");
+      case "/sos":
+        return setHeaderName("Sos bildirişləri");
       default:
         return setHeaderName("");
     }
@@ -26,7 +26,7 @@ const Header = () => {
     getPathName(pathname);
   }, [pathname]);
   return (
-    <div className="flex items-center justify-between w-full h-24 p-6 bg-transparent border-b border-line">
+    <div className="flex items-center justify-between w-full p-6 border-b h-24x border-line">
       <h1 className="text-2xl font-bold text-dark">{headerName}</h1>
       <div className="w-12 h-12 rounded-full bg-slate-200"></div>
     </div>
