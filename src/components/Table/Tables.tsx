@@ -37,7 +37,7 @@ const Tables = ({ headers, modal, openModal }: PropsType) => {
           <tr>
             <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
               
-              <Link to="/customers/detail/1" className="flex items-center">
+              <Link to="/customers/1" className="flex items-center">
                 <div className="flex-shrink-0 w-10 h-10">
                   <img
                     className="rounded-full"

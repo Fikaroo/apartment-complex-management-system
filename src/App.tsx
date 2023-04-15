@@ -5,6 +5,7 @@ import Layout from "./layout/Layout";
 import Sos from "./pages/Sos/Sos";
 import Customers from "./pages/Customers/Customers";
 import CustomerDetail from "./pages/CustomerDetail/CustomerDetail";
+import Deals from "./pages/Deals/Deals";
 
 const App = () => {
   return (
@@ -16,6 +17,7 @@ const App = () => {
           <Route path="/sos" element={<Sos />} />
           <Route path="/customers" element={<Customers />} />
           <Route path="/customers/:customerId" element={<CustomerDetail />} />
+          <Route path="/deals" element={<Deals />} />
         </Routes>
       </Layout>
     </div>
