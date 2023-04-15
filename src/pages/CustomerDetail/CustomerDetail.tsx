@@ -1,6 +1,7 @@
-import React from 'react'
+import React from "react";
+import { useParams } from "react-router-dom";
 
-type Props = {}
+type Props = {};
 
 const CustomerDetail = (props: Props) => {
   return (
@@ -98,4 +99,7 @@ const CustomerDetail = (props: Props) => {
   )
 }
 
-export default CustomerDetail
+ 
+
+
+export default CustomerDetail;

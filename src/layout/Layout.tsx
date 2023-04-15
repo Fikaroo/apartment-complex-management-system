@@ -9,7 +9,7 @@ interface ILayout {
 const Layout = ({ children }: ILayout) => {
   return (
     <Fragment>
-      <div className="fixed right-0 w-11/12">
+      <div className="fixed right-0 z-10 left-[90px] bg-background">
         <Header />
       </div>
       <Navbar />
