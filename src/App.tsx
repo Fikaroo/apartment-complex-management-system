@@ -9,28 +9,77 @@ import Deals from "./pages/Deals/Deals";
 import Blog from "./pages/Blog/Blog";
 import Notification from "./pages/Notifications/Notifications";
 
-
 const App = () => {
   return (
     <div className="w-full min-h-screen overflow-hidden bg-background/90 text-dark">
-      <Layout>
-        <Routes>
-          <Route path="/login" element={<Login />} />
-          <Route index element={<Dashboard />} />
-          <Route path="/sos" element={<Sos />} />
-          <Route path="/customers" element={<Customers />} />
+      <Routes>
+        <Route path="/login" element={<Login />} />
+        <Route
+          index
+          element={
+            <Layout>
+              <Dashboard />
+            </Layout>
+          }
+        />
+        <Route
+          path="/sos"
+          element={
+            <Layout>
+              <Sos />
+            </Layout>
+          }
+        />
+        <Route
+          path="/customers"
+          element={
+            <Layout>
+              <Customers />
+            </Layout>
+          }
+        />
 
-          <Route path="/customers/:customerId" element={<CustomerDetail />} />
-          <Route path="/deals" element={<Deals />} />
-          <Route
-            path="/customers/detail/:customerId"
-            element={<CustomerDetail />}
-          />
-          <Route path="/blog" element={<Blog />} />
-          <Route path="/notification" element={<Notification />} />
-
-        </Routes>
-      </Layout>
+        <Route
+          path="/customers/:customerId"
+          element={
+            <Layout>
+              <CustomerDetail />
+            </Layout>
+          }
+        />
+        <Route
+          path="/deals"
+          element={
+            <Layout>
+              <Deals />
+            </Layout>
+          }
+        />
+        <Route
+          path="/customers/detail/:customerId"
+          element={
+            <Layout>
+              <CustomerDetail />
+            </Layout>
+          }
+        />
+        <Route
+          path="/blog"
+          element={
+            <Layout>
+              <Blog />
+            </Layout>
+          }
+        />
+        <Route
+          path="/notification"
+          element={
+            <Layout>
+              <Notification />
+            </Layout>
+          }
+        />
+      </Routes>
     </div>
   );
 };
