@@ -1,6 +1,15 @@
-import React from "react";
 import loginFrame from "../assets/login-frame.png";
+import useSWR from "swr";
+import { LoginApi } from "../api";
+import { useState } from "react";
 const Login = () => {
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [isLogged, setLogged] = useState(false);
+  const { data, error, isLoading } = useSWR(
+    isLogged ? "/api/Account/LoginAdmin" : null,
+    (key) => LoginApi.user(key, { username, password })
+  );
   return (
     <div className="relative flex min-h-screen">
       <div className="relative flex items-center justify-center w-full max-w-4xl">
