@@ -10,6 +10,17 @@ const Login = () => {
     isLogged ? "/api/Account/LoginAdmin" : null,
     (key) => LoginApi.user(key, { username, password })
   );
+
+  const handleUsername = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = e.target.value;
+    setUsername(val);
+  };
+
+  const handlePassword = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = e.target.value;
+    setPassword(val);
+  };
+
   return (
     <div className="relative flex min-h-screen">
       <div className="relative flex items-center justify-center w-full max-w-4xl">
@@ -131,6 +142,7 @@ const Login = () => {
             <div className="flex flex-col space-y-1.5">
               <label>Login</label>
               <input
+                onChange={handleUsername}
                 className="px-5 py-3.5 placeholder:text-[#5b5b5b] border rounded-lg"
                 placeholder="Giriş üçün login daxil edin"
                 type="text"
@@ -140,6 +152,7 @@ const Login = () => {
             <div className="flex flex-col space-y-1.5 mt-5">
               <label>Şifrə</label>
               <input
+                onChange={handlePassword}
                 className="px-5 py-3.5 placeholder:text-[#5b5b5b] border rounded-lg"
                 placeholder="Şifrəni daxil edin"
                 type="text"
@@ -157,7 +170,10 @@ const Login = () => {
               </span>
             </div>
 
-            <button className="w-full bg-primary hover:bg-primary/95 rounded-lg text-[#FCFCFC] font-semibold text-sm py-3.5 mt-16">
+            <button
+              onClick={() => setLogged(true)}
+              className="w-full bg-primary hover:bg-primary/95 rounded-lg text-[#FCFCFC] font-semibold text-sm py-3.5 mt-16"
+            >
               Daxil ol
             </button>
           </div>
