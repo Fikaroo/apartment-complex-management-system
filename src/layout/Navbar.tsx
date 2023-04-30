@@ -8,6 +8,8 @@ import {
   CalendarDaysIcon,
   BellIcon,
   Cog6ToothIcon,
+  ChevronDownIcon,
+  ChevronUpIcon,
 } from "@heroicons/react/24/outline";
 
 import {
@@ -21,7 +23,7 @@ import {
 } from "@heroicons/react/24/solid";
 
 import { ReactComponent as Logo } from "../assets/logo.svg";
-import { useState } from "react";
+import React, { useState } from "react";
 
 interface ISidebarItems {
   name: string;
@@ -41,29 +43,59 @@ const NavItem = ({
   icon,
   iconSolid,
 }: NavItemProps & ISidebarItems) => {
+  const [isExpanded, setIsExpanded] = useState(false);
   const { pathname } = useLocation();
+  console.log(pathname, "pathname");
   const [isRollup, setRollup] = useState<boolean>(false);
   return (
-    <NavLink
+    <React.Fragment>
+ <NavLink
       key={path}
       to={path}
-      className={`flex items-center relative justify-center group-hover:justify-between w-12 h-12 group-hover:w-full border border-line rounded-full ${
+      className={`flex  items-center relative justify-center  w-12 px-5 py-3 group-hover:w-full border border-line rounded-full ${
         path === pathname ? "bg-primary" : "bg-white"
       }`}
+      onClick={()=>{pathname=='/'? setIsExpanded(false):null}}
     >
-      <li>
-        <div className="flex">
+      <li
+        className="w-full  flex justify-center"
+        onClick={() => (setIsExpanded(!isExpanded))}
+      >
+        <div className=" w-full  flex items-center justify-center group-hover:justify-between">
           <div>{path === pathname ? iconSolid : icon}</div>
           <div
-            className={`hidden scale-0 w-full group-hover:scale-100 group-hover:flex duration-400 items-center h-full font-semibold  ${
+            className={`hidden scale-0 w-[80%] group-hover:scale-100 group-hover:flex duration-400 items-center h-full font-semibold  ${
               path === pathname ? "text-white bg-primary" : "bg-transparent"
             }  transition-all rounded-full`}
           >
             {name}
           </div>
+          {pathname && pathname == "/" ? null : (
+            <div className="hidden group-hover:block">
+              {" "}
+              {isExpanded && isExpanded ? (
+                <ChevronUpIcon className="w-[14px] text-cyan-50 translate-x-1" />
+              ) : (
+                <ChevronDownIcon className="w-[14px] translate-x-1 text-cyan-50" />
+              )}{" "}
+            </div>
+          )}
         </div>
       </li>
+      
     </NavLink>
+    {isExpanded && (
+        <div className="hidden group-hover:block">
+          <div className="text-[16px] font-medium cursor-pointer text-gray-500 mt-4 ml-6">
+            List of objects
+          </div>
+          <div className="text-[16px] font-medium cursor-pointer text-gray-500 mt-4 ml-6">
+            List of residents
+          </div>
+        </div>
+      )}
+    </React.Fragment>
+   
   );
 };
 

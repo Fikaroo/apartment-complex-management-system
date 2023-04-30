@@ -1,4 +1,4 @@
-import React,{useState} from "react";
+import React, { useState } from "react";
 import OtpModal from "../components/Modals/OtpModal";
 import loginFrame from "../assets/login-frame.png";
 import useSWR from "swr";
@@ -8,10 +8,7 @@ const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [isLogged, setLogged] = useState(false);
-  const { data, error, isLoading } = useSWR(
-    isLogged ? "/api/Account/LoginAdmin" : null,
-    (key) => LoginApi.user(key, { username, password })
-  );
+  
 
   const handleUsername = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = e.target.value;
@@ -30,6 +27,11 @@ const Login = () => {
   const openModal = (): void => {
     setIsOpen(true);
   };
+  const handleSubmit = async (e:any) => {
+    e.preventDefault();
+    
+  }
+
 
   return (
     <div className="relative flex min-h-screen">
@@ -148,6 +150,7 @@ const Login = () => {
             Xoş gəlmisiniz
           </h2>
 
+          <form onSubmit={handleSubmit}>
           <div className="mt-24">
             <div className="flex flex-col space-y-1.5">
               <label>Login</label>
@@ -156,6 +159,7 @@ const Login = () => {
                 className="px-5 py-3.5 placeholder:text-[#5b5b5b] border rounded-lg"
                 placeholder="Giriş üçün login daxil edin"
                 type="text"
+                required
               />
             </div>
 
@@ -166,6 +170,7 @@ const Login = () => {
                 className="px-5 py-3.5 placeholder:text-[#5b5b5b] border rounded-lg"
                 placeholder="Şifrəni daxil edin"
                 type="text"
+                required
               />
             </div>
 
@@ -181,16 +186,20 @@ const Login = () => {
             </div>
 
             <button
-              onClick={() => {setLogged(true)
-                openModal()}}
+              type="submit"
+              onClick={() => {
+                setLogged(true);
+                openModal();
+              }}
               className="w-full bg-primary hover:bg-primary/95 rounded-lg text-[#FCFCFC] font-semibold text-sm py-3.5 mt-16"
             >
               Daxil ol
             </button>
           </div>
+          </form>
         </div>
       </div>
-      <OtpModal isOpen={isOpen} closeModal={closeModal}/>
+      <OtpModal isOpen={isOpen} closeModal={closeModal} />
     </div>
   );
 };
