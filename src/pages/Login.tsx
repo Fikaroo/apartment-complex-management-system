@@ -1,6 +1,14 @@
-import React from "react";
+import React,{useState} from "react";
 import loginFrame from "../assets/login-frame.png";
+import OtpModal from "../components/Modals/OtpModal";
 const Login = () => {
+  let [isOpen, setIsOpen] = useState<boolean>(false);
+  const closeModal = (): void => {
+    setIsOpen(false);
+  };
+  const openModal = (): void => {
+    setIsOpen(true);
+  };
   return (
     <div className="relative flex min-h-screen">
       <div className="relative flex items-center justify-center w-full max-w-4xl">
@@ -148,12 +156,13 @@ const Login = () => {
               </span>
             </div>
 
-            <button className="w-full bg-primary hover:bg-primary/95 rounded-lg text-[#FCFCFC] font-semibold text-sm py-3.5 mt-16">
+            <button     onClick={() => openModal()} className="w-full bg-primary hover:bg-primary/95 rounded-lg text-[#FCFCFC] font-semibold text-sm py-3.5 mt-16">
               Daxil ol
             </button>
           </div>
         </div>
       </div>
+      <OtpModal isOpen={isOpen} closeModal={closeModal}/>
     </div>
   );
 };
