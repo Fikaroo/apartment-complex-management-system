@@ -1,7 +1,28 @@
 import React,{useState} from "react";
-import loginFrame from "../assets/login-frame.png";
 import OtpModal from "../components/Modals/OtpModal";
+import loginFrame from "../assets/login-frame.png";
+import useSWR from "swr";
+import { LoginApi } from "../api";
+
 const Login = () => {
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [isLogged, setLogged] = useState(false);
+  const { data, error, isLoading } = useSWR(
+    isLogged ? "/api/Account/LoginAdmin" : null,
+    (key) => LoginApi.user(key, { username, password })
+  );
+
+  const handleUsername = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = e.target.value;
+    setUsername(val);
+  };
+
+  const handlePassword = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = e.target.value;
+    setPassword(val);
+  };
+
   let [isOpen, setIsOpen] = useState<boolean>(false);
   const closeModal = (): void => {
     setIsOpen(false);
@@ -9,6 +30,7 @@ const Login = () => {
   const openModal = (): void => {
     setIsOpen(true);
   };
+
   return (
     <div className="relative flex min-h-screen">
       <div className="relative flex items-center justify-center w-full max-w-4xl">
@@ -130,6 +152,7 @@ const Login = () => {
             <div className="flex flex-col space-y-1.5">
               <label>Login</label>
               <input
+                onChange={handleUsername}
                 className="px-5 py-3.5 placeholder:text-[#5b5b5b] border rounded-lg"
                 placeholder="Giriş üçün login daxil edin"
                 type="text"
@@ -139,6 +162,7 @@ const Login = () => {
             <div className="flex flex-col space-y-1.5 mt-5">
               <label>Şifrə</label>
               <input
+                onChange={handlePassword}
                 className="px-5 py-3.5 placeholder:text-[#5b5b5b] border rounded-lg"
                 placeholder="Şifrəni daxil edin"
                 type="text"
@@ -156,7 +180,11 @@ const Login = () => {
               </span>
             </div>
 
-            <button     onClick={() => openModal()} className="w-full bg-primary hover:bg-primary/95 rounded-lg text-[#FCFCFC] font-semibold text-sm py-3.5 mt-16">
+            <button
+              onClick={() => {setLogged(true)
+                openModal()}}
+              className="w-full bg-primary hover:bg-primary/95 rounded-lg text-[#FCFCFC] font-semibold text-sm py-3.5 mt-16"
+            >
               Daxil ol
             </button>
           </div>
