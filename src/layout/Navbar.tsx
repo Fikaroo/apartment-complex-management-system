@@ -49,42 +49,43 @@ const NavItem = ({
   const [isRollup, setRollup] = useState<boolean>(false);
   return (
     <React.Fragment>
- <NavLink
-      key={path}
-      to={path}
-      className={`flex  items-center relative justify-center  w-12 px-5 py-3 group-hover:w-full border border-line rounded-full ${
-        path === pathname ? "bg-primary" : "bg-white"
-      }`}
-      onClick={()=>{pathname=='/'? setIsExpanded(false):null}}
-    >
-      <li
-        className="w-full  flex justify-center"
-        onClick={() => (setIsExpanded(!isExpanded))}
+      <NavLink
+        key={path}
+        to={path}
+        className={`flex  items-center relative justify-center w-12 px-5 py-3 group-hover:w-full border border-line rounded-full ${
+          path === pathname ? "bg-primary" : "bg-white"
+        }`}
+        onClick={() => {
+          pathname == "/" ? setIsExpanded(false) : null;
+        }}
       >
-        <div className=" w-full  flex items-center justify-center group-hover:justify-between">
-          <div>{path === pathname ? iconSolid : icon}</div>
-          <div
-            className={`hidden scale-0 w-[80%] group-hover:scale-100 group-hover:flex duration-400 items-center h-full font-semibold  ${
-              path === pathname ? "text-white bg-primary" : "bg-transparent"
-            }  transition-all rounded-full`}
-          >
-            {name}
-          </div>
-          {pathname && pathname == "/" ? null : (
-            <div className="hidden group-hover:block">
-              {" "}
-              {isExpanded && isExpanded ? (
-                <ChevronUpIcon className="w-[14px] text-cyan-50 translate-x-1" />
-              ) : (
-                <ChevronDownIcon className="w-[14px] translate-x-1 text-cyan-50" />
-              )}{" "}
+        <li
+          className="flex justify-center w-full"
+          onClick={() => setIsExpanded(!isExpanded)}
+        >
+          <div className="flex items-center justify-center w-full group-hover:justify-between">
+            <div>{path === pathname ? iconSolid : icon}</div>
+            <div
+              className={`hidden scale-0 w-[80%] group-hover:scale-100 group-hover:flex duration-400 items-center h-full font-semibold  ${
+                path === pathname ? "text-white bg-primary" : "bg-transparent"
+              }  transition-all rounded-full`}
+            >
+              {name}
             </div>
-          )}
-        </div>
-      </li>
-      
-    </NavLink>
-    {isExpanded && (
+            {pathname && pathname == "/" ? null : (
+              <div className="hidden group-hover:block">
+                {" "}
+                {isExpanded && isExpanded ? (
+                  <ChevronUpIcon className="w-[14px] text-cyan-50 translate-x-1" />
+                ) : (
+                  <ChevronDownIcon className="w-[14px] translate-x-1 text-cyan-50" />
+                )}{" "}
+              </div>
+            )}
+          </div>
+        </li>
+      </NavLink>
+      {isExpanded && (
         <div className="hidden group-hover:block">
           <div className="text-[16px] font-medium cursor-pointer text-gray-500 mt-4 ml-6">
             List of objects
@@ -95,7 +96,6 @@ const NavItem = ({
         </div>
       )}
     </React.Fragment>
-   
   );
 };
 

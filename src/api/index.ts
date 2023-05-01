@@ -5,14 +5,14 @@ const baseUrl = import.meta.env.VITE_BASE_URL;
 const instance = axios.create({
   baseURL: baseUrl,
 });
-const admin=axios.create({
+const admin = axios.create({
   baseURL: baseUrl,
   headers: {
     Authorization: `Bearer ${localStorage.getItem("user-token")}`,
 
     "Content-type": "application/json",
   },
-})
+});
 export const LoginApi = {
   user: async (
     path: string,
@@ -40,19 +40,32 @@ export const LoginApprove = {
 export const RegisterUser = {
   user: async (
     path: string,
-    { name, surname,patrionimyc,userName,email,phoneNumber,roleName }: { name: string;surname:string;patrionimyc:string;userName:string;email:string; phoneNumber: string;roleName:string }
+    {
+      name,
+      surname,
+      patrionimyc,
+      userName,
+      email,
+      phoneNumber,
+      roleName,
+    }: {
+      name: string;
+      surname: string;
+      patrionimyc: string;
+      userName: string;
+      email: string;
+      phoneNumber: string;
+      roleName: string;
+    }
   ) => {
     const { data } = await admin.post(path, {
       name: name,
       surname: surname,
-      patrionimyc:patrionimyc,
-      userName:userName,
-      email:email,
-      phoneNumber:phoneNumber,
-      roleName:roleName
-
-
-
+      patrionimyc: patrionimyc,
+      userName: userName,
+      email: email,
+      phoneNumber: phoneNumber,
+      roleName: roleName,
     });
     return data;
   },
