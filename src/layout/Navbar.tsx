@@ -8,6 +8,8 @@ import {
   CalendarDaysIcon,
   BellIcon,
   Cog6ToothIcon,
+  ChevronDownIcon,
+  ChevronUpIcon,
 } from "@heroicons/react/24/outline";
 
 import {
@@ -21,52 +23,126 @@ import {
 } from "@heroicons/react/24/solid";
 
 import { ReactComponent as Logo } from "../assets/logo.svg";
-import { useState } from "react";
-const Navbar = () => {
-  const { pathname } = useLocation();
+import React, { useState } from "react";
 
-  const sidebarItems = [
+interface ISidebarItems {
+  name: string;
+  path: string;
+  icon: any;
+  iconSolid: any;
+  children?: { name: string; path: string }[];
+}
+
+type NavItemProps = {
+  name: string;
+};
+
+const NavItem = ({
+  name,
+  path,
+  icon,
+  iconSolid,
+}: NavItemProps & ISidebarItems) => {
+  const [isExpanded, setIsExpanded] = useState(false);
+  const { pathname } = useLocation();
+  console.log(pathname, "pathname");
+  const [isRollup, setRollup] = useState<boolean>(false);
+  return (
+    <React.Fragment>
+ <NavLink
+      key={path}
+      to={path}
+      className={`flex  items-center relative justify-center  w-12 px-5 py-3 group-hover:w-full border border-line rounded-full ${
+        path === pathname ? "bg-primary" : "bg-white"
+      }`}
+      onClick={()=>{pathname=='/'? setIsExpanded(false):null}}
+    >
+      <li
+        className="w-full  flex justify-center"
+        onClick={() => (setIsExpanded(!isExpanded))}
+      >
+        <div className=" w-full  flex items-center justify-center group-hover:justify-between">
+          <div>{path === pathname ? iconSolid : icon}</div>
+          <div
+            className={`hidden scale-0 w-[80%] group-hover:scale-100 group-hover:flex duration-400 items-center h-full font-semibold  ${
+              path === pathname ? "text-white bg-primary" : "bg-transparent"
+            }  transition-all rounded-full`}
+          >
+            {name}
+          </div>
+          {pathname && pathname == "/" ? null : (
+            <div className="hidden group-hover:block">
+              {" "}
+              {isExpanded && isExpanded ? (
+                <ChevronUpIcon className="w-[14px] text-cyan-50 translate-x-1" />
+              ) : (
+                <ChevronDownIcon className="w-[14px] translate-x-1 text-cyan-50" />
+              )}{" "}
+            </div>
+          )}
+        </div>
+      </li>
+      
+    </NavLink>
+    {isExpanded && (
+        <div className="hidden group-hover:block">
+          <div className="text-[16px] font-medium cursor-pointer text-gray-500 mt-4 ml-6">
+            List of objects
+          </div>
+          <div className="text-[16px] font-medium cursor-pointer text-gray-500 mt-4 ml-6">
+            List of residents
+          </div>
+        </div>
+      )}
+    </React.Fragment>
+   
+  );
+};
+
+const Navbar = () => {
+  const sidebarItems: ISidebarItems[] = [
     {
       name: "Dashboard",
       path: "/",
-      icon: Squares2X2Icon,
-      iconSolid: Squares2X2IconSolid,
+      icon: <Squares2X2Icon className="w-5 h-5" />,
+      iconSolid: <Squares2X2IconSolid className="w-5 h-5 fill-white" />,
     },
     {
       name: "Deals",
       path: "/deals",
-      icon: BriefcaseIcon,
-      iconSolid: BriefcaseIconSolid,
+      icon: <BriefcaseIcon className="w-5 h-5" />,
+      iconSolid: <BriefcaseIconSolid className="w-5 h-5 fill-white" />,
+      children: [{ name: "Deals", path: "deals/deals" }],
     },
     {
       name: "Customers",
       path: "/customers",
-      icon: UsersIcon,
-      iconSolid: UsersIconSolid,
+      icon: <UsersIcon className="w-5 h-5" />,
+      iconSolid: <UsersIconSolid className="w-5 h-5 fill-white" />,
     },
     {
       name: "Sos",
       path: "/sos",
-      icon: ListBulletIcon,
-      iconSolid: ListBulletIconSolid,
+      icon: <ListBulletIcon className="w-5 h-5" />,
+      iconSolid: <ListBulletIconSolid className="w-5 h-5 fill-white" />,
     },
     {
       name: "Blog",
       path: "/blog",
-      icon: CalendarDaysIcon,
-      iconSolid: CalendarDaysIconSolid,
+      icon: <CalendarDaysIcon className="w-5 h-5" />,
+      iconSolid: <CalendarDaysIconSolid className="w-5 h-5 fill-white" />,
     },
     {
       name: "Notification",
       path: "/notification",
-      icon: BellIcon,
-      iconSolid: BellIconSolid,
+      icon: <BellIcon className="w-5 h-5" />,
+      iconSolid: <BellIconSolid className="w-5 h-5 fill-white" />,
     },
     {
       name: "Settings",
       path: "/settings",
-      icon: Cog6ToothIcon,
-      iconSolid: Cog6ToothIconSolid,
+      icon: <Cog6ToothIcon className="w-5 h-5" />,
+      iconSolid: <Cog6ToothIconSolid className="w-5 h-5 fill-white" />,
     },
   ];
 
@@ -81,34 +157,18 @@ const Navbar = () => {
       </div>
 
       <ul className="p-5 space-y-4">
-        {sidebarItems.map((item) => (
-          <NavLink
-            key={item.path}
-            to={item.path}
-            className={`flex items-center relative justify-center w-12 h-12 border border-line rounded-full ${
-              item.path === pathname ? "bg-primary" : "bg-white"
-            }`}
-          >
-            <li>
-              <div className="relative z-10">
-                {item.path === pathname ? (
-                  <item.iconSolid className="w-5 h-5 fill-white" />
-                ) : (
-                  <item.icon className="w-5 h-5" />
-                )}
-              </div>
-              <div
-                className={`absolute left-0 top-0 scale-0 group-hover:scale-100 duration-400 flex items-center h-full pr-6 font-semibold  ${
-                  item.path === pathname
-                    ? "text-white bg-primary"
-                    : "bg-transparent"
-                }  transition-all rounded-full pl-14`}
-              >
-                {item.name}
-              </div>
-            </li>
-          </NavLink>
-        ))}
+        {sidebarItems.map(
+          ({ name, path, icon, iconSolid, children }: ISidebarItems) => (
+            <NavItem
+              key={name}
+              name={name}
+              path={path}
+              icon={icon}
+              iconSolid={iconSolid}
+              children={children}
+            />
+          )
+        )}
       </ul>
     </div>
   );
