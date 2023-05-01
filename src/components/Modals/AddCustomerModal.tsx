@@ -2,13 +2,76 @@ import { Dialog, Transition } from "@headlessui/react";
 import { CheckIcon } from "@heroicons/react/24/solid";
 import { XCircleIcon } from "@heroicons/react/24/solid";
 import { Fragment, useState } from "react";
-
+import { RegisterUser } from "../../api";
 type Props = {
   isOpen: boolean;
   closeModal: () => void;
 };
 
 const AddCustomerModal: React.FC<Props> = ({ isOpen, closeModal }) => {
+  const [name, setName] = useState("");
+  const [surname, setSurname] = useState("");
+  const [patrionimyc, setFatherName] = useState("");
+  const [userName, setUserName] = useState("");
+  const [email, setEmail] = useState("");
+  const [phoneNumber, setPhone] = useState("");
+const[roleName,SetRole]=useState("user")
+  const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setName(event.target.value);
+  };
+
+  const handleSurnameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSurname(event.target.value);
+  };
+
+  const handleFatherNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setFatherName(event.target.value);
+  };
+
+  const handleUserNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setUserName(event.target.value);
+  };
+
+  const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setEmail(event.target.value);
+  };
+
+  const handlePhoneChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setPhone(event.target.value);
+  };
+  
+ 
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    try {
+      const response = await RegisterUser.user("/api/Account/RegisterUser", {
+        name,
+        surname,
+        patrionimyc,
+        userName,
+        email,
+        phoneNumber,
+        roleName
+      });
+  
+      if (response.statusCode === 201) {
+        alert(response.message);
+        closeModal()
+     console.log(response,"response")
+        
+      } else {
+        alert(response.message);
+        console.log(response,"response")
+        
+        console.log("Invalid username or password");
+      }
+    } catch (error) {
+      alert(error)
+      console.log("An error occurred. Please try again later.");
+    }
+  };
+ 
+
   return (
     <div>
       <Transition appear show={isOpen} as={Fragment}>
@@ -47,7 +110,7 @@ const AddCustomerModal: React.FC<Props> = ({ isOpen, closeModal }) => {
                       className="w-6 h-6 cursor-pointer fill-icon"
                     />
                   </Dialog.Title>
-                  <form action="">
+                  <form action="" onSubmit={handleSubmit}>
                     <div className="flex items-center flex-row justify-between mt-10 font-bold font-inter text-16 leading-30 text-dark">
                       <div>
                         <label
@@ -57,6 +120,7 @@ const AddCustomerModal: React.FC<Props> = ({ isOpen, closeModal }) => {
                           Ad
                         </label>
                         <input
+                        onChange={handleNameChange}
                           type="text"
                           className="mt-3 w-[95%] rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
                           required
@@ -70,13 +134,43 @@ const AddCustomerModal: React.FC<Props> = ({ isOpen, closeModal }) => {
                           Soyad
                         </label>
                         <input
+                       onChange={handleSurnameChange}
                           type="text"
                           className="mt-3 w-[95%]  rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none  font-medium text-md"
                           required
                         />
                       </div>
                     </div>
-
+                    <div className="flex items-center flex-row justify-between mt-10 font-bold font-inter text-16 leading-30 text-dark">
+                      <div>
+                        <label
+                          htmlFor="solution"
+                          className="inline-flex  justify-star items-center  w-1/2"
+                        >
+                          Ata adi
+                        </label>
+                        <input
+                        onChange={handleFatherNameChange}
+                          type="text"
+                          className="mt-3 w-[95%] rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
+                          required
+                        />
+                      </div>
+                      <div>
+                        <label
+                          htmlFor="solution"
+                          className="inline-flex  justify-star items-center  w-1/2"
+                        >
+                          Istifadeci adi
+                        </label>
+                        <input
+                     onChange={handleUserNameChange}   
+                          type="text"
+                          className="mt-3 w-[95%]  rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none  font-medium text-md"
+                          required
+                        />
+                      </div>
+                    </div>
                     <div className="flex items-center flex-row justify-between mt-10 font-bold font-inter text-16 leading-30 text-dark">
                       <div>
                         <label
@@ -86,6 +180,8 @@ const AddCustomerModal: React.FC<Props> = ({ isOpen, closeModal }) => {
                           E-poçt
                         </label>
                         <input
+                      onChange={handleEmailChange}
+
                           type="email"
                           className="mt-3 w-[95%] rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
                           required
@@ -99,13 +195,14 @@ const AddCustomerModal: React.FC<Props> = ({ isOpen, closeModal }) => {
                           Nömrə
                         </label>
                         <input
+                        onChange={handlePhoneChange}
                           type="number"
                           className="mt-3 w-[95%]  rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none  font-medium text-md"
                           required
                         />
                       </div>
                     </div>
-                    <div className="flex items-center flex-col justify-between mt-10 font-bold font-inter text-16 leading-30 text-dark">
+                    {/* <div className="flex items-center flex-col justify-between mt-10 font-bold font-inter text-16 leading-30 text-dark">
                       <label
                         htmlFor="solution"
                         className="inline-flex  justify-star items-center  w-full"
@@ -148,7 +245,7 @@ const AddCustomerModal: React.FC<Props> = ({ isOpen, closeModal }) => {
                       </div>
                      
 
-                    </div>
+                    </div> */}
 
                     <div className="flex w-full items-center justify-end mt-10 font-bold font-inter text-16 leading-30 text-dark">
                       <button
@@ -175,4 +272,5 @@ const AddCustomerModal: React.FC<Props> = ({ isOpen, closeModal }) => {
     </div>
   );
 };
+
 export default AddCustomerModal;

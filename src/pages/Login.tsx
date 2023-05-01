@@ -7,7 +7,6 @@ import { LoginApi } from "../api";
 const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [isLogged, setLogged] = useState(false);
   
 
   const handleUsername = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -27,10 +26,30 @@ const Login = () => {
   const openModal = (): void => {
     setIsOpen(true);
   };
-  const handleSubmit = async (e:any) => {
+  
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+  
     
-  }
+  
+    try {
+      const response = await LoginApi.user("/api/Account/LoginAdmin", {
+        username,
+        password,
+      });
+  
+      if (response.statusCode === 201) {
+     console.log(response,"response")
+        openModal();
+      } else {
+        console.log(response,"response")
+        
+        console.log("Invalid username or password");
+      }
+    } catch (error) {
+      console.log("An error occurred. Please try again later.");
+    }
+  };
 
 
   return (
@@ -187,10 +206,10 @@ const Login = () => {
 
             <button
               type="submit"
-              onClick={() => {
-                setLogged(true);
-                openModal();
-              }}
+              // onClick={() => {
+              //   setLogged(true);
+              //   openModal();
+              // }}
               className="w-full bg-primary hover:bg-primary/95 rounded-lg text-[#FCFCFC] font-semibold text-sm py-3.5 mt-16"
             >
               Daxil ol
@@ -199,7 +218,7 @@ const Login = () => {
           </form>
         </div>
       </div>
-      <OtpModal isOpen={isOpen} closeModal={closeModal} />
+      <OtpModal isOpen={isOpen} closeModal={closeModal} username={username}/>
     </div>
   );
 };

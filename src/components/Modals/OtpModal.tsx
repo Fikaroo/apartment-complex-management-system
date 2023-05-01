@@ -2,13 +2,50 @@ import React from 'react'
 import { Dialog, Transition } from "@headlessui/react";
 import { Fragment, useState } from "react";
 import { XCircleIcon } from "@heroicons/react/24/solid";
+import { redirect, useNavigate } from "react-router-dom";
+import { LoginApprove } from '../../api';
 type Props = {
     isOpen: boolean;
+    username:string;
     closeModal: () => void;
   };
   
 
-const OtpModal : React.FC<Props> = ({ isOpen, closeModal }) => {
+const OtpModal : React.FC<Props> = ({ isOpen, closeModal,username }) => {
+  const nav = useNavigate();
+    const [smsCode, setSmscode] = useState<string>("");
+    const handleSmscode = (e: React.ChangeEvent<HTMLInputElement>) => {
+      const val = e.target.value;
+      const newSmscode = smsCode + val; // concatenate the new digit with the existing smscode
+      setSmscode(newSmscode);
+      console.log(newSmscode, "smscode");
+    };
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+  
+    
+  
+    try {
+      const response = await LoginApprove.user("/api/Account/LoginApproveAdmin", {
+        username,
+        smsCode      
+      })
+  
+      if (response.statusCode === 201) {
+     console.log(response,"response")
+     localStorage.clear();
+            localStorage.setItem("user-token", response.data.token);
+     nav("/")
+      } else {
+        console.log(response.data.token,"response")
+        
+        console.log("Invalid username or password");
+      }
+    } catch (error) {
+      console.log("An error occurred. Please try again later.");
+    }
+  };
+
   return (
     <Transition appear show={isOpen} as={Fragment}>
         <Dialog as="div" className="relative z-10" onClose={closeModal}>
@@ -57,26 +94,26 @@ const OtpModal : React.FC<Props> = ({ isOpen, closeModal }) => {
       </div>
 
       <div>
-        <form action="" method="post">
+        <form action="" method="post"  onSubmit={handleSubmit}>
           <div className="flex flex-col space-y-16">
             <div className="flex flex-row items-center justify-between mx-auto w-full">
               <div className="w-16 h-16 ">
-                <input className="w-full h-full flex flex-col items-center justify-center text-center px-5 outline-none rounded-xl border border-gray-200 text-lg bg-white focus:bg-gray-50 focus:ring-1 ring-primary" type="text" name="" id=""/>
+                <input onChange={handleSmscode} className="w-full h-full flex flex-col items-center justify-center text-center px-5 outline-none rounded-xl border border-gray-200 text-lg bg-white  appearance-none focus:bg-gray-50 focus:ring-1 ring-primary hover:appearance-none" type="text"/>
               </div>
               <div className="w-16 h-16 ">
-                <input className="w-full h-full flex flex-col items-center justify-center text-center px-5 outline-none rounded-xl border border-gray-200 text-lg bg-white focus:bg-gray-50 focus:ring-1 ring-primary" type="text" name="" id="" />
+                <input onChange={handleSmscode} className="w-full h-full flex flex-col items-center justify-center text-center px-5 outline-none rounded-xl border border-gray-200 text-lg bg-white appearance-none focus:bg-gray-50 focus:ring-1 ring-primary  hover:appearance-none" type="text"   />
               </div>
               <div className="w-16 h-16 ">
-                <input className="w-full h-full flex flex-col items-center justify-center text-center px-5 outline-none rounded-xl border border-gray-200 text-lg bg-white focus:bg-gray-50 focus:ring-1 ring-primary" type="text" name="" id="" />
+                <input onChange={handleSmscode} className="w-full h-full flex flex-col items-center justify-center text-center px-5 outline-none rounded-xl border border-gray-200 text-lg bg-white appearance-none focus:bg-gray-50 focus:ring-1 ring-primary" type="text"/>
               </div>
               <div className="w-16 h-16 ">
-                <input className="w-full h-full flex flex-col items-center justify-center text-center px-5 outline-none rounded-xl border border-gray-200 text-lg bg-white focus:bg-gray-50 focus:ring-1 ring-primary" type="text" name="" id="" />
+                <input onChange={handleSmscode} className="w-full h-full flex flex-col items-center justify-center text-center px-5 outline-none rounded-xl border border-gray-200 text-lg bg-white appearance-none focus:bg-gray-50 focus:ring-1 ring-primary" type="text" />
               </div>
               <div className="w-16 h-16 ">
-                <input className="w-full h-full flex flex-col items-center justify-center text-center px-5 outline-none rounded-xl border border-gray-200 text-lg bg-white focus:bg-gray-50 focus:ring-1 ring-primary" type="text" name="" id="" />
+                <input onChange={handleSmscode} className="w-full h-full flex flex-col items-center justify-center text-center px-5 outline-none rounded-xl border border-gray-200 text-lg bg-white appearance-none focus:bg-gray-50 focus:ring-1 ring-primary" type="text" />
               </div>
               <div className="w-16 h-16 ">
-                <input className="w-full h-full flex flex-col items-center justify-center text-center px-5 outline-none rounded-xl border border-gray-200 text-lg bg-white focus:bg-gray-50 focus:ring-1 ring-primary" type="text" name="" id="" />
+                <input onChange={handleSmscode} className="w-full h-full flex flex-col items-center justify-center text-center px-5 outline-none rounded-xl border border-gray-200 text-lg bg-white appearance-none focus:bg-gray-50 focus:ring-1 ring-primary" type="text"/>
               </div>
             </div>
 
