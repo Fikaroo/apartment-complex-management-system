@@ -63,7 +63,7 @@ const NavItem = ({
           className="flex justify-center w-full"
           onClick={() => setIsExpanded(!isExpanded)}
         >
-          <div className="flex items-center justify-center w-full group-hover:justify-between">
+          <div className="flex items-center justify-center w-full gap-1 px-2 group-hover:justify-between">
             <div>{path === pathname ? iconSolid : icon}</div>
             <div
               className={`hidden scale-0 w-[80%] group-hover:scale-100 group-hover:flex duration-400 items-center h-full font-semibold  ${
@@ -72,29 +72,32 @@ const NavItem = ({
             >
               {name}
             </div>
-            {pathname && pathname == "/" ? null : (
-              <div className="hidden group-hover:block">
-                {" "}
-                {isExpanded && isExpanded ? (
-                  <ChevronUpIcon className="w-[14px] text-cyan-50 translate-x-1" />
-                ) : (
-                  <ChevronDownIcon className="w-[14px] translate-x-1 text-cyan-50" />
-                )}{" "}
-              </div>
-            )}
+            {pathname &&
+              (pathname == "/" ? null : (
+                <div className="hidden group-hover:block">
+                  {" "}
+                  {isExpanded && isExpanded ? (
+                    <ChevronUpIcon className="w-[14px] text-cyan-50 translate-x-1" />
+                  ) : (
+                    <ChevronDownIcon className="w-[14px] translate-x-1 text-cyan-50" />
+                  )}{" "}
+                </div>
+              ))}
           </div>
         </li>
       </NavLink>
-      {isExpanded && (
-        <div className="hidden group-hover:block">
-          <div className="text-[16px] font-medium cursor-pointer text-gray-500 mt-4 ml-6">
-            List of objects
-          </div>
-          <div className="text-[16px] font-medium cursor-pointer text-gray-500 mt-4 ml-6">
-            List of residents
-          </div>
-        </div>
-      )}
+      {name === "Dashboard"
+        ? null
+        : isExpanded && (
+            <div className="hidden group-hover:block">
+              <div className="text-[16px] font-medium cursor-pointer text-gray-500 mt-4 ml-6">
+                List of objects
+              </div>
+              <div className="text-[16px] font-medium cursor-pointer text-gray-500 mt-4 ml-6">
+                List of residents
+              </div>
+            </div>
+          )}
     </React.Fragment>
   );
 };
@@ -156,7 +159,7 @@ const Navbar = () => {
         </div>
       </div>
 
-      <ul className="p-5 space-y-4">
+      <ul className="p-5 space-y-4 overflow-x-hidden overflow-y-auto h-[600px]">
         {sidebarItems.map(
           ({ name, path, icon, iconSolid, children }: ISidebarItems) => (
             <NavItem

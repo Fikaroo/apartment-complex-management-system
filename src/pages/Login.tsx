@@ -7,7 +7,6 @@ import { LoginApi } from "../api";
 const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  
 
   const handleUsername = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = e.target.value;
@@ -26,31 +25,21 @@ const Login = () => {
   const openModal = (): void => {
     setIsOpen(true);
   };
-  
+
+  const [isLogged, setLogged] = useState(false);
+
+  const { data, error, isLoading } = useSWR(
+    isLogged ? "/api/Account/LoginAdmin" : null,
+    (key) => LoginApi.user(key, { username, password })
+  );
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-  
-    
-  
-    try {
-      const response = await LoginApi.user("/api/Account/LoginAdmin", {
-        username,
-        password,
-      });
-  
-      if (response.statusCode === 201) {
-     console.log(response,"response")
-        openModal();
-      } else {
-        console.log(response,"response")
-        
-        console.log("Invalid username or password");
-      }
-    } catch (error) {
-      console.log("An error occurred. Please try again later.");
-    }
-  };
 
+    setLogged(true);
+
+    console.log(data?.statusCode === 201 ? openModal() : "", error);
+  };
 
   return (
     <div className="relative flex min-h-screen">
@@ -170,55 +159,51 @@ const Login = () => {
           </h2>
 
           <form onSubmit={handleSubmit}>
-          <div className="mt-24">
-            <div className="flex flex-col space-y-1.5">
-              <label>Login</label>
-              <input
-                onChange={handleUsername}
-                className="px-5 py-3.5 placeholder:text-[#5b5b5b] border rounded-lg"
-                placeholder="Giriş üçün login daxil edin"
-                type="text"
-                required
-              />
-            </div>
+            <div className="mt-24">
+              <div className="flex flex-col space-y-1.5">
+                <label>Login</label>
+                <input
+                  onChange={handleUsername}
+                  className="px-5 py-3.5 placeholder:text-[#5b5b5b] border rounded-lg"
+                  placeholder="Giriş üçün login daxil edin"
+                  type="text"
+                  required
+                />
+              </div>
 
-            <div className="flex flex-col space-y-1.5 mt-5">
-              <label>Şifrə</label>
-              <input
-                onChange={handlePassword}
-                className="px-5 py-3.5 placeholder:text-[#5b5b5b] border rounded-lg"
-                placeholder="Şifrəni daxil edin"
-                type="text"
-                required
-              />
-            </div>
+              <div className="flex flex-col space-y-1.5 mt-5">
+                <label>Şifrə</label>
+                <input
+                  onChange={handlePassword}
+                  className="px-5 py-3.5 placeholder:text-[#5b5b5b] border rounded-lg"
+                  placeholder="Şifrəni daxil edin"
+                  type="text"
+                  required
+                />
+              </div>
 
-            <div className="flex justify-between px-1 mt-3">
-              <label className="flex gap-1.5 text-xs font-medium">
-                {" "}
-                <input type="checkbox" className="rounded" />
-                Məni xatırla
-              </label>
-              <span className="inline-flex text-xs font-medium ">
-                Şifrəni unutmuşam
-              </span>
-            </div>
+              <div className="flex justify-between px-1 mt-3">
+                <label className="flex gap-1.5 text-xs font-medium">
+                  {" "}
+                  <input type="checkbox" className="rounded" />
+                  Məni xatırla
+                </label>
+                <span className="inline-flex text-xs font-medium ">
+                  Şifrəni unutmuşam
+                </span>
+              </div>
 
-            <button
-              type="submit"
-              // onClick={() => {
-              //   setLogged(true);
-              //   openModal();
-              // }}
-              className="w-full bg-primary hover:bg-primary/95 rounded-lg text-[#FCFCFC] font-semibold text-sm py-3.5 mt-16"
-            >
-              Daxil ol
-            </button>
-          </div>
+              <button
+                type="submit"
+                className="w-full bg-primary hover:bg-primary/95 rounded-lg text-[#FCFCFC] font-semibold text-sm py-3.5 mt-16"
+              >
+                Daxil ol
+              </button>
+            </div>
           </form>
         </div>
       </div>
-      <OtpModal isOpen={isOpen} closeModal={closeModal} username={username}/>
+      <OtpModal isOpen={isOpen} closeModal={closeModal} username={username} />
     </div>
   );
 };
