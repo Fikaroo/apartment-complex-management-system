@@ -13,9 +13,9 @@ const App = () => {
   return (
     <div className="w-full min-h-screen overflow-hidden bg-background/90 text-dark">
       <Routes>
-        <Route path="/login" element={<Login />} />
+        <Route index path="/" element={<Login />} />
         <Route
-          index
+          path="/dashboard"
           element={
             <Layout>
               <Dashboard />
@@ -38,23 +38,23 @@ const App = () => {
             </Layout>
           }
         />
-          <Route
+        <Route
           path="/control-panel/deals"
           element={
             <Layout>
-            <Deals />
-          </Layout>
+              <Deals />
+            </Layout>
           }
         />
-<Route
+        <Route
           path="/control-panel/deals/:dealId"
           element={
             <Layout>
-            <Deals />
-          </Layout>
+              <Deals />
+            </Layout>
           }
         />
-        
+
         <Route
           path="/references"
           element={
@@ -63,7 +63,7 @@ const App = () => {
             </Layout>
           }
         />
-         <Route
+        <Route
           path="/references/customers"
           element={
             <Layout>

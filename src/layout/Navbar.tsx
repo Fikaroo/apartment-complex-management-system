@@ -116,7 +116,7 @@ const Navbar = () => {
   const sidebarItems: ISidebarItems[] = [
     {
       name: "Dashboard",
-      path: "/",
+      path: "/dashboard",
       icon: <Squares2X2Icon className="w-5 h-5" />,
       iconSolid: <Squares2X2IconSolid className="w-5 h-5 fill-white" />,
     },

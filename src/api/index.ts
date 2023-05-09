@@ -16,12 +16,10 @@ const admin = axios.create({
 export const LoginApi = {
   user: async (
     path: string,
-    { username, password }: { username: string; password: string }
+    { arg }: { arg: { username: string; password: string } }
   ) => {
-    const { data } = await instance.post(path, {
-      userName: username,
-      password: password,
-    });
+    const { data } = await instance.post(path, arg);
+
     return data;
   },
 };
@@ -72,10 +70,7 @@ export const RegisterUser = {
 };
 
 export const DealsGetAll = {
-  user: async (
-    path: string,
-   
-  ) => {
+  user: async (path: string) => {
     const { data } = await admin.get(path);
     return data;
   },
@@ -84,15 +79,15 @@ export const CreateDeal = {
   user: async (
     path: string,
     {
-  description,
-  statusId,
-  orderTypeId,
-  orderSourceId,
-  priorityId,
-  orderClassId,
-  appUserId,
-  actualDeadline,
-  normativeDeadline,
+      description,
+      statusId,
+      orderTypeId,
+      orderSourceId,
+      priorityId,
+      orderClassId,
+      appUserId,
+      actualDeadline,
+      normativeDeadline,
     }: {
       description: string;
       statusId: number;
@@ -111,19 +106,16 @@ export const CreateDeal = {
       orderTypeId: orderTypeId,
       orderSourceId: orderSourceId,
       priorityId: priorityId,
-      orderClassId:orderClassId,
+      orderClassId: orderClassId,
       appUserId: appUserId,
       actualDeadline: actualDeadline,
-      normativeDeadline: normativeDeadline
+      normativeDeadline: normativeDeadline,
     });
     return data;
   },
 };
 export const Delete = {
-  user: async (
-    path: string,
-   deleteId:number
-  ) => {
+  user: async (path: string, deleteId: number) => {
     const { data } = await admin.delete(`${path}?Id=${deleteId}`);
     return data;
   },

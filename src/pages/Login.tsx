@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import OtpModal from "../components/Modals/OtpModal";
 import loginFrame from "../assets/login-frame.png";
-import useSWR from "swr";
+import useSWRMutation from "swr/mutation";
 import { LoginApi } from "../api";
 
 const Login = () => {
@@ -28,23 +28,23 @@ const Login = () => {
 
   const [isLogged, setLogged] = useState(false);
 
-  const { data, error, isLoading } = useSWR(
-    isLogged ? "/api/AccountAdmin/LoginAdmin" : null,
-    (key) => LoginApi.user(key, { username, password })
+  const { trigger, data, error, isMutating } = useSWRMutation(
+    "/api/AccountAdmin/LoginAdmin",
+    LoginApi.user
   );
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
-    setLogged(true);
-    if(data?.statusCode === 201){
-      openModal()
-    }
-    else if(error){
-      console.log(error,"eroor")
-    }
-
+    trigger({ username, password });
   };
+
+  useEffect(() => {
+    if (data?.statusCode === 202) {
+      openModal();
+    } else if (data?.statusCode === 400) {
+      console.log(error, "error");
+    }
+  }, [data]);
 
   return (
     <div className="relative flex min-h-screen">
@@ -199,9 +199,9 @@ const Login = () => {
               </div>
 
               <button
-             
                 type="submit"
                 className="w-full bg-primary hover:bg-primary/95 rounded-lg text-[#FCFCFC] font-semibold text-sm py-3.5 mt-16"
+                disabled={isMutating}
               >
                 Daxil ol
               </button>
