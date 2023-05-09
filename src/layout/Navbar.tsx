@@ -54,7 +54,7 @@ const NavItem = ({
       <NavLink
         key={path}
         to={path}
-        className={`flex  items-center relative justify-center w-12 px-5 py-3 group-hover:w-full border border-line rounded-full ${
+        className={`flex  items-center relative justify-center w-12 px-2 py-3 group-hover:w-full border border-line rounded-full ${
           path === pathname ? "bg-primary" : "bg-white"
         }`}
         onClick={() => {
@@ -99,7 +99,7 @@ const NavItem = ({
                 return (
                   <NavLink
                     key={child.path}
-                    to={child.path}
+                    to={`/references/${child.path}`}
                     className="flex flex-col text-[16px] font-medium cursor-pointer text-gray-500 mt-4 ml-6"
                   >
                     {child.name}
@@ -126,7 +126,6 @@ const Navbar = () => {
       icon: <BriefcaseIcon className="w-5 h-5" />,
       iconSolid: <BriefcaseIconSolid className="w-5 h-5 fill-white" />,
       children: [
-
         { name: "Customers", path: "customers" },
         { name: "Objects", path: "objects" },
         { name: "Residents", path: "residents" },
@@ -139,10 +138,7 @@ const Navbar = () => {
       path: "/control-panel",
       icon: <UsersIcon className="w-5 h-5" />,
       iconSolid: <UsersIconSolid className="w-5 h-5 fill-white" />,
-      children: [
-        { name: "Deals", path: "deals" },
-        
-      ],
+      children: [{ name: "Deals", path: "deals" }],
     },
     {
       name: "Sos",
@@ -172,7 +168,7 @@ const Navbar = () => {
 
   return (
     <div
-      className={`fixed group z-10 sidebar-overlay transition-all w-[88px] hover:w-2/12 duration-300 min-h-screen border-r bg-background border-line`}
+      className={`fixed group z-10 sidebar-overlay transition-all w-[92px] hover:w-2/12 duration-300 min-h-screen border-r bg-background border-line`}
     >
       <div className="px-5 py-[23.5px] border-b border-line">
         <div className="flex items-center justify-center w-12 h-12 rounded bg-dark">
