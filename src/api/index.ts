@@ -70,3 +70,61 @@ export const RegisterUser = {
     return data;
   },
 };
+
+export const DealsGetAll = {
+  user: async (
+    path: string,
+   
+  ) => {
+    const { data } = await admin.get(path);
+    return data;
+  },
+};
+export const CreateDeal = {
+  user: async (
+    path: string,
+    {
+  description,
+  statusId,
+  orderTypeId,
+  orderSourceId,
+  priorityId,
+  orderClassId,
+  appUserId,
+  actualDeadline,
+  normativeDeadline,
+    }: {
+      description: string;
+      statusId: number;
+      orderTypeId: number;
+      orderSourceId: number;
+      priorityId: number;
+      orderClassId: number;
+      appUserId: string;
+      actualDeadline: string;
+      normativeDeadline: string;
+    }
+  ) => {
+    const { data } = await admin.post(path, {
+      description: description,
+      statusId: statusId,
+      orderTypeId: orderTypeId,
+      orderSourceId: orderSourceId,
+      priorityId: priorityId,
+      orderClassId:orderClassId,
+      appUserId: appUserId,
+      actualDeadline: actualDeadline,
+      normativeDeadline: normativeDeadline
+    });
+    return data;
+  },
+};
+export const Delete = {
+  user: async (
+    path: string,
+   deleteId:number
+  ) => {
+    const { data } = await admin.delete(`${path}?Id=${deleteId}`);
+    return data;
+  },
+};

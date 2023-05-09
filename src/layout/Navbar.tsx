@@ -42,7 +42,9 @@ const NavItem = ({
   path,
   icon,
   iconSolid,
+  children,
 }: NavItemProps & ISidebarItems) => {
+  console.log(children, "childrenn");
   const [isExpanded, setIsExpanded] = useState(false);
   const { pathname } = useLocation();
   console.log(pathname, "pathname");
@@ -88,14 +90,22 @@ const NavItem = ({
       </NavLink>
       {name === "Dashboard"
         ? null
-        : isExpanded && (
+        : isExpanded &&
+          children &&
+          Array.isArray(children) && (
             <div className="hidden group-hover:block">
-              <div className="text-[16px] font-medium cursor-pointer text-gray-500 mt-4 ml-6">
-                List of objects
-              </div>
-              <div className="text-[16px] font-medium cursor-pointer text-gray-500 mt-4 ml-6">
-                List of residents
-              </div>
+              {children.map((child) => {
+                console.log(child, "child");
+                return (
+                  <NavLink
+                    key={child.path}
+                    to={child.path}
+                    className="flex flex-col text-[16px] font-medium cursor-pointer text-gray-500 mt-4 ml-6"
+                  >
+                    {child.name}
+                  </NavLink>
+                );
+              })}
             </div>
           )}
     </React.Fragment>
@@ -111,17 +121,28 @@ const Navbar = () => {
       iconSolid: <Squares2X2IconSolid className="w-5 h-5 fill-white" />,
     },
     {
-      name: "Deals",
-      path: "/deals",
+      name: "References",
+      path: "/references",
       icon: <BriefcaseIcon className="w-5 h-5" />,
       iconSolid: <BriefcaseIconSolid className="w-5 h-5 fill-white" />,
-      children: [{ name: "Deals", path: "deals/deals" }],
+      children: [
+
+        { name: "Customers", path: "customers" },
+        { name: "Objects", path: "objects" },
+        { name: "Residents", path: "residents" },
+        { name: "Buildings", path: "buildings" },
+        { name: "Companies", path: "companies" },
+      ],
     },
     {
-      name: "Customers",
-      path: "/customers",
+      name: "Control Panel",
+      path: "/control-panel",
       icon: <UsersIcon className="w-5 h-5" />,
       iconSolid: <UsersIconSolid className="w-5 h-5 fill-white" />,
+      children: [
+        { name: "Deals", path: "deals" },
+        
+      ],
     },
     {
       name: "Sos",

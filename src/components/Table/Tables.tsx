@@ -15,9 +15,13 @@ type PropsType = {
   headers: IHeaders[];
   modal: JSX.Element;
   openModal: () => void;
+  data: any;
+  setProcess: React.Dispatch<React.SetStateAction<string>>;
+  setOrderId: React.Dispatch<React.SetStateAction<number>>;
 };
 
-const Tables = ({ headers, modal, openModal }: PropsType) => {
+const Tables = ({ headers, modal, openModal,data,setProcess,setOrderId }: PropsType) => {
+  
   return (
     <div className="w-full mt-8 overflow-x-auto">
       <table className="table w-full table-auto">
@@ -34,7 +38,8 @@ const Tables = ({ headers, modal, openModal }: PropsType) => {
           </tr>
         </thead>
         <tbody>
-          <tr>
+        {data?.data?.map((item:any) => ( 
+           <tr key={item.id}>
             <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
 
               
@@ -54,59 +59,39 @@ const Tables = ({ headers, modal, openModal }: PropsType) => {
             <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
               <div className="ml-4">
                 <div className="text-sm font-medium leading-5 text-gray-900">
-                  31.03.2023
+                 {item.actualDeadline}
                 </div>
               </div>
             </td>
+            <td className="px-6 py-4 text-sm leading-5 text-gray-500 whitespace-no-wrap border-b border-gray-200">
+      {item.normativeDeadline}
+            </td>
             <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-              <div className="text-sm leading-5 text-gray-900">Director</div>
+              <div className="text-sm leading-5 text-gray-900">{item.description}</div>
+            </td>
+           
+            <td className="px-6 py-4 text-sm leading-5 text-gray-500 whitespace-no-wrap border-b border-gray-200">
+             {item.orderClass.name}
             </td>
             <td className="px-6 py-4 text-sm leading-5 text-gray-500 whitespace-no-wrap border-b border-gray-200">
-              A menzili
+             {item.orderSource.name}
             </td>
             <td className="px-6 py-4 text-sm leading-5 text-gray-500 whitespace-no-wrap border-b border-gray-200">
-              Menzil
+             {item.orderType.name}
+            </td>
+            <td className="px-6 py-4 text-sm leading-5 text-gray-500 whitespace-no-wrap border-b border-gray-200">
+             {item.phoneNumber}
             </td>
             <td className="px-6 py-4 text-sm font-medium leading-5 text-right whitespace-no-wrap border-b border-gray-200">
               <img
-                onClick={() => openModal()}
+                onClick={() => {openModal();setProcess("Edit");setOrderId(item.id)}}
                 className="ml-4 cursor-pointer"
                 src="/icons/edit.svg"
               />
             </td>
-          </tr>
-          <tr>
-            <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-              <div className="flex items-center">
-                <div className="flex items-center justify-center flex-shrink-0 w-10 h-10">
-                  <img
-                    className="rounded-full"
-                    src="/icons/checked.svg"
-                    alt=""
-                  />
-                </div>
-              </div>
-            </td>
-            <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-              <div className="ml-4">
-                <div className="text-sm font-medium leading-5 text-gray-900">
-                  Bernard Lane
-                </div>
-              </div>
-            </td>
-            <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-              <div className="text-sm leading-5 text-gray-900">Director</div>
-            </td>
-            <td className="px-6 py-4 text-sm text-gray-500 whitespace-no-wrap border-b border-gray-200">
-              Active
-            </td>
-            <td className="px-6 py-4 text-sm leading-5 text-gray-500 whitespace-no-wrap border-b border-gray-200">
-              Owner
-            </td>
-            <td className="px-6 py-4 text-sm font-medium leading-5 text-right whitespace-no-wrap border-b border-gray-200">
-              <img className="ml-4 cursor-pointer" src="/icons/edit.svg" />
-            </td>
-          </tr>
+          </tr>))}
+        
+       
         </tbody>
       </table>
 

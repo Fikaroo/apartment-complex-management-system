@@ -4,6 +4,9 @@ import { Fragment, useState } from "react";
 import { XCircleIcon } from "@heroicons/react/24/solid";
 import { redirect, useNavigate } from "react-router-dom";
 import { LoginApprove } from "../../api";
+import useSWR from "swr";
+import { useRef } from "react";
+
 type Props = {
   isOpen: boolean;
   username: string;
@@ -11,40 +14,78 @@ type Props = {
 };
 
 const OtpModal: React.FC<Props> = ({ isOpen, closeModal, username }) => {
+  const [isLogged, setLogged] = useState(false);
+  const { data, error, isLoading } = useSWR(
+    isLogged ? "/api/AccountAdmin/LoginApproveAdmin" : null,
+    (key) => LoginApprove.user(key, { username, smsCode })
+  );
   const nav = useNavigate();
-  const [smsCode, setSmscode] = useState<string>();
+  const [smsCode, setSmscode] = useState<string>("");
+
+  const input1Ref = useRef<HTMLInputElement>(null);
+  const input2Ref = useRef<HTMLInputElement>(null);
+  const input3Ref = useRef<HTMLInputElement>(null);
+  const input4Ref = useRef<HTMLInputElement>(null);
+  const input5Ref = useRef<HTMLInputElement>(null);
+  const input6Ref = useRef<HTMLInputElement>(null);
+
+  const handleKeyUp = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    const val = event.currentTarget.value;
+    if (val.length === event.currentTarget.maxLength) {
+      // Set the focus on the next input field
+      switch (event.currentTarget.name) {
+        case "input1":
+          input2Ref.current?.focus();
+          break;
+        case "input2":
+          input3Ref.current?.focus();
+          break;
+        case "input3":
+          input4Ref.current?.focus();
+          break;
+        case "input4":
+          input5Ref.current?.focus();
+          break;
+        case "input5":
+          input6Ref.current?.focus();
+          break;
+        default:
+          break;
+      }
+    }
+
+  };
+
+
   const handleSmscode = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = e.target.value;
-    const newSmscode = smsCode + val; // concatenate the new digit with the existing smscode
-    setSmscode(newSmscode);
-    console.log(newSmscode, "smscode");
+    const newSmscode = smsCode + val; 
+    if (val === "") {
+      const updatedSmsCode = smsCode.slice(0, -1);
+      setSmscode(updatedSmsCode);
+    } else {
+      setSmscode(newSmscode);
+    }
+
   };
+
+
+
+ 
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
-    try {
-      const response = await LoginApprove.user(
-        "/api/Account/LoginApproveAdmin",
-        {
-          username,
-          smsCode,
-        }
-      );
-
-      if (response.statusCode === 201) {
-        console.log(response, "response");
-        localStorage.clear();
-        localStorage.setItem("user-token", response.data.token);
-        nav("/");
-      } else {
-        console.log(response.data.token, "response");
-
-        console.log("Invalid username or password");
-      }
-    } catch (error) {
-      console.log("An error occurred. Please try again later.");
+console.log(data?.data?.token,"tokennn")
+    setLogged(true);
+    if(data?.statusCode === 201){
+      localStorage.setItem("user-token",data?.data?.token);
+  nav("/");
+    }
+    else if(error){
+      console.log(error,"eroor")
     }
   };
+
 
   return (
     <Transition appear show={isOpen} as={Fragment}>
@@ -100,6 +141,10 @@ const OtpModal: React.FC<Props> = ({ isOpen, closeModal, username }) => {
                                   onChange={handleSmscode}
                                   className="flex flex-col items-center justify-center w-full h-full px-5 text-lg text-center bg-white border border-gray-200 outline-none appearance-none rounded-xl focus:bg-gray-50 focus:ring-1 ring-primary hover:appearance-none"
                                   type="text"
+                                  maxLength={1}
+                                  onKeyUp={handleKeyUp}
+                                  ref={input1Ref}
+                                  name="input1"
                                 />
                               </div>
                               <div className="w-16 h-16 ">
@@ -107,6 +152,10 @@ const OtpModal: React.FC<Props> = ({ isOpen, closeModal, username }) => {
                                   onChange={handleSmscode}
                                   className="flex flex-col items-center justify-center w-full h-full px-5 text-lg text-center bg-white border border-gray-200 outline-none appearance-none rounded-xl focus:bg-gray-50 focus:ring-1 ring-primary hover:appearance-none"
                                   type="text"
+                                  maxLength={1}
+                                  onKeyUp={handleKeyUp}
+                                  ref={input2Ref}
+                                  name="input2"
                                 />
                               </div>
                               <div className="w-16 h-16 ">
@@ -114,6 +163,10 @@ const OtpModal: React.FC<Props> = ({ isOpen, closeModal, username }) => {
                                   onChange={handleSmscode}
                                   className="flex flex-col items-center justify-center w-full h-full px-5 text-lg text-center bg-white border border-gray-200 outline-none appearance-none rounded-xl focus:bg-gray-50 focus:ring-1 ring-primary"
                                   type="text"
+                                  maxLength={1}
+                                  onKeyUp={handleKeyUp}
+                                  ref={input3Ref}
+                                  name="input3"
                                 />
                               </div>
                               <div className="w-16 h-16 ">
@@ -121,6 +174,10 @@ const OtpModal: React.FC<Props> = ({ isOpen, closeModal, username }) => {
                                   onChange={handleSmscode}
                                   className="flex flex-col items-center justify-center w-full h-full px-5 text-lg text-center bg-white border border-gray-200 outline-none appearance-none rounded-xl focus:bg-gray-50 focus:ring-1 ring-primary"
                                   type="text"
+                                  maxLength={1}
+                                  onKeyUp={handleKeyUp}
+                                  ref={input4Ref}
+                                  name="input4"
                                 />
                               </div>
                               <div className="w-16 h-16 ">
@@ -128,6 +185,10 @@ const OtpModal: React.FC<Props> = ({ isOpen, closeModal, username }) => {
                                   onChange={handleSmscode}
                                   className="flex flex-col items-center justify-center w-full h-full px-5 text-lg text-center bg-white border border-gray-200 outline-none appearance-none rounded-xl focus:bg-gray-50 focus:ring-1 ring-primary"
                                   type="text"
+                                  maxLength={1}
+                                  onKeyUp={handleKeyUp}
+                                  ref={input5Ref}
+                                  name="input5"
                                 />
                               </div>
                               <div className="w-16 h-16 ">
@@ -135,6 +196,10 @@ const OtpModal: React.FC<Props> = ({ isOpen, closeModal, username }) => {
                                   onChange={handleSmscode}
                                   className="flex flex-col items-center justify-center w-full h-full px-5 text-lg text-center bg-white border border-gray-200 outline-none appearance-none rounded-xl focus:bg-gray-50 focus:ring-1 ring-primary"
                                   type="text"
+                                  maxLength={1}
+                                  onKeyUp={handleKeyUp}
+                                  ref={input6Ref}
+                                  name="input6"
                                 />
                               </div>
                             </div>

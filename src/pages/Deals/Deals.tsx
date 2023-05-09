@@ -4,11 +4,14 @@ import SearchInput from "../../components/SearchInput";
 import Filter from "../../components/Filter";
 import OrderDate from "../../components/OrderDate";
 import DealsModal from "../../components/Modals/DealsModal";
-
+import AddBtn from "../../components/AddBtn";
+import  useSWR  from "swr";
+import { DealsGetAll } from "../../api";
 const Deals = () => {
   let [isOpen, setIsOpen] = useState<boolean>(false);
-
-
+  const [modalItem,setModalItem]=useState({})
+const[process,setProcess]=useState("")
+const[orderId,setOrderId]=useState<number>(0)
   const closeModal = (): void => {
     setIsOpen(false);
   };
@@ -16,6 +19,11 @@ const Deals = () => {
   const openModal = (): void => {
     setIsOpen(true);
   };
+  const { data, error, isLoading } = useSWR(
+     "/api/OrderAdmin/GetAll",
+    (key) => DealsGetAll.user(key,)
+  );
+  console.log(data,"dataa")
 
 
   const headers: IHeaders[] = [
@@ -39,23 +47,35 @@ const Deals = () => {
     },
     {
       id: 2,
-      title: "Tarix",
+      title: "Normative Deadline",
     },
     {
       id: 3,
-      title: "YK",
+      title: "Actual Deadline",
     },
     {
       id: 4,
-      title: "Bina",
+      title: "Description",
     },
     {
       id: 5,
-      title: "Mənzil",
+      title: "Order Class",
     },
     {
       id: 6,
-      title: "Düzəlt",
+      title: "Order Source",
+    },
+    {
+      id: 7,
+      title: "Order Type",
+    },
+    {
+      id: 8,
+      title: "Phone Number",
+    },
+    {
+      id: 9,
+      title: "Edit",
     },
   ];
 
@@ -66,6 +86,9 @@ const Deals = () => {
           Ümumi: 178 Sakin
         </p>{" "}
         <div className="flex gap-4 items-center">
+        <AddBtn openModal={openModal}  setProcess={setProcess}
+         modal={<DealsModal isOpen={isOpen} closeModal={closeModal}   process={process} orderId={orderId} /> }
+        />
       
           <OrderDate/>
           
@@ -75,8 +98,11 @@ const Deals = () => {
       </div>
       <Tables
         openModal={openModal}
-        modal={<DealsModal isOpen={isOpen} closeModal={closeModal} />}
+        modal={<DealsModal isOpen={isOpen} closeModal={closeModal}  process={process} orderId={orderId}  />}
         headers={headers}
+        data={data}
+        setProcess={setProcess}
+        setOrderId={setOrderId}
       />
     </Fragment>
   );

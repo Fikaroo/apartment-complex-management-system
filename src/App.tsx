@@ -31,27 +31,51 @@ const App = () => {
           }
         />
         <Route
-          path="/customers"
+          path="/control-panel"
           element={
             <Layout>
               <Customers />
             </Layout>
           }
         />
-
-        <Route
-          path="/customers/:customerId"
+          <Route
+          path="/control-panel/deals"
           element={
             <Layout>
-              <CustomerDetail />
+            <Deals />
+          </Layout>
+          }
+        />
+<Route
+          path="/control-panel/deals/:dealId"
+          element={
+            <Layout>
+            <Deals />
+          </Layout>
+          }
+        />
+        
+        <Route
+          path="/references"
+          element={
+            <Layout>
+              <Deals />
+            </Layout>
+          }
+        />
+         <Route
+          path="/references/customers"
+          element={
+            <Layout>
+              <Deals />
             </Layout>
           }
         />
         <Route
-          path="/deals"
+          path="/references/customers/:customerId"
           element={
             <Layout>
-              <Deals />
+              <CustomerDetail />
             </Layout>
           }
         />

@@ -44,7 +44,7 @@ const[roleName,SetRole]=useState("user")
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      const response = await RegisterUser.user("/api/Account/RegisterUser", {
+      const response = await RegisterUser.user("/api/AccountAdmin/RegisterAdmin", {
         name,
         surname,
         patrionimyc,

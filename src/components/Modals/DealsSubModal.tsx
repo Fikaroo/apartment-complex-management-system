@@ -7,36 +7,35 @@ type Props = {
   isOpenSub: boolean;
   closeModalSub: () => void;
 };
-const array=[
-    {
-        name:'Aysel Memmedova',
-        email:"aysel@gmail.com"
-    },
-    {
-        name:'Aysel Memmedova',
-        email:"aysel@gmail.com"
-    },
-    {
-        name:'Aysel Memmedova',
-        email:"aysel@gmail.com"
-    },
-    {
-        name:'Aysel Memmedova',
-        email:"aysel@gmail.com"
-    },
-    {
-        name:'Aysel Memmedova',
-        email:"aysel@gmail.com"
-    },
-    {
-        name:'Aysel Memmedova',
-        email:"aysel@gmail.com"
-    },
-    {
-        name:'Aysel Memmedova',
-        email:"aysel@gmail.com"
-    },
-]
+const array = [
+  { id: 1, name: "Aysel Memmedova", email: "aysel@gmail.com" },
+  {
+    id: 2,
+    name: "Aysel Memmedova",
+    email: "aysel@gmail.com",
+  },
+  {
+    id: 3,
+    name: "Aysel Memmedova",
+    email: "aysel@gmail.com",
+  },
+  {
+    id: 4,
+    name: "Aysel Memmedova",
+    email: "aysel@gmail.com",
+  },
+  {
+    id: 5,
+    name: "Aysel Memmedova",
+    email: "aysel@gmail.com",
+  },
+  {
+    id: 6,
+    name: "Aysel Memmedova",
+    email: "aysel@gmail.com",
+  },
+  { id: 7, name: "Aysel Memmedova", email: "aysel@gmail.com" },
+];
 const DealsSubModal: React.FC<Props> = ({ isOpenSub, closeModalSub }) => {
   return (
     <Fragment>
@@ -76,38 +75,35 @@ const DealsSubModal: React.FC<Props> = ({ isOpenSub, closeModalSub }) => {
                       className="w-6 h-6 cursor-pointer fill-icon"
                     />
                   </Dialog.Title>
-                <div className="flex flex-col">
-                    {
-                        array.map((item)=>(
-                            <div className="mt-4 flex items-center justify-between">
-                            <div className="flex justify-between items-start w-1/2">
-                              {" "}
-                              <div className="w-[40px] h-[40px]">
-                                <img src="/Avatar.svg" alt="" />
-                              </div>
-                              <div className="flex flex-col items-start">
-                                <p className="font-bold font-inter text-[16px] leading-30 text-dark">
-                           {item.name}
-                                </p>
-                                <p className="font-medium font-inter text-[14px] leading-30 text-icon text-start">{item.email}</p>
-                              </div>
-                            </div>
-                            <div className="w-1/2 flex justify-end items-center">
-                              <ArrowRightIcon className="w-6 h-6 cursor-pointer fill-primary text-primary " />
-                            </div>
+                  <div className="flex flex-col">
+                    {array.map((item) => (
+                      <div
+                        key={item.id}
+                        className="mt-4 flex items-center justify-between"
+                      >
+                        <div className="flex justify-between items-start w-1/2">
+                          {" "}
+                          <div className="w-[40px] h-[40px]">
+                            <img src="/Avatar.svg" alt="" />
                           </div>
-                        ))
-                    }
-           <p className="mt-4 font-medium font-inter text-[16px] leading-30 text-primary text-center cursor-pointer">Daha çox</p>
-                
-                    </div> 
-
-                 
-
-
-
-
-                  
+                          <div className="flex flex-col items-start">
+                            <p className="font-bold font-inter text-[16px] leading-30 text-dark">
+                              {item.name}
+                            </p>
+                            <p className="font-medium font-inter text-[14px] leading-30 text-icon text-start">
+                              {item.email}
+                            </p>
+                          </div>
+                        </div>
+                        <div className="w-1/2 flex justify-end items-center">
+                          <ArrowRightIcon className="w-6 h-6 cursor-pointer fill-primary text-primary " />
+                        </div>
+                      </div>
+                    ))}
+                    <p className="mt-4 font-medium font-inter text-[16px] leading-30 text-primary text-center cursor-pointer">
+                      Daha çox
+                    </p>
+                  </div>
                 </Dialog.Panel>
               </Transition.Child>
             </div>

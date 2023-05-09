@@ -10,10 +10,10 @@ const Header = () => {
       case "/":
         return setHeaderName("İdarəetmə Paneli");
 
-      case "/customers":
-        return setHeaderName("Sakinlər");
+      case "/references":
+        return setHeaderName("References");
 
-      case "/deals":
+      case "/control-panel/deals":
         return setHeaderName("Sifarişlər");
       case "/sos":
         return setHeaderName("Sos bildirişləri");

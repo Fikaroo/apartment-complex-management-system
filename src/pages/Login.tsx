@@ -29,7 +29,7 @@ const Login = () => {
   const [isLogged, setLogged] = useState(false);
 
   const { data, error, isLoading } = useSWR(
-    isLogged ? "/api/Account/LoginAdmin" : null,
+    isLogged ? "/api/AccountAdmin/LoginAdmin" : null,
     (key) => LoginApi.user(key, { username, password })
   );
 
@@ -37,8 +37,13 @@ const Login = () => {
     e.preventDefault();
 
     setLogged(true);
+    if(data?.statusCode === 201){
+      openModal()
+    }
+    else if(error){
+      console.log(error,"eroor")
+    }
 
-    console.log(data?.statusCode === 201 ? openModal() : "", error);
   };
 
   return (
@@ -194,6 +199,7 @@ const Login = () => {
               </div>
 
               <button
+             
                 type="submit"
                 className="w-full bg-primary hover:bg-primary/95 rounded-lg text-[#FCFCFC] font-semibold text-sm py-3.5 mt-16"
               >
