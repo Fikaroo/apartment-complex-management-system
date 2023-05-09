@@ -99,7 +99,7 @@ const NavItem = ({
                 return (
                   <NavLink
                     key={child.path}
-                    to={`/references/${child.path}`}
+                    to={`${path}/${child.path}`}
                     className="flex flex-col text-[16px] font-medium cursor-pointer text-gray-500 mt-4 ml-6"
                   >
                     {child.name}
