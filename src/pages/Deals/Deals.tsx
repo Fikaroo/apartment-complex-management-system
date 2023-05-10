@@ -12,10 +12,11 @@ const Deals = () => {
   const [modalItem,setModalItem]=useState({})
 const[process,setProcess]=useState("")
 const[orderId,setOrderId]=useState<number>(0)
+const [selectedRow, setSelectedRow] = useState(null);
   const closeModal = (): void => {
     setIsOpen(false);
   };
- 
+ console.log(selectedRow,"selectedRow")
   const openModal = (): void => {
     setIsOpen(true);
   };
@@ -23,7 +24,7 @@ const[orderId,setOrderId]=useState<number>(0)
      "/api/OrderAdmin/GetAll",
     (key) => DealsGetAll.user(key,)
   );
-  console.log(data,"dataa")
+ 
 
 
   const headers: IHeaders[] = [
@@ -75,6 +76,14 @@ const[orderId,setOrderId]=useState<number>(0)
     },
     {
       id: 9,
+      title: "Status",
+    },
+    {
+      id: 10,
+      title: "Executor",
+    },
+    {
+      id: 11,
       title: "Edit",
     },
   ];
@@ -87,7 +96,7 @@ const[orderId,setOrderId]=useState<number>(0)
         </p>{" "}
         <div className="flex gap-4 items-center">
         <AddBtn openModal={openModal}  setProcess={setProcess}
-         modal={<DealsModal isOpen={isOpen} closeModal={closeModal}   process={process} orderId={orderId} /> }
+         modal={<DealsModal isOpen={isOpen} closeModal={closeModal}   process={process} deleteId={orderId} selectedRow={selectedRow}  /> }
         />
       
           <OrderDate/>
@@ -98,11 +107,12 @@ const[orderId,setOrderId]=useState<number>(0)
       </div>
       <Tables
         openModal={openModal}
-        modal={<DealsModal isOpen={isOpen} closeModal={closeModal}  process={process} orderId={orderId}  />}
+        modal={<DealsModal isOpen={isOpen} closeModal={closeModal}  process={process} deleteId={orderId} selectedRow={selectedRow}  />}
         headers={headers}
         data={data}
         setProcess={setProcess}
         setOrderId={setOrderId}
+        setSelectedRow={setSelectedRow}
       />
     </Fragment>
   );

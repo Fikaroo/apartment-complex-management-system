@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { Fragment, useState } from "react";
 import { XCircleIcon } from "@heroicons/react/24/solid";
@@ -6,6 +6,7 @@ import { redirect, useNavigate } from "react-router-dom";
 import { LoginApprove } from "../../api";
 import useSWR from "swr";
 import { useRef } from "react";
+import useSWRMutation from "swr/mutation";
 
 type Props = {
   isOpen: boolean;
@@ -15,12 +16,19 @@ type Props = {
 
 const OtpModal: React.FC<Props> = ({ isOpen, closeModal, username }) => {
   const [isLogged, setLogged] = useState(false);
-  const { data, error, isLoading } = useSWR(
-    isLogged ? "/api/AccountAdmin/LoginApproveAdmin" : null,
-    (key) => LoginApprove.user(key, { username, smsCode })
-  );
-  const nav = useNavigate();
   const [smsCode, setSmscode] = useState<string>("");
+  // const { data, error, isLoading } = useSWR(
+  //   isLogged ? "/api/AccountAdmin/LoginApproveAdmin" : null,
+  //   (key) => LoginApprove.user(key, { username, smsCode })
+  // );
+
+  const { trigger, data, error, isMutating } = useSWRMutation(
+    "/api/AccountAdmin/LoginApproveAdmin",
+    LoginApprove.user
+  );
+
+  const nav = useNavigate();
+
 
   const input1Ref = useRef<HTMLInputElement>(null);
   const input2Ref = useRef<HTMLInputElement>(null);
@@ -75,16 +83,20 @@ const OtpModal: React.FC<Props> = ({ isOpen, closeModal, username }) => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    trigger({ username, smsCode });	
 console.log(data?.data?.token,"tokennn")
-    setLogged(true);
+
+   
+  };
+  useEffect(()=>{
     if(data?.statusCode === 201){
       localStorage.setItem("user-token",data?.data?.token);
-  nav("/");
+  nav("/dashboard");
     }
     else if(error){
       console.log(error,"eroor")
     }
-  };
+  },[data])
 
 
   return (
@@ -206,7 +218,10 @@ console.log(data?.data?.token,"tokennn")
 
                             <div className="flex flex-col space-y-5">
                               <div>
-                                <button className="flex flex-row items-center justify-center w-full py-5 text-sm text-center text-white border shadow-sm outline-none rounded-xl bg-border-none bg-primary">
+                                <button
+                                type="submit"
+                                disabled={isMutating}
+                                className="flex flex-row items-center justify-center w-full py-5 text-sm text-center text-white border shadow-sm outline-none rounded-xl bg-border-none bg-primary">
                                   Verify Account
                                 </button>
                               </div>

@@ -26,12 +26,9 @@ export const LoginApi = {
 export const LoginApprove = {
   user: async (
     path: string,
-    { username, smsCode }: { username: string; smsCode: string }
+    { arg }: { arg: { username: string; smsCode: string } }
   ) => {
-    const { data } = await instance.post(path, {
-      userName: username,
-      smsCode: smsCode,
-    });
+    const { data } = await instance.post(path, arg);
     return data;
   },
 };
@@ -79,44 +76,61 @@ export const CreateDeal = {
   user: async (
     path: string,
     {
-      description,
-      statusId,
-      orderTypeId,
-      orderSourceId,
-      priorityId,
-      orderClassId,
-      appUserId,
-      actualDeadline,
-      normativeDeadline,
+      arg,
     }: {
-      description: string;
-      statusId: number;
-      orderTypeId: number;
-      orderSourceId: number;
-      priorityId: number;
-      orderClassId: number;
-      appUserId: string;
-      actualDeadline: string;
-      normativeDeadline: string;
+      arg: {
+        orderSourceId: number;
+        orderTypeId: number;
+        priorityId: number;
+        statusId: number;
+        orderClassId: number;
+        description: string;
+        appUserId: string;
+        actualDeadline: string;
+        normativeDeadline: string;
+      };
     }
   ) => {
-    const { data } = await admin.post(path, {
-      description: description,
-      statusId: statusId,
-      orderTypeId: orderTypeId,
-      orderSourceId: orderSourceId,
-      priorityId: priorityId,
-      orderClassId: orderClassId,
-      appUserId: appUserId,
-      actualDeadline: actualDeadline,
-      normativeDeadline: normativeDeadline,
-    });
+    const { data } = await admin.post(path, arg);
     return data;
   },
 };
 export const Delete = {
-  user: async (path: string, deleteId: number) => {
-    const { data } = await admin.delete(`${path}?Id=${deleteId}`);
+  user: async (path: string,
+    {
+      arg,
+    }: {
+      arg: {
+        deleteId: number;
+      };
+    }) => {
+      console.log(arg,"argg");
+    const { data } = await admin.delete(`${path}?Id=${arg.deleteId}`);
+    return data;
+  },
+};
+
+export const EditDeal = {
+  user: async (
+    path: string,
+    {
+      arg,
+    }: {
+      arg: {
+        orderSourceId: number;
+        orderTypeId: number;
+        priorityId: number;
+        statusId: number;
+        orderClassId: number;
+        description: string;
+        appUserId: string;
+        actualDeadline: string;
+        normativeDeadline: string;
+        id:number
+      };
+    }
+  ) => {
+    const { data } = await admin.put(path, arg);
     return data;
   },
 };

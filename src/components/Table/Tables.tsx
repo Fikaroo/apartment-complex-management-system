@@ -18,6 +18,7 @@ type PropsType = {
   data: any;
   setProcess: React.Dispatch<React.SetStateAction<string>>;
   setOrderId: React.Dispatch<React.SetStateAction<number>>;
+  setSelectedRow: React.Dispatch<React.SetStateAction<any>>;
 };
 
 const Tables = ({
@@ -27,7 +28,26 @@ const Tables = ({
   data,
   setProcess,
   setOrderId,
+  setSelectedRow
 }: PropsType) => {
+  const optionsStatus = [
+    { id: 0, name: "NewOrder+" },
+    { id: 1, name: "Appointed" },
+    { id: 2, name: "Inprogress" },
+    { id: 3, name: "OnPause" },
+    { id: 4, name: "OnConfirmation" },
+    { id: 5, name: "Completed" },
+    { id: 6, name: "Rejected" },
+    { id: 7, name: "Returned" },
+    { id: 8, name: "Cancelled" },
+    { id: 9, name: "Closed" },
+    { id: 10, name: "EnteredIncorrectly" },
+  ];
+
+  function isValidDate(dateString:any) {
+    const date = new Date(dateString);
+    return !isNaN(date.getTime());
+  }
   return (
     <div className="w-full mt-8 overflow-x-auto">
       <table className="table w-full table-auto">
@@ -45,7 +65,7 @@ const Tables = ({
         </thead>
         <tbody>
           {data?.data?.map((item: any) => (
-            <tr key={item.id}>
+            <tr key={item.id} >
               <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
                 <Link to="/customers/1" className="flex items-center" />
 
@@ -62,12 +82,12 @@ const Tables = ({
               <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
                 <div className="ml-4">
                   <div className="text-sm font-medium leading-5 text-gray-900">
-                    {item.actualDeadline}
+                  { new Date(item.actualDeadline).toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' }).split('/').reverse().join('-') }
                   </div>
                 </div>
               </td>
               <td className="px-6 py-4 text-sm leading-5 text-gray-500 whitespace-no-wrap border-b border-gray-200">
-                {item.normativeDeadline}
+              {new Date(item.normativeDeadline).toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' }).split('/').reverse().join('-')}
               </td>
               <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
                 <div className="text-sm leading-5 text-gray-900">
@@ -84,8 +104,15 @@ const Tables = ({
               <td className="px-6 py-4 text-sm leading-5 text-gray-500 whitespace-no-wrap border-b border-gray-200">
                 {item.orderType.name}
               </td>
+             
               <td className="px-6 py-4 text-sm leading-5 text-gray-500 whitespace-no-wrap border-b border-gray-200">
                 {item.phoneNumber}
+              </td>
+              <td className="px-6 py-4 text-sm leading-5 text-gray-500 whitespace-no-wrap border-b border-gray-200">
+              {optionsStatus.find(option => option.id === item.statusId)?.name}
+              </td>
+              <td className="px-6 py-4 text-sm leading-5 text-gray-500 whitespace-no-wrap border-b border-gray-200">
+       
               </td>
               <td className="px-6 py-4 text-sm font-medium leading-5 text-right whitespace-no-wrap border-b border-gray-200">
                 <img
@@ -93,6 +120,11 @@ const Tables = ({
                     openModal();
                     setProcess("Edit");
                     setOrderId(item.id);
+                    setSelectedRow({
+                      ...item,
+                      actualDeadline: new Date(item.actualDeadline).toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' }).split('/').reverse().join('-'),
+                      normativeDeadline: new Date(item.normativeDeadline).toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' }).split('/').reverse().join('-')
+                    });
                   }}
                   className="ml-4 cursor-pointer"
                   src="/icons/edit.svg"
