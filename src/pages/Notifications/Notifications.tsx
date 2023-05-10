@@ -41,11 +41,11 @@ const Notification = () => {
           <Filter />
         </div>
       </div>
-      <Tables
+      {/* <Tables
         openModal={openModal}
         modal={<SosModal isOpen={isOpen} closeModal={closeModal} />}
         headers={headers}
-      />
+      /> */}
     </Fragment>
   );
 };

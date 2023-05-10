@@ -71,22 +71,23 @@ const Customers = () => {
           Ümumi: 178 Sakin
         </p>{" "}
         <div className="flex items-center gap-4">
-          <AddBtn
+          {/* <AddBtn
+        
             openModal={openModalAdd}
             modal={
               <AddCustomerModal isOpen={isOpenAdd} closeModal={closeModalAdd} />
             }
-          />
+          /> */}
           <OrderDate />
 
           <Filter />
         </div>
       </div>
-      <Tables
+      {/* <Tables
         openModal={openModal}
         modal={<SosModal isOpen={isOpen} closeModal={closeModal} />}
         headers={headers}
-      />
+      /> */}
     </Fragment>
   );
 };
