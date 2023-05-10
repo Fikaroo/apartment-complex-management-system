@@ -1,32 +1,46 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import Tables, { IHeaders } from "../../components/Table/Tables";
 import SearchInput from "../../components/SearchInput";
 import Filter from "../../components/Filter";
 import OrderDate from "../../components/OrderDate";
 import DealsModal from "../../components/Modals/DealsModal";
 import AddBtn from "../../components/AddBtn";
-import  useSWR  from "swr";
+import useSWR from "swr";
 import { DealsGetAll } from "../../api";
+import useStoreData from "../../hooks/useStoreData";
+import { useDealsStore } from "../../state/store";
 const Deals = () => {
   let [isOpen, setIsOpen] = useState<boolean>(false);
-  const [modalItem,setModalItem]=useState({})
-const[process,setProcess]=useState("")
-const[orderId,setOrderId]=useState<number>(0)
-const [selectedRow, setSelectedRow] = useState(null);
+  const [modalItem, setModalItem] = useState({});
+  const [process, setProcess] = useState("");
+  const [orderId, setOrderId] = useState<number>(0);
+  const [selectedRow, setSelectedRow] = useState(null);
+
   const closeModal = (): void => {
     setIsOpen(false);
   };
- console.log(selectedRow,"selectedRow")
+
+  console.log(selectedRow, "selectedRow");
+
   const openModal = (): void => {
     setIsOpen(true);
   };
+
   const { data, error, isLoading } = useSWR(
-     "/api/OrderAdmin/GetAll",
-    (key) => DealsGetAll.user(key,)
+    "/api/OrderAdmin/GetAll",
+    (key) => DealsGetAll.user(key),
+    { revalidateIfStale: true }
   );
- 
+  // const dealsStore = useDealsStore();
 
+  // useEffect(() => {}, []);
 
+  // console.log(dealsStore);
+  // useStoreData({
+  //   path: "/api/OrderAdmin/GetAll",
+  //   fetcher: DealsGetAll,
+  //   storeFunc: dealsStore?.updateDeal,
+  // });
   const headers: IHeaders[] = [
     {
       id: 1,
@@ -94,20 +108,37 @@ const [selectedRow, setSelectedRow] = useState(null);
         <p className="font-bold font-inter text-16 leading-30 text-dark">
           Ümumi: 178 Sakin
         </p>{" "}
-        <div className="flex gap-4 items-center">
-        <AddBtn openModal={openModal}  setProcess={setProcess}
-         modal={<DealsModal isOpen={isOpen} closeModal={closeModal}   process={process} deleteId={orderId} selectedRow={selectedRow}  /> }
-        />
-      
-          <OrderDate/>
-          
+        <div className="flex items-center gap-4">
+          <AddBtn
+            openModal={openModal}
+            setProcess={setProcess}
+            modal={
+              <DealsModal
+                isOpen={isOpen}
+                closeModal={closeModal}
+                process={process}
+                deleteId={orderId}
+                selectedRow={selectedRow}
+              />
+            }
+          />
+
+          <OrderDate />
+
           <Filter />
-        
         </div>
       </div>
       <Tables
         openModal={openModal}
-        modal={<DealsModal isOpen={isOpen} closeModal={closeModal}  process={process} deleteId={orderId} selectedRow={selectedRow}  />}
+        modal={
+          <DealsModal
+            isOpen={isOpen}
+            closeModal={closeModal}
+            process={process}
+            deleteId={orderId}
+            selectedRow={selectedRow}
+          />
+        }
         headers={headers}
         data={data}
         setProcess={setProcess}

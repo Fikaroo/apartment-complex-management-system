@@ -15,7 +15,6 @@ type Props = {
 };
 
 const OtpModal: React.FC<Props> = ({ isOpen, closeModal, username }) => {
-  const [isLogged, setLogged] = useState(false);
   const [smsCode, setSmscode] = useState<string>("");
   // const { data, error, isLoading } = useSWR(
   //   isLogged ? "/api/AccountAdmin/LoginApproveAdmin" : null,
@@ -28,7 +27,6 @@ const OtpModal: React.FC<Props> = ({ isOpen, closeModal, username }) => {
   );
 
   const nav = useNavigate();
-
 
   const input1Ref = useRef<HTMLInputElement>(null);
   const input2Ref = useRef<HTMLInputElement>(null);
@@ -61,43 +59,32 @@ const OtpModal: React.FC<Props> = ({ isOpen, closeModal, username }) => {
           break;
       }
     }
-
   };
-
 
   const handleSmscode = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = e.target.value;
-    const newSmscode = smsCode + val; 
+    const newSmscode = smsCode + val;
     if (val === "") {
       const updatedSmsCode = smsCode.slice(0, -1);
       setSmscode(updatedSmsCode);
     } else {
       setSmscode(newSmscode);
     }
-
   };
-
-
-
- 
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    trigger({ username, smsCode });	
-console.log(data?.data?.token,"tokennn")
-
-   
+    trigger({ username, smsCode });
+    console.log(data?.data?.token, "tokennn");
   };
-  useEffect(()=>{
-    if(data?.statusCode === 201){
-      localStorage.setItem("user-token",data?.data?.token);
-  nav("/dashboard");
+  useEffect(() => {
+    if (data?.statusCode === 201) {
+      localStorage.setItem("user-token", data?.data?.token);
+      nav("/dashboard");
+    } else if (error) {
+      console.log(error, "eroor");
     }
-    else if(error){
-      console.log(error,"eroor")
-    }
-  },[data])
-
+  }, [data]);
 
   return (
     <Transition appear show={isOpen} as={Fragment}>
@@ -219,9 +206,10 @@ console.log(data?.data?.token,"tokennn")
                             <div className="flex flex-col space-y-5">
                               <div>
                                 <button
-                                type="submit"
-                                disabled={isMutating}
-                                className="flex flex-row items-center justify-center w-full py-5 text-sm text-center text-white border shadow-sm outline-none rounded-xl bg-border-none bg-primary">
+                                  type="submit"
+                                  disabled={isMutating}
+                                  className="flex flex-row items-center justify-center w-full py-5 text-sm text-center text-white border shadow-sm outline-none rounded-xl bg-border-none bg-primary"
+                                >
                                   Verify Account
                                 </button>
                               </div>

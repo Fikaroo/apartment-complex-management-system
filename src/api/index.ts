@@ -5,14 +5,14 @@ const baseUrl = import.meta.env.VITE_BASE_URL;
 const instance = axios.create({
   baseURL: baseUrl,
 });
+
 const admin = axios.create({
   baseURL: baseUrl,
   headers: {
-    Authorization: `Bearer ${localStorage.getItem("user-token")}`,
-
     "Content-type": "application/json",
   },
 });
+
 export const LoginApi = {
   user: async (
     path: string,
@@ -68,7 +68,11 @@ export const RegisterUser = {
 
 export const DealsGetAll = {
   user: async (path: string) => {
-    const { data } = await admin.get(path);
+    const { data } = await admin.get(path, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("user-token")}`,
+      },
+    });
     return data;
   },
 };
@@ -91,21 +95,31 @@ export const CreateDeal = {
       };
     }
   ) => {
-    const { data } = await admin.post(path, arg);
+    const { data } = await admin.post(path, arg, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("user-token")}`,
+      },
+    });
     return data;
   },
 };
 export const Delete = {
-  user: async (path: string,
+  user: async (
+    path: string,
     {
       arg,
     }: {
       arg: {
         deleteId: number;
       };
-    }) => {
-      console.log(arg,"argg");
-    const { data } = await admin.delete(`${path}?Id=${arg.deleteId}`);
+    }
+  ) => {
+    console.log(arg, "argg");
+    const { data } = await admin.delete(`${path}?Id=${arg.deleteId}`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("user-token")}`,
+      },
+    });
     return data;
   },
 };
@@ -126,11 +140,15 @@ export const EditDeal = {
         appUserId: string;
         actualDeadline: string;
         normativeDeadline: string;
-        id:number
+        id: number;
       };
     }
   ) => {
-    const { data } = await admin.put(path, arg);
+    const { data } = await admin.put(path, arg, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("user-token")}`,
+      },
+    });
     return data;
   },
 };

@@ -55,7 +55,7 @@ const NavItem = ({
         key={path}
         to={path}
         className={`flex  items-center relative justify-center w-12 px-2 py-3 group-hover:w-full border border-line rounded-full ${
-          path === pathname ? "bg-primary" : "bg-white"
+          isExpanded ? "bg-primary" : "bg-white"
         }`}
         onClick={() => {
           pathname == "/" ? setIsExpanded(false) : null;
@@ -66,11 +66,11 @@ const NavItem = ({
           onClick={() => setIsExpanded(!isExpanded)}
         >
           <div className="flex items-center justify-center w-full gap-1 px-2 group-hover:justify-between">
-            <div>{path === pathname ? iconSolid : icon}</div>
+            <div>{isExpanded ? iconSolid : icon}</div>
             <div
-              className={`hidden scale-0 w-[80%] group-hover:scale-100 group-hover:flex duration-400 items-center h-full font-semibold  ${
-                path === pathname ? "text-white bg-primary" : "bg-transparent"
-              }  transition-all rounded-full`}
+              className={`hidden scale-0 w-[80%] whitespace-nowrap group-hover:scale-100 group-hover:flex items-center h-full font-semibold  ${
+                isExpanded ? "text-white bg-primary" : "bg-transparent"
+              }  rounded-full`}
             >
               {name}
             </div>
@@ -99,7 +99,7 @@ const NavItem = ({
                 return (
                   <NavLink
                     key={child.path}
-                    to={`${path}/${child.path}`}
+                    to={`${child.path}`}
                     className="flex flex-col text-[16px] font-medium cursor-pointer text-gray-500 mt-4 ml-6"
                   >
                     {child.name}
@@ -122,23 +122,23 @@ const Navbar = () => {
     },
     {
       name: "References",
-      path: "/references",
+      path: "",
       icon: <BriefcaseIcon className="w-5 h-5" />,
       iconSolid: <BriefcaseIconSolid className="w-5 h-5 fill-white" />,
       children: [
-        { name: "Customers", path: "customers" },
-        { name: "Objects", path: "objects" },
-        { name: "Residents", path: "residents" },
-        { name: "Buildings", path: "buildings" },
-        { name: "Companies", path: "companies" },
+        { name: "Customers", path: "/references/customers" },
+        { name: "Objects", path: "/references/objects" },
+        { name: "Residents", path: "/references/residents" },
+        { name: "Buildings", path: "/references/buildings" },
+        { name: "Companies", path: "/references/companies" },
       ],
     },
     {
       name: "Control Panel",
-      path: "/control-panel",
+      path: "",
       icon: <UsersIcon className="w-5 h-5" />,
       iconSolid: <UsersIconSolid className="w-5 h-5 fill-white" />,
-      children: [{ name: "Deals", path: "deals" }],
+      children: [{ name: "Deals", path: "/control-panel/deals" }],
     },
     {
       name: "Sos",

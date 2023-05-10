@@ -1,7 +1,7 @@
 import { Dialog, Transition } from "@headlessui/react";
 import { Fragment, useState } from "react";
 import SosModal from "../Modals/SosModal";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 export interface IHeaders {
   isStatus?: boolean;
   isAvatar?: boolean;
@@ -28,8 +28,10 @@ const Tables = ({
   data,
   setProcess,
   setOrderId,
-  setSelectedRow
+  setSelectedRow,
 }: PropsType) => {
+  const nav = useNavigate();
+
   const optionsStatus = [
     { id: 0, name: "NewOrder+" },
     { id: 1, name: "Appointed" },
@@ -44,10 +46,13 @@ const Tables = ({
     { id: 10, name: "EnteredIncorrectly" },
   ];
 
-  function isValidDate(dateString:any) {
+  function isValidDate(dateString: any) {
     const date = new Date(dateString);
     return !isNaN(date.getTime());
   }
+
+  const handleTableRow = () => nav("/customers/detail/1");
+
   return (
     <div className="w-full mt-8 overflow-x-auto">
       <table className="table w-full table-auto">
@@ -65,36 +70,51 @@ const Tables = ({
         </thead>
         <tbody>
           {data?.data?.map((item: any) => (
-            <tr key={item.id} >
+            <tr
+              key={item.id}
+              className="cursor-pointer  hover:bg-gray-200"
+              onClick={handleTableRow}
+            >
               <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-                <Link to="/customers/1" className="flex items-center" />
-
-                <Link to="/customers/detail/1" className="flex items-center">
-                  <div className="flex-shrink-0 w-10 h-10">
-                    <img
-                      className="rounded-full"
-                      src="/icons/exclamation.svg"
-                      alt=""
-                    />
-                  </div>
-                </Link>
+                <div className="flex-shrink-0 w-10 h-10">
+                  <img
+                    className="rounded-full"
+                    src="/icons/exclamation.svg"
+                    alt=""
+                  />
+                </div>
               </td>
               <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
                 <div className="ml-4">
                   <div className="text-sm font-medium leading-5 text-gray-900">
-                  { new Date(item.actualDeadline).toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' }).split('/').reverse().join('-') }
+                    {new Date(item.actualDeadline)
+                      .toLocaleDateString("en-GB", {
+                        day: "2-digit",
+                        month: "2-digit",
+                        year: "numeric",
+                      })
+                      .split("/")
+                      .reverse()
+                      .join("-")}
                   </div>
                 </div>
               </td>
               <td className="px-6 py-4 text-sm leading-5 text-gray-500 whitespace-no-wrap border-b border-gray-200">
-              {new Date(item.normativeDeadline).toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' }).split('/').reverse().join('-')}
+                {new Date(item.normativeDeadline)
+                  .toLocaleDateString("en-GB", {
+                    day: "2-digit",
+                    month: "2-digit",
+                    year: "numeric",
+                  })
+                  .split("/")
+                  .reverse()
+                  .join("-")}
               </td>
               <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
                 <div className="text-sm leading-5 text-gray-900">
                   {item.description}
                 </div>
               </td>
-
               <td className="px-6 py-4 text-sm leading-5 text-gray-500 whitespace-no-wrap border-b border-gray-200">
                 {item.orderClass.name}
               </td>
@@ -104,17 +124,20 @@ const Tables = ({
               <td className="px-6 py-4 text-sm leading-5 text-gray-500 whitespace-no-wrap border-b border-gray-200">
                 {item.orderType.name}
               </td>
-             
               <td className="px-6 py-4 text-sm leading-5 text-gray-500 whitespace-no-wrap border-b border-gray-200">
                 {item.phoneNumber}
               </td>
               <td className="px-6 py-4 text-sm leading-5 text-gray-500 whitespace-no-wrap border-b border-gray-200">
-              {optionsStatus.find(option => option.id === item.statusId)?.name}
+                {
+                  optionsStatus.find((option) => option.id === item.statusId)
+                    ?.name
+                }
               </td>
-              <td className="px-6 py-4 text-sm leading-5 text-gray-500 whitespace-no-wrap border-b border-gray-200">
-       
-              </td>
-              <td className="px-6 py-4 text-sm font-medium leading-5 text-right whitespace-no-wrap border-b border-gray-200">
+              <td className="px-6 py-4 text-sm leading-5 text-gray-500 whitespace-no-wrap border-b border-gray-200"></td>
+              <td
+                className="px-6 py-4 text-sm font-medium leading-5 text-right whitespace-no-wrap border-b border-gray-200"
+                onClick={(e) => e.stopPropagation()}
+              >
                 <img
                   onClick={() => {
                     openModal();
@@ -122,11 +145,27 @@ const Tables = ({
                     setOrderId(item.id);
                     setSelectedRow({
                       ...item,
-                      actualDeadline: new Date(item.actualDeadline).toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' }).split('/').reverse().join('-'),
-                      normativeDeadline: new Date(item.normativeDeadline).toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' }).split('/').reverse().join('-')
+                      actualDeadline: new Date(item.actualDeadline)
+                        .toLocaleDateString("en-GB", {
+                          day: "2-digit",
+                          month: "2-digit",
+                          year: "numeric",
+                        })
+                        .split("/")
+                        .reverse()
+                        .join("-"),
+                      normativeDeadline: new Date(item.normativeDeadline)
+                        .toLocaleDateString("en-GB", {
+                          day: "2-digit",
+                          month: "2-digit",
+                          year: "numeric",
+                        })
+                        .split("/")
+                        .reverse()
+                        .join("-"),
                     });
                   }}
-                  className="ml-4 cursor-pointer"
+                  className="absolute z-50 ml-4 cursor-pointer"
                   src="/icons/edit.svg"
                 />
               </td>
