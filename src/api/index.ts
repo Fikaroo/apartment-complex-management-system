@@ -12,6 +12,12 @@ const admin = axios.create({
     "Content-type": "application/json",
   },
 });
+const company = axios.create({
+  baseURL: baseUrl,
+  headers: {
+    "Content-type": "multipart/form-data",
+  },
+});
 
 export const LoginApi = {
   user: async (
@@ -199,7 +205,7 @@ export const EditObjects = {
         id: number;
         title: string;
         address: string;
-        regionId:number
+        regionId: number;
       };
     }
   ) => {
@@ -220,11 +226,118 @@ export const AddObjects = {
       arg: {
         title: string;
         address: string;
-        regionId:number
+        regionId: number;
       };
     }
   ) => {
     const { data } = await admin.post(path, arg, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("user-token")}`,
+      },
+    });
+    return data;
+  },
+};
+
+export const CreateApartment = {
+  user: async (
+    path: string,
+    {
+      arg,
+    }: {
+      arg: {
+        vendorBuildingId: number;
+        apartmentNo: string;
+        entranceNo: string;
+        area: number;
+        floorNo: number;
+      };
+    }
+  ) => {
+    const { data } = await admin.post(path, arg, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("user-token")}`,
+      },
+    });
+    return data;
+  },
+};
+
+export const EditApartment = {
+  user: async (
+    path: string,
+    {
+      arg,
+    }: {
+      arg: {
+        id: number;
+        vendorBuildingId: number;
+        apartmentNo: string;
+        entranceNo: string;
+        area: number;
+        floorNo: number;
+      };
+    }
+  ) => {
+    const { data } = await admin.put(path, arg, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("user-token")}`,
+      },
+    });
+    return data;
+  },
+};
+export const CreateCompany = {
+  user: async (
+    path: string,
+    {
+      arg,
+    }: {
+      arg: {
+    directorName:string,
+    directorSurname: string,
+    directorFatherName: string,
+    phonenumber: string,
+    email: string,
+    logo: string,
+    buildingId: number,
+    companyName: string,
+    voen: string,
+    vin: string,
+      };
+    }
+  ) => {
+    const { data } = await company.post(path, arg, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("user-token")}`,
+      },
+    });
+    return data;
+  },
+};
+
+export const EditCompany = {
+  user: async (
+    path: string,
+    {
+      arg,
+    }: {
+      arg: {
+        id: number;
+        directorName:string,
+        directorSurname: string,
+        directorFatherName: string,
+        phonenumber: string,
+        email: string,
+        logo: string,
+        buildingId: number,
+        companyName: string,
+        voen: string,
+        vin: string,
+      };
+    }
+  ) => {
+    const { data } = await admin.put(path, arg, {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("user-token")}`,
       },

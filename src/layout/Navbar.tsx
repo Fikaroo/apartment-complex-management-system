@@ -127,9 +127,10 @@ const Navbar = () => {
       children: [
         { name: "Users", path: "/references/users" },
         { name: "Objects", path: "/references/objects" },
-        { name: "Residents", path: "/references/residents" },
+        // { name: "RentRooms", path: "/references/rentrooms" },
         { name: "Buildings", path: "/references/buildings" },
         { name: "Companies", path: "/references/companies" },
+        { name: "Apartments", path: "/references/apartments" },
       ],
     },
     {
