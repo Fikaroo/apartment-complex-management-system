@@ -1,19 +1,20 @@
 import React, { Fragment, useEffect, useState } from "react";
-import Tables, { IHeaders } from "../../components/Table/Tables";
+import Tables, { IHeaders } from "../../components/Table/CompaniesTable";
 import SearchInput from "../../components/SearchInput";
 import Filter from "../../components/Filter";
 import OrderDate from "../../components/OrderDate";
-import DealsModal from "../../components/Modals/DealsModal";
 import AddBtn from "../../components/AddBtn";
 import useSWR from "swr";
 import { GetAll } from "../../api";
 import useStoreData from "../../hooks/useStoreData";
 import { useDealsStore } from "../../state/store";
-const Deals = () => {
+import CompaniesModal from "../../components/Modals/CompaniesModal";
+
+const Companies = () => {
   let [isOpen, setIsOpen] = useState<boolean>(false);
   const [modalItem, setModalItem] = useState({});
   const [process, setProcess] = useState("");
-  const [orderId, setOrderId] = useState<number>(0);
+  const [companyId, setCompanyId] = useState<number>(0);
   const [selectedRow, setSelectedRow] = useState(null);
 
   const closeModal = (): void => {
@@ -27,7 +28,7 @@ const Deals = () => {
   };
 
   const { data, error, isLoading } = useSWR(
-    "/api/OrderAdmin/GetAll",
+    "/api/VendorCompany/GetAllByVendorId",
     (key) => GetAll.user(key),
     { revalidateIfStale: true }
   );
@@ -62,62 +63,62 @@ const Deals = () => {
     },
     {
       id: 2,
-      title: "Normative Deadline",
+      title: "Director Name",
     },
     {
       id: 3,
-      title: "Actual Deadline",
+      title: "Director Surname",
     },
     {
       id: 4,
-      title: "Description",
+      title: "Director Father Name",
     },
     {
-      id: 5,
-      title: "Order Class",
-    },
+        id: 5,
+        title: "Phonenumber",
+      },
     {
       id: 6,
-      title: "Order Source",
+      title: "Email",
     },
     {
       id: 7,
-      title: "Order Type",
-    },
-    {
+      title: "Object Name",
+    },  {
       id: 8,
-      title: "Phone Number",
-    },
-    {
+      title: "Company Name",
+    },  {
       id: 9,
-      title: "Status",
+      title: "Vendor Name",
     },
     {
       id: 10,
-      title: "Executor",
+      title: "Voen",
     },
+
     {
       id: 11,
-      title: "Edit",
+      title: "Vin",
     },
+   
   ];
 
   return (
     <Fragment>
       <div className="flex items-center justify-between">
         <p className="font-bold font-inter text-16 leading-30 text-dark">
-          Ümumi: 178 Sakin
+          Ümumi: 178 Companies
         </p>{" "}
         <div className="flex items-center gap-4">
           <AddBtn
             openModal={openModal}
             setProcess={setProcess}
             modal={
-              <DealsModal
+              <CompaniesModal
                 isOpen={isOpen}
                 closeModal={closeModal}
                 process={process}
-                deleteId={orderId}
+                deleteId={companyId}
                 selectedRow={selectedRow}
               />
             }
@@ -131,22 +132,22 @@ const Deals = () => {
       <Tables
         openModal={openModal}
         modal={
-          <DealsModal
+          <CompaniesModal
             isOpen={isOpen}
             closeModal={closeModal}
             process={process}
-            deleteId={orderId}
+            deleteId={companyId}
             selectedRow={selectedRow}
           />
         }
         headers={headers}
         data={data}
         setProcess={setProcess}
-        setOrderId={setOrderId}
+        setCompanyId={setCompanyId}
         setSelectedRow={setSelectedRow}
       />
     </Fragment>
   );
 };
 
-export default Deals;
+export default Companies;
