@@ -24,7 +24,7 @@ type Values = {
     phonenumber: string,
     email: string,
     logo: string,
-    buildingId: string,
+    objectId: string,
     companyName: string,
     voen: string,
     vin: string,
@@ -66,8 +66,8 @@ const CompaniesModal: React.FC<Props> = ({
       mutate("/api/VendorCompany/GetAllByVendorId", data, false);
     }
   };
-  const { data:dataBuilding, error:errorBuilding, isLoading:isLoadingBuilding } = useSWR(
-    "/api/VendorBuildings/GetAll",
+  const { data:dataObjects, error:errorObjects, isLoading:isLoadingObjects } = useSWR(
+    "/api/VendorObjects/GetAll",
     (key) => GetAll.user(key),
     
   );
@@ -105,7 +105,7 @@ const CompaniesModal: React.FC<Props> = ({
 
     const parsedValues = {
       ...values,
-      buildingId : parseInt(values.buildingId),
+      objectId : parseInt(values.objectId),
     
     };
     const { data, error } = await trigger(parsedValues);
@@ -121,7 +121,7 @@ const CompaniesModal: React.FC<Props> = ({
     console.log(values, "editvalues");
     const parsedValues = {
         ...values,
-        buildingId : parseInt(values.buildingId),
+        objectId : parseInt(values.objectId),
         id: selectedRow.id,
       
       };
@@ -195,7 +195,7 @@ const CompaniesModal: React.FC<Props> = ({
                         phonenumber: "",
                         email: "",
                         logo: "",
-                        buildingId: "",
+                        objectId: "",
                         companyName: "",
                         voen: "",
                         vin: "",
@@ -209,21 +209,21 @@ const CompaniesModal: React.FC<Props> = ({
                           <div className="w-[48%]">
                             {" "}
                             <label
-                              htmlFor="vendorBuildingId"
+                              htmlFor="objectId"
                               className="flex items-center justify-between mt-10 font-bold font-inter text-16 leading-30 text-dark"
                             >
-                              Building Name
+                              Object Name
                             </label>
                             <Field
                               as="select"
-                              id="buildingId"
+                              id="objectId"
                               className="mt-3 w-full rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md hover:outline-none"
-                              name="buildingId"
+                              name="objectId"
                               required
                             >
                               <option value="-1">Choose</option>
-                              {dataBuilding?.data.map((item:any) => (
-                                <option value={item.id}>{item.name}</option>
+                              {dataObjects?.data.map((item:any) => (
+                                <option value={item.id}>{item.title}</option>
                               ))}
                              
                             </Field>
@@ -399,9 +399,9 @@ const CompaniesModal: React.FC<Props> = ({
                     </Dialog.Title>
                     <Formik
                       initialValues={{
-                        buildingId:dataBuilding?.data.find(
+                        objectId:dataObjects?.data.find(
                             (item:any) =>
-                              item.name === selectedRow?.buildingName
+                              item.title === selectedRow?.objectName
                           )?.id || "",
                           directorName: selectedRow?.directorName || "",
                           directorSurname: selectedRow?.directorSurname || "",
@@ -421,21 +421,21 @@ const CompaniesModal: React.FC<Props> = ({
                           <div className="w-[48%]">
                             {" "}
                             <label
-                              htmlFor="vendorBuildingId"
+                              htmlFor="objectId"
                               className="flex items-center justify-between mt-10 font-bold font-inter text-16 leading-30 text-dark"
                             >
-                              Building Name
+                           Object Name
                             </label>
                             <Field
                               as="select"
-                              id="buildingId"
+                              id="objectId"
                               className="mt-3 w-full rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md hover:outline-none"
-                              name="buildingId"
+                              name="objectId"
                               required
                             >
                               <option value="-1">Choose</option>
-                              {dataBuilding?.data.map((item:any) => (
-                                <option value={item.id}>{item.name}</option>
+                              {dataObjects?.data.map((item:any) => (
+                                <option value={item.id}>{item.title}</option>
                               ))}
                              
                             </Field>
