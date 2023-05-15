@@ -83,7 +83,7 @@ const Companies = () => {
     },
     {
       id: 7,
-      title: "Building Name",
+      title: "Object Name",
     },  {
       id: 8,
       title: "Company Name",
