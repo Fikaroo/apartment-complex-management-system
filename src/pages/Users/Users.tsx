@@ -1,15 +1,19 @@
 import React, { Fragment, useState } from "react";
-import Tables, { IHeaders } from "../../components/Table/Tables";
+import Tables, { IHeaders } from "../../components/Table/UsersTable";
 import SearchInput from "../../components/SearchInput";
 import Filter from "../../components/Filter";
 import OrderDate from "../../components/OrderDate";
 import AddBtn from "../../components/AddBtn";
-import SosModal from "../../components/Modals/SosModal";
-import AddCustomerModal from "../../components/Modals/AddCustomerModal";
-const Customers = () => {
+import DealsModal from "../../components/Modals/DealsModal";
+import UserModal from "../../components/Modals/UserModal";
+import useSWR from "swr";
+import {GetAll } from "../../api";
+const Users = () => {
   let [isOpen, setIsOpen] = useState<boolean>(false);
   let [isOpenAdd, setIsOpenAdd] = useState<boolean>(false);
-
+  const [process, setProcess] = useState("");
+  const [orderId, setOrderId] = useState<number>(0);
+  const [selectedRow, setSelectedRow] = useState(null);
   const closeModal = (): void => {
     setIsOpen(false);
   };
@@ -22,6 +26,11 @@ const Customers = () => {
   const openModalAdd = (): void => {
     setIsOpenAdd(true);
   };
+  const { data, error, isLoading } = useSWR(
+    "/api/Users/GetAllForAdmin",
+    (key) => GetAll.user(key),
+    { revalidateIfStale: true }
+  );
 
   const headers: IHeaders[] = [
     {
@@ -44,23 +53,39 @@ const Customers = () => {
     },
     {
       id: 2,
-      title: "Tarix",
+      title: "Name",
     },
     {
       id: 3,
-      title: "YK",
+      title: "Surname",
     },
     {
       id: 4,
-      title: "Bina",
+      title: "Patrionimyc",
     },
     {
       id: 5,
-      title: "Mənzil",
+      title: "Email",
     },
     {
       id: 6,
-      title: "Düzəlt",
+      title: "Phone Number",
+    },
+    {
+      id: 7,
+      title: "Create Date",
+    },
+    {
+      id: 8,
+      title: "Customer  Status",
+    },
+    {
+      id: 9,
+      title: "Property Type",
+    },
+    {
+      id: 10,
+      title: "Proportion",
     },
   ];
 
@@ -71,24 +96,38 @@ const Customers = () => {
           Ümumi: 178 Sakin
         </p>{" "}
         <div className="flex items-center gap-4">
-          <AddBtn
+          {/* <AddBtn
             openModal={openModalAdd}
             modal={
               <AddCustomerModal isOpen={isOpenAdd} closeModal={closeModalAdd} />
+            
             }
-          />
+            setProcess={setProcess}
+          /> */}
           <OrderDate />
 
           <Filter />
         </div>
       </div>
       <Tables
-        openModal={openModal}
-        modal={<SosModal isOpen={isOpen} closeModal={closeModal} />}
-        headers={headers}
+         openModal={openModal}
+         modal={
+           <UserModal
+             isOpen={isOpen}
+             closeModal={closeModal}
+             process={process}
+             deleteId={orderId}
+             selectedRow={selectedRow}
+           />
+         }
+         headers={headers}
+         data={data}
+         setProcess={setProcess}
+         setOrderId={setOrderId}
+         setSelectedRow={setSelectedRow}
       />
     </Fragment>
   );
 };
 
-export default Customers;
+export default Users;

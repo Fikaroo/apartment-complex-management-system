@@ -11,7 +11,6 @@ type Props = {
 }
 
 const AddBtn = ({modal, openModal ,setProcess}: Props) => {
-  console.log(setProcess,"setProcess");
   return (
 <Menu>
 <Menu.Button

@@ -1,46 +1,36 @@
-import React, { Fragment, useEffect, useState } from "react";
-import Tables, { IHeaders } from "../../components/Table/Tables";
+import React, { Fragment, useState } from "react";
+import Tables, { IHeaders } from "../../components/Table/ObjectsTable";
 import SearchInput from "../../components/SearchInput";
 import Filter from "../../components/Filter";
 import OrderDate from "../../components/OrderDate";
-import DealsModal from "../../components/Modals/DealsModal";
 import AddBtn from "../../components/AddBtn";
+import ObjectsModal from "../../components/Modals/ObjectsModal";
 import useSWR from "swr";
 import { GetAll } from "../../api";
-import useStoreData from "../../hooks/useStoreData";
-import { useDealsStore } from "../../state/store";
-const Deals = () => {
+const Objects = () => {
   let [isOpen, setIsOpen] = useState<boolean>(false);
-  const [modalItem, setModalItem] = useState({});
+  let [isOpenAdd, setIsOpenAdd] = useState<boolean>(false);
   const [process, setProcess] = useState("");
-  const [orderId, setOrderId] = useState<number>(0);
+  const [vendorId, setVendorId] = useState<number>(0);
   const [selectedRow, setSelectedRow] = useState(null);
-
   const closeModal = (): void => {
     setIsOpen(false);
   };
-
-  console.log(selectedRow, "selectedRow");
-
+  const closeModalAdd = (): void => {
+    setIsOpenAdd(false);
+  };
   const openModal = (): void => {
     setIsOpen(true);
   };
-
+  const openModalAdd = (): void => {
+    setIsOpenAdd(true);
+  };
   const { data, error, isLoading } = useSWR(
-    "/api/OrderAdmin/GetAll",
+    "/api/VendorObjects/GetAll",
     (key) => GetAll.user(key),
     { revalidateIfStale: true }
   );
-  // const dealsStore = useDealsStore();
 
-  // useEffect(() => {}, []);
-
-  // console.log(dealsStore);
-  // useStoreData({
-  //   path: "/api/OrderAdmin/GetAll",
-  //   fetcher: DealsGetAll,
-  //   storeFunc: dealsStore?.updateDeal,
-  // });
   const headers: IHeaders[] = [
     {
       id: 1,
@@ -62,43 +52,19 @@ const Deals = () => {
     },
     {
       id: 2,
-      title: "Normative Deadline",
+      title: "Vendor Name",
     },
     {
       id: 3,
-      title: "Actual Deadline",
+      title: "Region Name",
     },
     {
       id: 4,
-      title: "Description",
+      title: "Address",
     },
     {
       id: 5,
-      title: "Order Class",
-    },
-    {
-      id: 6,
-      title: "Order Source",
-    },
-    {
-      id: 7,
-      title: "Order Type",
-    },
-    {
-      id: 8,
-      title: "Phone Number",
-    },
-    {
-      id: 9,
-      title: "Status",
-    },
-    {
-      id: 10,
-      title: "Executor",
-    },
-    {
-      id: 11,
-      title: "Edit",
+      title: "Title",
     },
   ];
 
@@ -106,23 +72,22 @@ const Deals = () => {
     <Fragment>
       <div className="flex items-center justify-between">
         <p className="font-bold font-inter text-16 leading-30 text-dark">
-          Ümumi: 178 Sakin
+          Ümumi: 2 Vendor
         </p>{" "}
         <div className="flex items-center gap-4">
           <AddBtn
-            openModal={openModal}
-            setProcess={setProcess}
+            openModal={openModalAdd}
             modal={
-              <DealsModal
-                isOpen={isOpen}
-                closeModal={closeModal}
+              <ObjectsModal
+                isOpen={isOpenAdd}
+                closeModal={closeModalAdd}
                 process={process}
-                deleteId={orderId}
+                deleteId={vendorId}
                 selectedRow={selectedRow}
               />
             }
+            setProcess={setProcess}
           />
-
           <OrderDate />
 
           <Filter />
@@ -131,22 +96,22 @@ const Deals = () => {
       <Tables
         openModal={openModal}
         modal={
-          <DealsModal
+          <ObjectsModal
             isOpen={isOpen}
             closeModal={closeModal}
             process={process}
-            deleteId={orderId}
+            deleteId={vendorId}
             selectedRow={selectedRow}
           />
         }
         headers={headers}
         data={data}
         setProcess={setProcess}
-        setOrderId={setOrderId}
+        setVendorId={setVendorId}
         setSelectedRow={setSelectedRow}
       />
     </Fragment>
   );
 };
 
-export default Deals;
+export default Objects;

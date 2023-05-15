@@ -20,192 +20,134 @@ type Props = {
   selectedRow: any;
 };
 type Values = {
-  description: string;
-  statusId: string;
-  orderTypeId: string;
-  orderSourceId: string;
-  priorityId: string;
-  orderClassId: string;
-  appUserId: string;
-  actualDeadline: string;
-  normativeDeadline: string;
+  image:any;
+  name: string;
+  regionId: string;
+  street: string;
+  buildingNo: string;
+  securityPhone: string;
+  floor: string;
+  entrance: string;
+
 };
 
-const DealsModal: React.FC<Props> = ({
+const BuildingsModal: React.FC<Props> = ({
   isOpen,
   closeModal,
   process,
   deleteId,
   selectedRow,
 }) => {
-  const [isOpenSub, setIsOpenSub] = useState<boolean>(false);
-  console.log(process, "process");
-  const { trigger, data, error, isMutating } = useSWRMutation(
-    "/api/OrderAdmin/Create",
-    CreateDeal.user
-  );
-  const {
-    trigger: triggerDelete,
-    data: dataDelete,
-    error: errorDelete,
-    isMutating: isMutatingDelete,
-  } = useSWRMutation("/api/OrderAdmin/Delete", Delete.user);
-  const {
-    trigger: triggerEdit,
-    data: dataEdit,
-    error: errorEdit,
-    isMutating: isMutatingEdit,
-  } = useSWRMutation("/api/OrderAdmin/Update", EditDeal.user);
-  const mutateData = async () => {
-    const { data, error } = await fetch("/api/OrderAdmin/GetAll").then((res) =>
-      res.json()
-    );
-    if (error) {
-      console.log(error);
-    } else {
-      mutate("/api/OrderAdmin/GetAll", data, false);
-    }
-  };
+  
+  // const { trigger, data, error, isMutating } = useSWRMutation(
+  //   "/api/VendorBuildings/Create",
+  //   CreateDeal.user
+  // );
+  // const {
+  //   trigger: triggerDelete,
+  //   data: dataDelete,
+  //   error: errorDelete,
+  //   isMutating: isMutatingDelete,
+  // } = useSWRMutation("/api/OrderAdmin/Delete", Delete.user);
+  // const {
+  //   trigger: triggerEdit,
+  //   data: dataEdit,
+  //   error: errorEdit,
+  //   isMutating: isMutatingEdit,
+  // } = useSWRMutation("/api/OrderAdmin/Update", EditDeal.user);
+  // const mutateData = async () => {
+  //   const { data, error } = await fetch("/api/VendorBuildings/GetAll").then((res) =>
+  //     res.json()
+  //   );
+  //   if (error) {
+  //     console.log(error);
+  //   } else {
+  //     mutate("/api/VendorBuildings/GetAll", data, false);
+  //   }
+  // };
 
-  const closeModalSub = (): void => {
-    setIsOpenSub(false);
-  };
 
-  const openModalSub = (): void => {
-    setIsOpenSub(true);
-  };
-  useEffect(() => {
-    if (data?.statusCode === 201) {
-      alert(data.message);
-      closeModal();
-    } else if (data?.statusCode === 400) {
-      console.log(error, "error");
-    }
-  }, [data]);
-  useEffect(() => {
-    if (dataDelete?.statusCode === 201) {
-      alert(dataDelete.message);
-      closeModal();
-    } else if (dataDelete?.statusCode === 400) {
-      console.log(errorDelete, "error");
-    }
-  }, [dataDelete]);
-  useEffect(() => {
-    if (dataEdit?.statusCode === 201) {
-      alert(dataEdit.message);
-      closeModal();
-    } else if (dataEdit?.statusCode === 400) {
-      console.log(errorEdit, "error");
-    }
-  }, [dataEdit]);
+  // useEffect(() => {
+  //   if (data?.statusCode === 201) {
+  //     alert(data.message);
+  //     closeModal();
+  //   } else if (data?.statusCode === 400) {
+  //     console.log(error, "error");
+  //   }
+  // }, [data]);
+  // useEffect(() => {
+  //   if (dataDelete?.statusCode === 201) {
+  //     alert(dataDelete.message);
+  //     closeModal();
+  //   } else if (dataDelete?.statusCode === 400) {
+  //     console.log(errorDelete, "error");
+  //   }
+  // }, [dataDelete]);
+  // useEffect(() => {
+  //   if (dataEdit?.statusCode === 201) {
+  //     alert(dataEdit.message);
+  //     closeModal();
+  //   } else if (dataEdit?.statusCode === 400) {
+  //     console.log(errorEdit, "error");
+  //   }
+  // }, [dataEdit]);
 
-  const handleSubmit = async (values: Values) => {
-    console.log(values, "values");
+  // const handleSubmit = async (values: Values) => {
+  //   console.log(values, "values");
 
-    const parsedValues = {
-      ...values,
-      actualDeadline: new Date(values.actualDeadline)
-        .toLocaleDateString("en-GB", {
-          day: "2-digit",
-          month: "2-digit",
-          year: "numeric",
-        })
-        .split("/")
-        .reverse()
-        .join("-"),
-      normativeDeadline: new Date(values.normativeDeadline)
-        .toLocaleDateString("en-GB", {
-          day: "2-digit",
-          month: "2-digit",
-          year: "numeric",
-        })
-        .split("/")
-        .reverse()
-        .join("-"),
-      orderSourceId: parseInt(values.orderSourceId),
-      orderTypeId: parseInt(values.orderTypeId),
-      priorityId: parseInt(values.priorityId),
-      statusId: parseInt(values.statusId),
-      orderClassId: parseInt(values.orderClassId),
-    };
-    const { data, error } = await trigger(parsedValues);
-    if (error) {
-      console.log(error);
-    } else {
-      alert(data.message);
-      closeModal();
-      mutateData();
-    }
-  };
-  const handleEdit = async (values: Values) => {
-    console.log(values, "editvalues");
-    const parsedValues = {
-      ...values,
-      orderSourceId: parseInt(values.orderSourceId),
-      orderTypeId: parseInt(values.orderTypeId),
-      priorityId: parseInt(values.priorityId),
-      statusId: parseInt(values.statusId),
-      orderClassId: parseInt(values.orderClassId),
-      id: selectedRow.id,
-    };
-    const { data, error } = await triggerEdit(parsedValues);
-    if (error) {
-      console.log(error);
-    } else {
-      alert(data.message);
-      closeModal();
-      mutateData();
-    }
-  };
-  const handleDelete = async () => {
-    const { data, error } = await triggerDelete({ deleteId });
-    if (error) {
-      console.log(error);
-    } else {
-      alert(data.message);
-      closeModal();
-      mutateData();
-    }
-  };
+  //   const parsedValues = {
+  //     ...values,
+      
+  //     floor: parseInt(values.floor),
+  //     entrance: parseInt(values.entrance),
 
-  const options = [
-    { id: 1, name: "Yanğinsöndürmə sistemləri" },
-    { id: 2, name: "Su catdirilmasi" },
-    { id: 3, name: "Avtomatik Qapi" },
-    { id: 4, name: "Santexnik, istilik, kanalizasiya+" },
-  ];
-  const optionsSource = [
-    { id: 1, name: "Şəxsi Ziyarət" },
-    { id: 2, name: "Sosial Sebeke+" },
-  ];
-  const optionsPriority = [
-    { id: 0, name: "Low" },
-    { id: 1, name: "Normal+" },
-    { id: 2, name: "High" },
-    { id: 3, name: "Critical" },
-  ];
-  const optionsClass = [
-    { id: 1, name: "Client" },
-    { id: 2, name: "Planned+" },
-  ];
-  const optionsStatus = [
-    { id: 0, name: "NewOrder+" },
-    { id: 1, name: "Appointed" },
-    { id: 2, name: "Inprogress" },
-    { id: 3, name: "OnPause" },
-    { id: 4, name: "OnConfirmation" },
-    { id: 5, name: "Completed" },
-    { id: 6, name: "Rejected" },
-    { id: 7, name: "Returned" },
-    { id: 8, name: "Cancelled" },
-    { id: 9, name: "Closed" },
-    { id: 10, name: "EnteredIncorrectly" },
-  ];
+  //   };
+  //   const { data, error } = await trigger(parsedValues);
+  //   if (error) {
+  //     console.log(error);
+  //   } else {
+  //     alert(data.message);
+  //     closeModal();
+  //     mutateData();
+  //   }
+  // };
+  // const handleEdit = async (values: Values) => {
+  //   console.log(values, "editvalues");
+  //   const parsedValues = {
+  //     ...values,
+  //     orderSourceId: parseInt(values.orderSourceId),
+  //     orderTypeId: parseInt(values.orderTypeId),
+  //     priorityId: parseInt(values.priorityId),
+  //     statusId: parseInt(values.statusId),
+  //     orderClassId: parseInt(values.orderClassId),
+  //     id: selectedRow.id,
+  //   };
+  //   const { data, error } = await triggerEdit(parsedValues);
+  //   if (error) {
+  //     console.log(error);
+  //   } else {
+  //     alert(data.message);
+  //     closeModal();
+  //     mutateData();
+  //   }
+  // };
+  // const handleDelete = async () => {
+  //   const { data, error } = await triggerDelete({ deleteId });
+  //   if (error) {
+  //     console.log(error);
+  //   } else {
+  //     alert(data.message);
+  //     closeModal();
+  //     mutateData();
+  //   }
+  // };
+
+ 
 
   return (
     <div>
       <Transition appear show={isOpen} as={Fragment}>
-        <Dialog as="div" className="relative z-10" onClose={closeModal}>
+        {/* <Dialog as="div" className="relative z-10" onClose={closeModal}>
           <Transition.Child
             as={Fragment}
             enter="ease-out duration-300"
@@ -305,7 +247,7 @@ const DealsModal: React.FC<Props> = ({
                               />
                               <ChevronDownIcon
                                 className="h-5 w-5 text-gray-400 absolute top-[50%] right-4 cursor-pointer"
-                                onClick={openModalSub}
+                           
                               />
                             </div>
                           </div>
@@ -682,11 +624,11 @@ const DealsModal: React.FC<Props> = ({
               </Transition.Child>
             </div>
           </div>
-        </Dialog>
+        </Dialog> */}
       </Transition>
-      <DealsSubModal isOpenSub={isOpenSub} closeModalSub={closeModalSub} />
+      
     </div>
   );
 };
 
-export default DealsModal;
+export default BuildingsModal;

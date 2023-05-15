@@ -66,7 +66,7 @@ export const RegisterUser = {
   },
 };
 
-export const DealsGetAll = {
+export const GetAll = {
   user: async (path: string) => {
     const { data } = await admin.get(path, {
       headers: {
@@ -145,6 +145,86 @@ export const EditDeal = {
     }
   ) => {
     const { data } = await admin.put(path, arg, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("user-token")}`,
+      },
+    });
+    return data;
+  },
+};
+export const OrderGetbyId = {
+  user: async (path: string) => {
+    const { data } = await admin.get(path, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("user-token")}`,
+      },
+    });
+    return data;
+  },
+};
+export const EditUser = {
+  user: async (
+    path: string,
+    {
+      arg,
+    }: {
+      arg: {
+        id: number;
+        name: string;
+        surname: string;
+        patrionimyc: string;
+        email: string;
+        phoneNumber: string;
+        propertyTypeId: number;
+        customerStatusId: number;
+        proportion: string;
+      };
+    }
+  ) => {
+    const { data } = await admin.put(path, arg, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("user-token")}`,
+      },
+    });
+    return data;
+  },
+};
+export const EditObjects = {
+  user: async (
+    path: string,
+    {
+      arg,
+    }: {
+      arg: {
+        id: number;
+        title: string;
+        address: string;
+        regionId:number
+      };
+    }
+  ) => {
+    const { data } = await admin.put(path, arg, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("user-token")}`,
+      },
+    });
+    return data;
+  },
+};
+export const AddObjects = {
+  user: async (
+    path: string,
+    {
+      arg,
+    }: {
+      arg: {
+        title: string;
+        address: string;
+        regionId:number
+      };
+    }
+  ) => {
+    const { data } = await admin.post(path, arg, {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("user-token")}`,
       },

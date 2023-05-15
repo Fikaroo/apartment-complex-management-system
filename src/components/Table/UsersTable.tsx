@@ -32,26 +32,28 @@ const Tables = ({
 }: PropsType) => {
   const nav = useNavigate();
 
-  const optionsStatus = [
-    { id: 0, name: "NewOrder+" },
-    { id: 1, name: "Appointed" },
-    { id: 2, name: "Inprogress" },
-    { id: 3, name: "OnPause" },
-    { id: 4, name: "OnConfirmation" },
-    { id: 5, name: "Completed" },
-    { id: 6, name: "Rejected" },
-    { id: 7, name: "Returned" },
-    { id: 8, name: "Cancelled" },
-    { id: 9, name: "Closed" },
-    { id: 10, name: "EnteredIncorrectly" },
-  ];
+  const userStatus = [
+    { id: 1, name: "Landlord" },
+    { id: 2, name: "Resident" },
+    { id: 3, name: "Tenant" },
+    { id: 4, name: "Family member" },
+    { id: 5, name: "Child" },
 
-  function isValidDate(dateString: any) {
-    const date = new Date(dateString);
-    return !isNaN(date.getTime());
-  }
-const [tableId,setTableId]=useState<number>(0);
-  const handleTableRow = ({id}:any) => nav(`/control-panel/deals/${id}`);
+  ];
+  const propertyType = [
+    { id: 1, name: "Apartment" },
+    { id: 2, name: "Office" },
+    
+  ]
+  const atHome=[
+    { id: 0, name: "NoSelect" },
+    { id: 1, name: "Yes" },
+    { id: 2, name: "No" },
+  ]
+
+ 
+
+//   const handleTableRow = ({id}:any) => nav(`/control-panel/deals/${id}`);
 
   return (
     <div className="w-full mt-8 overflow-x-auto">
@@ -73,7 +75,7 @@ const [tableId,setTableId]=useState<number>(0);
             <tr
               key={item.id}
               className="cursor-pointer  hover:bg-gray-200"
-              onClick={() => handleTableRow({ id: item.id })}
+            //   onClick={() => handleTableRow({ id: item.id })}
             >
               <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
                 <div className="flex-shrink-0 w-10 h-10">
@@ -87,7 +89,27 @@ const [tableId,setTableId]=useState<number>(0);
               <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
                 <div className="ml-4">
                   <div className="text-sm font-medium leading-5 text-gray-900">
-                    {new Date(item.actualDeadline)
+                    {item.name}	
+                  </div>
+                </div>
+              </td>
+              <td className="px-6 py-4 text-sm leading-5 text-gray-500 whitespace-no-wrap border-b border-gray-200">
+              {item.surname}
+              </td>
+              <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
+                <div className="text-sm leading-5 text-gray-900">
+                {item.patrionimyc}
+                </div>
+              </td>
+              <td className="px-6 py-4 text-sm leading-5 text-gray-500 whitespace-no-wrap border-b border-gray-200">
+              {item.email}
+              </td>
+              <td className="px-6 py-4 text-sm leading-5 text-gray-500 whitespace-no-wrap border-b border-gray-200">
+              {item.phoneNumber}
+              </td>
+              <td className="px-6 py-4 text-sm leading-5 text-gray-500 whitespace-no-wrap border-b border-gray-200">
+
+              {new Date(item.createdDate)
                       .toLocaleDateString("en-GB", {
                         day: "2-digit",
                         month: "2-digit",
@@ -96,44 +118,23 @@ const [tableId,setTableId]=useState<number>(0);
                       .split("/")
                       .reverse()
                       .join("-")}
-                  </div>
-                </div>
               </td>
               <td className="px-6 py-4 text-sm leading-5 text-gray-500 whitespace-no-wrap border-b border-gray-200">
-                {new Date(item.normativeDeadline)
-                  .toLocaleDateString("en-GB", {
-                    day: "2-digit",
-                    month: "2-digit",
-                    year: "numeric",
-                  })
-                  .split("/")
-                  .reverse()
-                  .join("-")}
-              </td>
-              <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-                <div className="text-sm leading-5 text-gray-900">
-                  {item.description}
-                </div>
+      {item.customerStatusName}
               </td>
               <td className="px-6 py-4 text-sm leading-5 text-gray-500 whitespace-no-wrap border-b border-gray-200">
-                {item.orderClass.name}
+      {item.propertyTypeName}
               </td>
               <td className="px-6 py-4 text-sm leading-5 text-gray-500 whitespace-no-wrap border-b border-gray-200">
-                {item.orderSource.name}
+      {item.proportion}
               </td>
-              <td className="px-6 py-4 text-sm leading-5 text-gray-500 whitespace-no-wrap border-b border-gray-200">
-                {item.orderType.name}
-              </td>
-              <td className="px-6 py-4 text-sm leading-5 text-gray-500 whitespace-no-wrap border-b border-gray-200">
-                {item.phoneNumber}
-              </td>
-              <td className="px-6 py-4 text-sm leading-5 text-gray-500 whitespace-no-wrap border-b border-gray-200">
+              {/* <td className="px-6 py-4 text-sm leading-5 text-gray-500 whitespace-no-wrap border-b border-gray-200">
                 {
                   optionsStatus.find((option) => option.id === item.statusId)
                     ?.name
                 }
-              </td>
-              <td className="px-6 py-4 text-sm leading-5 text-gray-500 whitespace-no-wrap border-b border-gray-200"></td>
+              </td> */}
+              
               <td
                 className="px-6 py-4 text-sm font-medium leading-5 text-right whitespace-no-wrap border-b border-gray-200"
                 onClick={(e) => e.stopPropagation()}
@@ -145,16 +146,7 @@ const [tableId,setTableId]=useState<number>(0);
                     setOrderId(item.id);
                     setSelectedRow({
                       ...item,
-                      actualDeadline: new Date(item.actualDeadline)
-                        .toLocaleDateString("en-GB", {
-                          day: "2-digit",
-                          month: "2-digit",
-                          year: "numeric",
-                        })
-                        .split("/")
-                        .reverse()
-                        .join("-"),
-                      normativeDeadline: new Date(item.normativeDeadline)
+                      createdDate: new Date(item.createdDate)
                         .toLocaleDateString("en-GB", {
                           day: "2-digit",
                           month: "2-digit",
