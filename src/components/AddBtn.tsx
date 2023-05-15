@@ -9,8 +9,7 @@ type Props = {
   setProcess: React.Dispatch<React.SetStateAction<string>>;
 };
 
-const AddBtn = ({ modal, openModal, setProcess }: Props) => {
-  console.log(setProcess, "setProcess");
+const AddBtn = ({modal, openModal ,setProcess}: Props) => {
   return (
     <Menu>
       <Menu.Button

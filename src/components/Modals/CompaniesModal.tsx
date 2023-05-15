@@ -1,17 +1,15 @@
 import React, { useEffect } from "react";
 import { Dialog, Transition } from "@headlessui/react";
-import { CheckIcon } from "@heroicons/react/24/solid";
 import { XCircleIcon } from "@heroicons/react/24/solid";
 import { Fragment, useState } from "react";
-import { ChevronDownIcon } from "@heroicons/react/20/solid";
-import DealsSubModal from "./DealsSubModal";
 import { Formik, Field, Form, FormikHelpers } from "formik";
 import useSWR, { mutate } from "swr";
 import useSWRMutation from "swr/mutation";
-import { CreateDeal } from "../../api";
 import { Delete } from "../../api";
-import { EditDeal } from "../../api";
-
+import { GetAll } from "../../api";
+import {EditApartment} from "../../api";
+import {CreateCompany} from "../../api";
+import {EditCompany} from "../../api";
 type Props = {
   isOpen: boolean;
   closeModal: () => void;
@@ -20,60 +18,63 @@ type Props = {
   selectedRow: any;
 };
 type Values = {
-  description: string;
-  statusId: string;
-  orderTypeId: string;
-  orderSourceId: string;
-  priorityId: string;
-  orderClassId: string;
-  appUserId: string;
-  actualDeadline: string;
-  normativeDeadline: string;
+    directorName:string,
+    directorSurname: string,
+    directorFatherName: string,
+    phonenumber: string,
+    email: string,
+    logo: string,
+    buildingId: string,
+    companyName: string,
+    voen: string,
+    vin: string,
+   
 };
 
-const DealsModal: React.FC<Props> = ({
+const CompaniesModal: React.FC<Props> = ({
   isOpen,
   closeModal,
   process,
   deleteId,
   selectedRow,
 }) => {
-  const [isOpenSub, setIsOpenSub] = useState<boolean>(false);
-  console.log(process, "process");
+    console.log(selectedRow, "selectedRowcompanies");
   const { trigger, data, error, isMutating } = useSWRMutation(
-    "/api/OrderAdmin/Create",
-    CreateDeal.user
+    "/api/VendorCompany/Create",
+    CreateCompany.user
   );
   const {
     trigger: triggerDelete,
     data: dataDelete,
     error: errorDelete,
     isMutating: isMutatingDelete,
-  } = useSWRMutation("/api/OrderAdmin/Delete", Delete.user);
+  } = useSWRMutation("/api/VendorCompany/Delete", Delete.user);
   const {
     trigger: triggerEdit,
     data: dataEdit,
     error: errorEdit,
     isMutating: isMutatingEdit,
-  } = useSWRMutation("/api/OrderAdmin/Update", EditDeal.user);
+  } = useSWRMutation("/api/VendorCompany/Update", EditCompany.user);
+ 
   const mutateData = async () => {
-    const { data, error } = await fetch("/api/OrderAdmin/GetAll").then((res) =>
+    const { data, error } = await fetch("/api/VendorCompany/GetAllByVendorId").then((res) =>
       res.json()
     );
     if (error) {
       console.log(error);
     } else {
-      mutate("/api/OrderAdmin/GetAll", data, false);
+      mutate("/api/VendorCompany/GetAllByVendorId", data, false);
     }
   };
+  const { data:dataBuilding, error:errorBuilding, isLoading:isLoadingBuilding } = useSWR(
+    "/api/VendorBuildings/GetAll",
+    (key) => GetAll.user(key),
+    
+  );
 
-  const closeModalSub = (): void => {
-    setIsOpenSub(false);
-  };
 
-  const openModalSub = (): void => {
-    setIsOpenSub(true);
-  };
+
+ 
   useEffect(() => {
     if (data?.statusCode === 201) {
       alert(data.message);
@@ -104,29 +105,8 @@ const DealsModal: React.FC<Props> = ({
 
     const parsedValues = {
       ...values,
-      actualDeadline: new Date(values.actualDeadline)
-        .toLocaleDateString("en-GB", {
-          day: "2-digit",
-          month: "2-digit",
-          year: "numeric",
-        })
-        .split("/")
-        .reverse()
-        .join("-"),
-      normativeDeadline: new Date(values.normativeDeadline)
-        .toLocaleDateString("en-GB", {
-          day: "2-digit",
-          month: "2-digit",
-          year: "numeric",
-        })
-        .split("/")
-        .reverse()
-        .join("-"),
-      orderSourceId: parseInt(values.orderSourceId),
-      orderTypeId: parseInt(values.orderTypeId),
-      priorityId: parseInt(values.priorityId),
-      statusId: parseInt(values.statusId),
-      orderClassId: parseInt(values.orderClassId),
+      buildingId : parseInt(values.buildingId),
+    
     };
     const { data, error } = await trigger(parsedValues);
     if (error) {
@@ -140,14 +120,12 @@ const DealsModal: React.FC<Props> = ({
   const handleEdit = async (values: Values) => {
     console.log(values, "editvalues");
     const parsedValues = {
-      ...values,
-      orderSourceId: parseInt(values.orderSourceId),
-      orderTypeId: parseInt(values.orderTypeId),
-      priorityId: parseInt(values.priorityId),
-      statusId: parseInt(values.statusId),
-      orderClassId: parseInt(values.orderClassId),
-      id: selectedRow.id,
-    };
+        ...values,
+        buildingId : parseInt(values.buildingId),
+        id: selectedRow.id,
+      
+      };
+     
     const { data, error } = await triggerEdit(parsedValues);
     if (error) {
       console.log(error);
@@ -168,39 +146,7 @@ const DealsModal: React.FC<Props> = ({
     }
   };
 
-  const options = [
-    { id: 1, name: "Yanğinsöndürmə sistemləri" },
-    { id: 2, name: "Su catdirilmasi" },
-    { id: 3, name: "Avtomatik Qapi" },
-    { id: 4, name: "Santexnik, istilik, kanalizasiya+" },
-  ];
-  const optionsSource = [
-    { id: 1, name: "Şəxsi Ziyarət" },
-    { id: 2, name: "Sosial Sebeke+" },
-  ];
-  const optionsPriority = [
-    { id: 0, name: "Low" },
-    { id: 1, name: "Normal+" },
-    { id: 2, name: "High" },
-    { id: 3, name: "Critical" },
-  ];
-  const optionsClass = [
-    { id: 1, name: "Client" },
-    { id: 2, name: "Planned+" },
-  ];
-  const optionsStatus = [
-    { id: 0, name: "NewOrder+" },
-    { id: 1, name: "Appointed" },
-    { id: 2, name: "Inprogress" },
-    { id: 3, name: "OnPause" },
-    { id: 4, name: "OnConfirmation" },
-    { id: 5, name: "Completed" },
-    { id: 6, name: "Rejected" },
-    { id: 7, name: "Returned" },
-    { id: 8, name: "Cancelled" },
-    { id: 9, name: "Closed" },
-    { id: 10, name: "EnteredIncorrectly" },
-  ];
+
 
   return (
     <div>
@@ -235,7 +181,7 @@ const DealsModal: React.FC<Props> = ({
                       as="h3"
                       className="flex items-center justify-between font-bold font-inter text-16 leading-30 text-dark"
                     >
-                      Add Order
+                      Add Company
                       <XCircleIcon
                         onClick={closeModal}
                         className="w-6 h-6 cursor-pointer fill-icon"
@@ -243,15 +189,18 @@ const DealsModal: React.FC<Props> = ({
                     </Dialog.Title>
                     <Formik
                       initialValues={{
-                        description: "",
-                        statusId: "",
-                        orderTypeId: "",
-                        orderSourceId: "",
-                        priorityId: "",
-                        orderClassId: "",
-                        appUserId: "",
-                        actualDeadline: "",
-                        normativeDeadline: "",
+                        directorName:"",
+                        directorSurname: "",
+                        directorFatherName: "",
+                        phonenumber: "",
+                        email: "",
+                        logo: "",
+                        buildingId: "",
+                        companyName: "",
+                        voen: "",
+                        vin: "",
+                       
+                       
                       }}
                       onSubmit={handleSubmit}
                     >
@@ -260,30 +209,37 @@ const DealsModal: React.FC<Props> = ({
                           <div className="w-[48%]">
                             {" "}
                             <label
-                              htmlFor="actualDeadline"
+                              htmlFor="vendorBuildingId"
                               className="flex items-center justify-between mt-10 font-bold font-inter text-16 leading-30 text-dark"
                             >
-                              Actual Deadline
+                              Building Name
                             </label>
                             <Field
-                              type="date"
-                              className="mt-3 w-full  rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none  font-medium text-md"
-                              name="actualDeadline"
+                              as="select"
+                              id="buildingId"
+                              className="mt-3 w-full rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md hover:outline-none"
+                              name="buildingId"
                               required
-                            />
+                            >
+                              <option value="-1">Choose</option>
+                              {dataBuilding?.data.map((item:any) => (
+                                <option value={item.id}>{item.name}</option>
+                              ))}
+                             
+                            </Field>
                           </div>
                           <div className="w-[48%]">
                             {" "}
                             <label
-                              htmlFor="normativeDeadline"
+                              htmlFor="directorName"
                               className="flex items-center justify-between mt-10 font-bold font-inter text-16 leading-30 text-dark"
                             >
-                              Normative Deadline
+                       Director Name
                             </label>
                             <Field
-                              type="date"
+                              type="text"
                               className="mt-3 w-full  rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none  font-medium text-md"
-                              name="normativeDeadline"
+                              name="directorName"
                               required
                             />
                           </div>
@@ -292,152 +248,131 @@ const DealsModal: React.FC<Props> = ({
                         <div className=" w-full flex items-center flex-row justify-between mt-5 font-bold font-inter text-16 leading-30 text-dark">
                           <div className="w-[48%]">
                             <label
-                              htmlFor="appUserId"
+                              htmlFor="directorSurname"
                               className="inline-flex  justify-star items-center  w-1/2"
                             >
-                              İcraçı
+                             Director Surname
                             </label>
                             <div className="flex items-center justify-between relative">
                               <Field
                                 type="text"
                                 className="mt-3 w-full rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
-                                name="appUserId"
+                                name="directorSurname"
                               />
-                              <ChevronDownIcon
-                                className="h-5 w-5 text-gray-400 absolute top-[50%] right-4 cursor-pointer"
-                                onClick={openModalSub}
-                              />
+                              
                             </div>
                           </div>
                           <div className="w-[48%]">
                             <label
-                              htmlFor="orderTypeId"
+                              htmlFor="directorFatherName"
                               className="inline-flex  justify-star items-center  w-1/2"
                             >
-                              Order Type
+                        Father Name
                             </label>
                             <Field
-                              as="select"
-                              id="orderTypeId"
-                              className="mt-3 w-full rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md hover:outline-none"
-                              name="orderTypeId"
-                              required
-                            >
-                              <option value="-1">Choose</option>
-                              {options.map((item) => (
-                                <option value={item.id}>{item.name}</option>
-                              ))}
-                            </Field>
+                                type="text"
+                                className="mt-3 w-full rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
+                                name="directorFatherName"
+                              />
                           </div>
                         </div>
                         <div className=" w-full flex items-center flex-row justify-between mt-5 font-bold font-inter text-16 leading-30 text-dark">
                           <div className="w-[48%]">
                             <label
-                              htmlFor="orderSourceId"
+                              htmlFor="email"
                               className="inline-flex  justify-star items-center  w-1/2"
                             >
-                              Order Source
+                            Email
                             </label>
                             <div className="flex items-center justify-between relative">
                               <Field
-                                as="select"
-                                className="mt-3 w-full rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md hover:outline-none"
-                                id="orderSourceId"
-                                name="orderSourceId"
-                                required
-                              >
-                                <option value="-1">Choose</option>
-                                {optionsSource.map((item) => (
-                                  <option value={item.id}>{item.name}</option>
-                                ))}
-                              </Field>
+                                type="email"
+                                className="mt-3 w-full rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
+                                name="email"
+                              />
+                              
                             </div>
                           </div>
                           <div className="w-[48%]">
                             <label
-                              htmlFor="priorityId"
+                              htmlFor="logo"
                               className="inline-flex  justify-star items-center  w-1/2"
                             >
-                              Priorty
+                      Logo
                             </label>
                             <Field
-                              className="mt-3 w-full rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md hover:outline-none"
-                              as="select"
-                              id="priorityId"
-                              name="priorityId"
-                              required
-                            >
-                              <option value="-1">Choose</option>
-                              {optionsPriority.map((item) => (
-                                <option value={item.id}>{item.name}</option>
-                              ))}
-                            </Field>
+                                type="text"
+                                className="mt-3 w-full rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
+                                name="logo"
+                              />
                           </div>
                         </div>
+
                         <div className=" w-full flex items-center flex-row justify-between mt-5 font-bold font-inter text-16 leading-30 text-dark">
                           <div className="w-[48%]">
                             <label
-                              htmlFor="orderClassId"
+                              htmlFor="companyName"
                               className="inline-flex  justify-star items-center  w-1/2"
                             >
-                              Order Class
+                           Company Name
                             </label>
                             <div className="flex items-center justify-between relative">
                               <Field
-                                className="mt-3 w-full rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md hover:outline-none"
-                                as="select"
-                                name="orderClassId"
-                                id="orderClassId"
-                                required
-                              >
-                                <option value="-1">Choose</option>
-                                {optionsClass.map((item) => (
-                                  <option value={item.id}>{item.name}</option>
-                                ))}
-                              </Field>
+                                type="text"
+                                className="mt-3 w-full rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
+                                name="companyName"
+                              />
+                              
                             </div>
                           </div>
                           <div className="w-[48%]">
                             <label
-                              htmlFor="statusId"
+                              htmlFor="voen"
                               className="inline-flex  justify-star items-center  w-1/2"
                             >
-                              Status
+                    Voen
                             </label>
-
                             <Field
-                              className="mt-3 w-full rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md hover:outline-none"
-                              as="select"
-                              name="statusId"
-                              id="statusId"
-                              required
-                            >
-                              <option value="-1">Choose</option>
-                              {optionsStatus.map((item) => (
-                                <option value={item.id}>{item.name}</option>
-                              ))}
-                            </Field>
+                                type="text"
+                                className="mt-3 w-full rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
+                                name="voen"
+                              />
                           </div>
                         </div>
 
-                        <div className="w-full  flex items-end justify-between  mt-5 font-bold font-inter text-16 leading-30 text-dark">
+                        <div className=" w-full flex items-center flex-row justify-between mt-5 font-bold font-inter text-16 leading-30 text-dark">
+                         
                           <div className="w-[48%]">
                             <label
-                              htmlFor="description"
+                              htmlFor="vin"
                               className="inline-flex  justify-star items-center  w-1/2"
                             >
-                              Description
+                   Vin
                             </label>
-
                             <Field
-                              className="mt-3 w-full min-h-[100px] rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md hover:outline-none"
-                              as="textarea"
-                              name="description"
-                              id="description"
-                              required
-                            ></Field>
+                                type="text"
+                                className="mt-3 w-full rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
+                                name="vin"
+                              />
+                          </div>
+                          <div className="w-[48%]">
+                            <label
+                              htmlFor="phonenumber"
+                              className="inline-flex  justify-star items-center  w-1/2"
+                            >
+                    Phone Number
+                            </label>
+                            <div className="flex items-center justify-between relative">
+                            <Field
+                                type="text"
+                                className="mt-3 w-full rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
+                                name="phonenumber"
+                              />
+                            </div>
                           </div>
                         </div>
+                      
+                       
                         <div className="flex w-full items-center justify-around mt-10 font-bold font-inter text-16 leading-30 text-dark">
                           <button
                             type="submit"
@@ -464,46 +399,59 @@ const DealsModal: React.FC<Props> = ({
                     </Dialog.Title>
                     <Formik
                       initialValues={{
-                        description: selectedRow?.description || "",
-                        statusId: selectedRow?.statusId || "",
-                        orderTypeId: selectedRow?.orderTypeId || "",
-                        orderSourceId: selectedRow?.orderSourceId || "",
-                        priorityId: selectedRow?.priorityId || "",
-                        orderClassId: selectedRow?.orderClassId || "",
-                        appUserId: selectedRow?.appUserId || "",
-                        actualDeadline: selectedRow?.actualDeadline || "",
-                        normativeDeadline: selectedRow?.normativeDeadline || "",
+                        buildingId:dataBuilding?.data.find(
+                            (item:any) =>
+                              item.name === selectedRow?.buildingName
+                          )?.id || "",
+                          directorName: selectedRow?.directorName || "",
+                          directorSurname: selectedRow?.directorSurname || "",
+                          directorFatherName: selectedRow?.directorFatherName || "",
+                          phonenumber: selectedRow?.phonenumber || "",
+                          email: selectedRow?.email || "",
+                          logo: selectedRow?.logo || "",
+                          companyName: selectedRow?.companyName || "",
+                          voen: selectedRow?.voen || "",
+                          vin: selectedRow?.vin || "",
+                       
                       }}
                       onSubmit={handleEdit}
                     >
-                      <Form>
+                       <Form>
                         <div className=" w-full flex items-center flex-row justify-between mt-5 font-bold font-inter text-16 leading-30 text-dark">
                           <div className="w-[48%]">
                             {" "}
                             <label
-                              htmlFor="actualDeadline"
+                              htmlFor="vendorBuildingId"
                               className="flex items-center justify-between mt-10 font-bold font-inter text-16 leading-30 text-dark"
                             >
-                              Actual Deadline
+                              Building Name
                             </label>
                             <Field
-                              type="date"
-                              className="mt-3 w-full  rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none  font-medium text-md"
-                              name="actualDeadline"
-                            />
+                              as="select"
+                              id="buildingId"
+                              className="mt-3 w-full rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md hover:outline-none"
+                              name="buildingId"
+                              required
+                            >
+                              <option value="-1">Choose</option>
+                              {dataBuilding?.data.map((item:any) => (
+                                <option value={item.id}>{item.name}</option>
+                              ))}
+                             
+                            </Field>
                           </div>
                           <div className="w-[48%]">
                             {" "}
                             <label
-                              htmlFor="normativeDeadline"
+                              htmlFor="directorName"
                               className="flex items-center justify-between mt-10 font-bold font-inter text-16 leading-30 text-dark"
                             >
-                              Normative Deadline
+                       Director Name
                             </label>
                             <Field
-                              type="date"
+                              type="text"
                               className="mt-3 w-full  rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none  font-medium text-md"
-                              name="normativeDeadline"
+                              name="directorName"
                               required
                             />
                           </div>
@@ -512,152 +460,131 @@ const DealsModal: React.FC<Props> = ({
                         <div className=" w-full flex items-center flex-row justify-between mt-5 font-bold font-inter text-16 leading-30 text-dark">
                           <div className="w-[48%]">
                             <label
-                              htmlFor="appUserId"
+                              htmlFor="directorSurname"
                               className="inline-flex  justify-star items-center  w-1/2"
                             >
-                              İcraçı
+                             Director Surname
                             </label>
                             <div className="flex items-center justify-between relative">
                               <Field
                                 type="text"
                                 className="mt-3 w-full rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
-                                name="appUserId"
+                                name="directorSurname"
                               />
-                              <ChevronDownIcon
-                                className="h-5 w-5 text-gray-400 absolute top-[50%] right-4 cursor-pointer"
-                                onClick={openModalSub}
-                              />
+                              
                             </div>
                           </div>
                           <div className="w-[48%]">
                             <label
-                              htmlFor="orderTypeId"
+                              htmlFor="directorFatherName"
                               className="inline-flex  justify-star items-center  w-1/2"
                             >
-                              Order Type
+                        Father Name
                             </label>
                             <Field
-                              as="select"
-                              id="orderTypeId"
-                              className="mt-3 w-full rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md hover:outline-none"
-                              name="orderTypeId"
-                              required
-                            >
-                              <option value="-1">Choose</option>
-                              {options.map((item) => (
-                                <option value={item.id}>{item.name}</option>
-                              ))}
-                            </Field>
+                                type="text"
+                                className="mt-3 w-full rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
+                                name="directorFatherName"
+                              />
                           </div>
                         </div>
                         <div className=" w-full flex items-center flex-row justify-between mt-5 font-bold font-inter text-16 leading-30 text-dark">
                           <div className="w-[48%]">
                             <label
-                              htmlFor="orderSourceId"
+                              htmlFor="email"
                               className="inline-flex  justify-star items-center  w-1/2"
                             >
-                              Order Source
+                            Email
                             </label>
                             <div className="flex items-center justify-between relative">
                               <Field
-                                as="select"
-                                className="mt-3 w-full rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md hover:outline-none"
-                                id="orderSourceId"
-                                name="orderSourceId"
-                                required
-                              >
-                                <option value="-1">Choose</option>
-                                {optionsSource.map((item) => (
-                                  <option value={item.id}>{item.name}</option>
-                                ))}
-                              </Field>
+                                type="email"
+                                className="mt-3 w-full rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
+                                name="email"
+                              />
+                              
                             </div>
                           </div>
                           <div className="w-[48%]">
                             <label
-                              htmlFor="priorityId"
+                              htmlFor="logo"
                               className="inline-flex  justify-star items-center  w-1/2"
                             >
-                              Priorty
+                      Logo
                             </label>
                             <Field
-                              className="mt-3 w-full rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md hover:outline-none"
-                              as="select"
-                              id="priorityId"
-                              name="priorityId"
-                              required
-                            >
-                              <option value="-1">Choose</option>
-                              {optionsPriority.map((item) => (
-                                <option value={item.id}>{item.name}</option>
-                              ))}
-                            </Field>
+                                type="text"
+                                className="mt-3 w-full rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
+                                name="logo"
+                              />
                           </div>
                         </div>
+
                         <div className=" w-full flex items-center flex-row justify-between mt-5 font-bold font-inter text-16 leading-30 text-dark">
                           <div className="w-[48%]">
                             <label
-                              htmlFor="orderClassId"
+                              htmlFor="companyName"
                               className="inline-flex  justify-star items-center  w-1/2"
                             >
-                              Order Class
+                           Company Name
                             </label>
                             <div className="flex items-center justify-between relative">
                               <Field
-                                className="mt-3 w-full rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md hover:outline-none"
-                                as="select"
-                                name="orderClassId"
-                                id="orderClassId"
-                                required
-                              >
-                                <option value="-1">Choose</option>
-                                {optionsClass.map((item) => (
-                                  <option value={item.id}>{item.name}</option>
-                                ))}
-                              </Field>
+                                type="text"
+                                className="mt-3 w-full rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
+                                name="companyName"
+                              />
+                              
                             </div>
                           </div>
                           <div className="w-[48%]">
                             <label
-                              htmlFor="statusId"
+                              htmlFor="voen"
                               className="inline-flex  justify-star items-center  w-1/2"
                             >
-                              Status
+                    Voen
                             </label>
-
                             <Field
-                              className="mt-3 w-full rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md hover:outline-none"
-                              as="select"
-                              name="statusId"
-                              id="statusId"
-                              required
-                            >
-                              <option value="-1">Choose</option>
-                              {optionsStatus.map((item) => (
-                                <option value={item.id}>{item.name}</option>
-                              ))}
-                            </Field>
+                                type="text"
+                                className="mt-3 w-full rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
+                                name="voen"
+                              />
                           </div>
                         </div>
 
-                        <div className="w-full  flex items-end justify-between  mt-5 font-bold font-inter text-16 leading-30 text-dark">
+                        <div className=" w-full flex items-center flex-row justify-between mt-5 font-bold font-inter text-16 leading-30 text-dark">
+                         
                           <div className="w-[48%]">
                             <label
-                              htmlFor="description"
+                              htmlFor="vin"
                               className="inline-flex  justify-star items-center  w-1/2"
                             >
-                              Description
+                   Vin
                             </label>
-
                             <Field
-                              className="mt-3 w-full min-h-[100px] rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md hover:outline-none"
-                              as="textarea"
-                              name="description"
-                              id="description"
-                              required
-                            ></Field>
+                                type="text"
+                                className="mt-3 w-full rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
+                                name="vin"
+                              />
+                          </div>
+                          <div className="w-[48%]">
+                            <label
+                              htmlFor="phonenumber"
+                              className="inline-flex  justify-star items-center  w-1/2"
+                            >
+                    Phone Number
+                            </label>
+                            <div className="flex items-center justify-between relative">
+                            <Field
+                                type="text"
+                                className="mt-3 w-full rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
+                                name="phonenumber"
+                              />
+                            </div>
                           </div>
                         </div>
+                      
+                       
                         <div className="flex w-full items-center justify-around mt-10 font-bold font-inter text-16 leading-30 text-dark">
                           <button
                             type="button"
@@ -684,9 +611,9 @@ const DealsModal: React.FC<Props> = ({
           </div>
         </Dialog>
       </Transition>
-      <DealsSubModal isOpenSub={isOpenSub} closeModalSub={closeModalSub} />
+     
     </div>
   );
 };
 
-export default DealsModal;
+export default CompaniesModal;

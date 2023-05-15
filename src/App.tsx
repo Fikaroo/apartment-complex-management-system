@@ -3,12 +3,19 @@ import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard/Dashboard";
 import Layout from "./layout/Layout";
 import Sos from "./pages/Sos/Sos";
-import Customers from "./pages/Customers/Customers";
+import Users from "./pages/Users/Users";
 import CustomerDetail from "./pages/CustomerDetail/CustomerDetail";
 import Deals from "./pages/Deals/Deals";
 import Blog from "./pages/Blog/Blog";
 import Notification from "./pages/Notifications/Notifications";
-
+import DealsDetail from "./pages/DealsDetail/DealsDetail";
+import Objects from "./pages/Objects/Objects";
+import ObjectDetail from "./pages/Objects/ObjectDetail";
+import Buildings from "./pages/Buildings/Buildings";
+import Apartments from "./pages/Apartments/Apartments";
+import ApartmentDetail from "./pages/Apartments/ApartmentDetail";
+import Companies from "./pages/Companies/Companies";
+import CompanyDetail from "./pages/Companies/CompanyDetail";
 const App = () => {
   return (
     <div className="w-full min-h-screen overflow-hidden bg-background/90 text-dark">
@@ -30,14 +37,7 @@ const App = () => {
             </Layout>
           }
         />
-        <Route
-          path="/control-panel"
-          element={
-            <Layout>
-              <Customers />
-            </Layout>
-          }
-        />
+       
         <Route
           path="/control-panel/deals"
           element={
@@ -50,40 +50,89 @@ const App = () => {
           path="/control-panel/deals/:dealId"
           element={
             <Layout>
-              <Deals />
+              <DealsDetail/>
             </Layout>
           }
         />
 
+       
         <Route
-          path="/references"
+          path="/references/users"
           element={
             <Layout>
-              <Deals />
+              <Users />
             </Layout>
           }
         />
         <Route
-          path="/references/customers"
-          element={
-            <Layout>
-              <Deals />
-            </Layout>
-          }
-        />
-        <Route
-          path="/references/customers/:customerId"
+          path="/references/users/:userId"
           element={
             <Layout>
               <CustomerDetail />
             </Layout>
           }
         />
-        <Route
-          path="/customers/detail/:customerId"
+         <Route
+          path="/references/objects"
           element={
             <Layout>
-              <CustomerDetail />
+              <Objects />
+            </Layout>
+          }
+        />
+           <Route
+          path="/references/objects/:objectId"
+          element={
+            <Layout>
+              <ObjectDetail />
+            </Layout>
+          }
+        />
+         <Route
+          path="/references/buildings"
+          element={
+            <Layout>
+              <Buildings/>
+            </Layout>
+          }
+        />
+           <Route
+          path="/references/buildings/:buildingId"
+          element={
+            <Layout>
+              <ObjectDetail />
+            </Layout>
+          }
+        />
+           <Route
+          path="/references/apartments"
+          element={
+            <Layout>
+              <Apartments/>
+            </Layout>
+          }
+        />
+         <Route
+          path="/references/apartments/:apartmentId"
+          element={
+            <Layout>
+              <ApartmentDetail />
+            </Layout>
+          }
+        />
+            <Route
+          path="/references/companies"
+          element={
+            <Layout>
+              <Companies/>
+            </Layout>
+          }
+        />
+        <Route
+          path="/references/companies/:companyId"
+          element={
+            <Layout>
+              <CompanyDetail />
             </Layout>
           }
         />

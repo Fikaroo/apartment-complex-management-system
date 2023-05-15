@@ -44,10 +44,10 @@ const NavItem = ({
   iconSolid,
   children,
 }: NavItemProps & ISidebarItems) => {
-  console.log(children, "childrenn");
+
   const [isExpanded, setIsExpanded] = useState(false);
   const { pathname } = useLocation();
-  console.log(pathname, "pathname");
+
   const [isRollup, setRollup] = useState<boolean>(false);
   return (
     <React.Fragment>
@@ -95,7 +95,6 @@ const NavItem = ({
           Array.isArray(children) && (
             <div className="hidden group-hover:block">
               {children.map((child) => {
-                console.log(child, "child");
                 return (
                   <NavLink
                     key={child.path}
@@ -126,11 +125,12 @@ const Navbar = () => {
       icon: <BriefcaseIcon className="w-5 h-5" />,
       iconSolid: <BriefcaseIconSolid className="w-5 h-5 fill-white" />,
       children: [
-        { name: "Customers", path: "/references/customers" },
+        { name: "Users", path: "/references/users" },
         { name: "Objects", path: "/references/objects" },
-        { name: "Residents", path: "/references/residents" },
+        // { name: "RentRooms", path: "/references/rentrooms" },
         { name: "Buildings", path: "/references/buildings" },
         { name: "Companies", path: "/references/companies" },
+        { name: "Apartments", path: "/references/apartments" },
       ],
     },
     {

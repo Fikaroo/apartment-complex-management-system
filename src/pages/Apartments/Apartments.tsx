@@ -1,5 +1,5 @@
 import React, { Fragment, useEffect, useState } from "react";
-import Tables, { IHeaders } from "../../components/Table/Tables";
+import Tables, { IHeaders } from "../../components/Table/ApartmentsTable";
 import SearchInput from "../../components/SearchInput";
 import Filter from "../../components/Filter";
 import OrderDate from "../../components/OrderDate";
@@ -9,11 +9,13 @@ import useSWR from "swr";
 import { GetAll } from "../../api";
 import useStoreData from "../../hooks/useStoreData";
 import { useDealsStore } from "../../state/store";
-const Deals = () => {
+import ApartmentsModal from "../../components/Modals/ApartmentsModal";
+
+const Apartments = () => {
   let [isOpen, setIsOpen] = useState<boolean>(false);
   const [modalItem, setModalItem] = useState({});
   const [process, setProcess] = useState("");
-  const [orderId, setOrderId] = useState<number>(0);
+  const [apartmentId, setApartmentId] = useState<number>(0);
   const [selectedRow, setSelectedRow] = useState(null);
 
   const closeModal = (): void => {
@@ -27,7 +29,7 @@ const Deals = () => {
   };
 
   const { data, error, isLoading } = useSWR(
-    "/api/OrderAdmin/GetAll",
+    "/api/VendorApartment/GetAll",
     (key) => GetAll.user(key),
     { revalidateIfStale: true }
   );
@@ -62,44 +64,25 @@ const Deals = () => {
     },
     {
       id: 2,
-      title: "Normative Deadline",
+      title: "BuildingName",
     },
     {
       id: 3,
-      title: "Actual Deadline",
+      title: "ApartmentNo",
     },
     {
       id: 4,
-      title: "Description",
+      title: "EntranceNo",
     },
     {
-      id: 5,
-      title: "Order Class",
-    },
+        id: 5,
+        title: "Area",
+      },
     {
       id: 6,
-      title: "Order Source",
+      title: "FloorNo",
     },
-    {
-      id: 7,
-      title: "Order Type",
-    },
-    {
-      id: 8,
-      title: "Phone Number",
-    },
-    {
-      id: 9,
-      title: "Status",
-    },
-    {
-      id: 10,
-      title: "Executor",
-    },
-    {
-      id: 11,
-      title: "Edit",
-    },
+   
   ];
 
   return (
@@ -113,11 +96,11 @@ const Deals = () => {
             openModal={openModal}
             setProcess={setProcess}
             modal={
-              <DealsModal
+              <ApartmentsModal
                 isOpen={isOpen}
                 closeModal={closeModal}
                 process={process}
-                deleteId={orderId}
+                deleteId={apartmentId}
                 selectedRow={selectedRow}
               />
             }
@@ -131,22 +114,22 @@ const Deals = () => {
       <Tables
         openModal={openModal}
         modal={
-          <DealsModal
+          <ApartmentsModal
             isOpen={isOpen}
             closeModal={closeModal}
             process={process}
-            deleteId={orderId}
+            deleteId={apartmentId}
             selectedRow={selectedRow}
           />
         }
         headers={headers}
         data={data}
         setProcess={setProcess}
-        setOrderId={setOrderId}
+        setApartmentId={setApartmentId}
         setSelectedRow={setSelectedRow}
       />
     </Fragment>
   );
 };
 
-export default Deals;
+export default Apartments;

@@ -25,7 +25,7 @@ const Filter = () => {
             leaveFrom="transform opacity-100 scale-100"
             leaveTo="transform opacity-0 scale-95"
           >
-            <Menu.Items className="absolute top-0 right-0 min-h-screen p-4 bg-white rounded-md shadow-lg w-72 focus:outline-none">
+            <Menu.Items className="absolute top-0 right-0 min-h-screen p-4 bg-white rounded-md shadow-lg w-72 focus:outline-none z-[1111]">
               <div className="px-1 py-1 ">
                 <Menu.Item>
                   {({ active }) => (

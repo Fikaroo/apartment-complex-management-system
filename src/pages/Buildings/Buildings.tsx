@@ -1,46 +1,36 @@
-import React, { Fragment, useEffect, useState } from "react";
-import Tables, { IHeaders } from "../../components/Table/Tables";
+import React, { Fragment, useState } from "react";
+import Tables, { IHeaders } from "../../components/Table/BuildingsTable";
 import SearchInput from "../../components/SearchInput";
 import Filter from "../../components/Filter";
 import OrderDate from "../../components/OrderDate";
-import DealsModal from "../../components/Modals/DealsModal";
 import AddBtn from "../../components/AddBtn";
+import BuildingsModal from "../../components/Modals/BuildingsModal";
 import useSWR from "swr";
-import { GetAll } from "../../api";
-import useStoreData from "../../hooks/useStoreData";
-import { useDealsStore } from "../../state/store";
-const Deals = () => {
+import {GetAll } from "../../api";
+const Users = () => {
   let [isOpen, setIsOpen] = useState<boolean>(false);
-  const [modalItem, setModalItem] = useState({});
+  let [isOpenAdd, setIsOpenAdd] = useState<boolean>(false);
   const [process, setProcess] = useState("");
-  const [orderId, setOrderId] = useState<number>(0);
+  const [buildingId, setBuildingId] = useState<number>(0);
   const [selectedRow, setSelectedRow] = useState(null);
-
   const closeModal = (): void => {
     setIsOpen(false);
   };
-
-  console.log(selectedRow, "selectedRow");
-
+  const closeModalAdd = (): void => {
+    setIsOpenAdd(false);
+  };
   const openModal = (): void => {
     setIsOpen(true);
   };
-
+  const openModalAdd = (): void => {
+    setIsOpenAdd(true);
+  };
   const { data, error, isLoading } = useSWR(
-    "/api/OrderAdmin/GetAll",
+    "/api/VendorBuildings/GetAll",
     (key) => GetAll.user(key),
     { revalidateIfStale: true }
   );
-  // const dealsStore = useDealsStore();
 
-  // useEffect(() => {}, []);
-
-  // console.log(dealsStore);
-  // useStoreData({
-  //   path: "/api/OrderAdmin/GetAll",
-  //   fetcher: DealsGetAll,
-  //   storeFunc: dealsStore?.updateDeal,
-  // });
   const headers: IHeaders[] = [
     {
       id: 1,
@@ -62,91 +52,79 @@ const Deals = () => {
     },
     {
       id: 2,
-      title: "Normative Deadline",
+      title: "Name",
     },
     {
       id: 3,
-      title: "Actual Deadline",
+      title: "Region Name",
     },
     {
       id: 4,
-      title: "Description",
+      title: "Street",
     },
     {
       id: 5,
-      title: "Order Class",
+      title: "BuildingNo",
     },
     {
       id: 6,
-      title: "Order Source",
+      title: "Security Phone",
     },
     {
       id: 7,
-      title: "Order Type",
+      title: "Floor",
     },
     {
       id: 8,
-      title: "Phone Number",
+      title: "Entrance",
     },
-    {
-      id: 9,
-      title: "Status",
-    },
-    {
-      id: 10,
-      title: "Executor",
-    },
-    {
-      id: 11,
-      title: "Edit",
-    },
+ 
   ];
 
   return (
     <Fragment>
       <div className="flex items-center justify-between">
         <p className="font-bold font-inter text-16 leading-30 text-dark">
-          Ümumi: 178 Sakin
+          Ümumi: 178 Buildings
         </p>{" "}
         <div className="flex items-center gap-4">
-          <AddBtn
+        <AddBtn
             openModal={openModal}
             setProcess={setProcess}
             modal={
-              <DealsModal
+              <BuildingsModal
                 isOpen={isOpen}
                 closeModal={closeModal}
                 process={process}
-                deleteId={orderId}
+                deleteId={buildingId}
                 selectedRow={selectedRow}
               />
             }
           />
-
           <OrderDate />
 
           <Filter />
         </div>
       </div>
       <Tables
-        openModal={openModal}
-        modal={
-          <DealsModal
-            isOpen={isOpen}
-            closeModal={closeModal}
-            process={process}
-            deleteId={orderId}
-            selectedRow={selectedRow}
-          />
-        }
-        headers={headers}
-        data={data}
-        setProcess={setProcess}
-        setOrderId={setOrderId}
-        setSelectedRow={setSelectedRow}
+         openModal={openModal}
+         modal={
+           <BuildingsModal
+             isOpen={isOpen}
+             closeModal={closeModal}
+             process={process}
+             deleteId={buildingId}
+             selectedRow={selectedRow}
+           />
+         }
+         headers={headers}
+         data={data}
+         setProcess={setProcess}
+         setBuildingId={setBuildingId}
+         setSelectedRow={setSelectedRow}
       />
     </Fragment>
   );
 };
 
-export default Deals;
+export default Users;
