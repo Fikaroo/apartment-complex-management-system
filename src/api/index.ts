@@ -12,6 +12,7 @@ const admin = axios.create({
     "Content-type": "application/json",
   },
 });
+
 const company = axios.create({
   baseURL: baseUrl,
   headers: {
@@ -294,16 +295,16 @@ export const CreateCompany = {
       arg,
     }: {
       arg: {
-    directorName:string,
-    directorSurname: string,
-    directorFatherName: string,
-    phonenumber: string,
-    email: string,
-    logo: string,
-    objectId: number,
-    companyName: string,
-    voen: string,
-    vin: string,
+        directorName: string;
+        directorSurname: string;
+        directorFatherName: string;
+        phonenumber: string;
+        email: string;
+        logo: string;
+        objectId: number;
+        companyName: string;
+        voen: string;
+        vin: string;
       };
     }
   ) => {
@@ -324,16 +325,16 @@ export const EditCompany = {
     }: {
       arg: {
         id: number;
-        directorName:string,
-        directorSurname: string,
-        directorFatherName: string,
-        phonenumber: string,
-        email: string,
-        logo: string,
-        objectId: number,
-        companyName: string,
-        voen: string,
-        vin: string,
+        directorName: string;
+        directorSurname: string;
+        directorFatherName: string;
+        phonenumber: string;
+        email: string;
+        logo: string;
+        objectId: number;
+        companyName: string;
+        voen: string;
+        vin: string;
       };
     }
   ) => {

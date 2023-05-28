@@ -6,7 +6,7 @@ import OrderDate from "../../components/OrderDate";
 import AddBtn from "../../components/AddBtn";
 import BuildingsModal from "../../components/Modals/BuildingsModal";
 import useSWR from "swr";
-import {GetAll } from "../../api";
+import { GetAll } from "../../api";
 const Users = () => {
   let [isOpen, setIsOpen] = useState<boolean>(false);
   let [isOpenAdd, setIsOpenAdd] = useState<boolean>(false);
@@ -78,7 +78,6 @@ const Users = () => {
       id: 8,
       title: "Entrance",
     },
- 
   ];
 
   return (
@@ -88,7 +87,7 @@ const Users = () => {
           Ümumi: 178 Buildings
         </p>{" "}
         <div className="flex items-center gap-4">
-        <AddBtn
+          <AddBtn
             openModal={openModal}
             setProcess={setProcess}
             modal={
@@ -107,21 +106,21 @@ const Users = () => {
         </div>
       </div>
       <Tables
-         openModal={openModal}
-         modal={
-           <BuildingsModal
-             isOpen={isOpen}
-             closeModal={closeModal}
-             process={process}
-             deleteId={buildingId}
-             selectedRow={selectedRow}
-           />
-         }
-         headers={headers}
-         data={data}
-         setProcess={setProcess}
-         setBuildingId={setBuildingId}
-         setSelectedRow={setSelectedRow}
+        openModal={openModal}
+        modal={
+          <BuildingsModal
+            isOpen={isOpen}
+            closeModal={closeModal}
+            process={process}
+            deleteId={buildingId}
+            selectedRow={selectedRow}
+          />
+        }
+        headers={headers}
+        data={data}
+        setProcess={setProcess}
+        setBuildingId={setBuildingId}
+        setSelectedRow={setSelectedRow}
       />
     </Fragment>
   );

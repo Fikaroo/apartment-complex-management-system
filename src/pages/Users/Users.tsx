@@ -7,7 +7,7 @@ import AddBtn from "../../components/AddBtn";
 import DealsModal from "../../components/Modals/DealsModal";
 import UserModal from "../../components/Modals/UserModal";
 import useSWR from "swr";
-import {GetAll } from "../../api";
+import { GetAll } from "../../api";
 const Users = () => {
   let [isOpen, setIsOpen] = useState<boolean>(false);
   let [isOpenAdd, setIsOpenAdd] = useState<boolean>(false);
@@ -110,21 +110,21 @@ const Users = () => {
         </div>
       </div>
       <Tables
-         openModal={openModal}
-         modal={
-           <UserModal
-             isOpen={isOpen}
-             closeModal={closeModal}
-             process={process}
-             deleteId={orderId}
-             selectedRow={selectedRow}
-           />
-         }
-         headers={headers}
-         data={data}
-         setProcess={setProcess}
-         setOrderId={setOrderId}
-         setSelectedRow={setSelectedRow}
+        openModal={openModal}
+        modal={
+          <UserModal
+            isOpen={isOpen}
+            closeModal={closeModal}
+            process={process}
+            deleteId={orderId}
+            selectedRow={selectedRow}
+          />
+        }
+        headers={headers}
+        data={data}
+        setProcess={setProcess}
+        setOrderId={setOrderId}
+        setSelectedRow={setSelectedRow}
       />
     </Fragment>
   );

@@ -5,7 +5,7 @@ import { Fragment, useState } from "react";
 import { Formik, Field, Form, FormikHelpers } from "formik";
 import useSWR, { mutate } from "swr";
 import useSWRMutation from "swr/mutation";
-import { Delete} from "../../api";
+import { Delete } from "../../api";
 import { AddObjects } from "../../api";
 import { EditObjects } from "../../api";
 type Props = {
@@ -128,7 +128,6 @@ const ObjectsModal: React.FC<Props> = ({
     }
   };
 
-
   return (
     <div>
       <Transition appear show={isOpen} as={Fragment}>
@@ -177,11 +176,11 @@ const ObjectsModal: React.FC<Props> = ({
                       onSubmit={handleSubmit}
                     >
                       <Form action="">
-                        <div className="flex items-center flex-row justify-between mt-10 font-bold font-inter text-16 leading-30 text-dark">
+                        <div className="flex flex-row items-center justify-between mt-10 font-bold font-inter text-16 leading-30 text-dark">
                           <div>
                             <label
                               htmlFor="title"
-                              className="inline-flex  justify-star items-center  w-1/2"
+                              className="inline-flex items-center w-1/2 justify-star"
                             >
                               Title
                             </label>
@@ -195,7 +194,7 @@ const ObjectsModal: React.FC<Props> = ({
                           <div>
                             <label
                               htmlFor="address"
-                              className="inline-flex  justify-star items-center  w-1/2"
+                              className="inline-flex items-center w-1/2 justify-star"
                             >
                               Adress
                             </label>
@@ -207,11 +206,11 @@ const ObjectsModal: React.FC<Props> = ({
                             />
                           </div>
                         </div>
-                        <div className="flex items-center flex-row justify-between mt-10 font-bold font-inter text-16 leading-30 text-dark">
+                        <div className="flex flex-row items-center justify-between mt-10 font-bold font-inter text-16 leading-30 text-dark">
                           <div className="w-1/2">
                             <label
                               htmlFor="regionId"
-                              className="inline-flex  justify-star items-center  w-1/2"
+                              className="inline-flex items-center w-1/2 justify-star"
                             >
                               Region
                             </label>
@@ -231,7 +230,7 @@ const ObjectsModal: React.FC<Props> = ({
                             </Field>
                           </div>
                         </div>
-                        <div className="flex w-full items-center justify-around mt-10 font-bold font-inter text-16 leading-30 text-dark">
+                        <div className="flex items-center justify-around w-full mt-10 font-bold font-inter text-16 leading-30 text-dark">
                           <button
                             type="submit"
                             disabled={isMutating}
@@ -268,11 +267,11 @@ const ObjectsModal: React.FC<Props> = ({
                       onSubmit={handleEdit}
                     >
                       <Form action="">
-                        <div className="flex items-center flex-row justify-between mt-10 font-bold font-inter text-16 leading-30 text-dark">
+                        <div className="flex flex-row items-center justify-between mt-10 font-bold font-inter text-16 leading-30 text-dark">
                           <div>
                             <label
                               htmlFor="title"
-                              className="inline-flex  justify-star items-center  w-1/2"
+                              className="inline-flex items-center w-1/2 justify-star"
                             >
                               Title
                             </label>
@@ -286,7 +285,7 @@ const ObjectsModal: React.FC<Props> = ({
                           <div>
                             <label
                               htmlFor="address"
-                              className="inline-flex  justify-star items-center  w-1/2"
+                              className="inline-flex items-center w-1/2 justify-star"
                             >
                               Adress
                             </label>
@@ -298,11 +297,11 @@ const ObjectsModal: React.FC<Props> = ({
                             />
                           </div>
                         </div>
-                        <div className="flex items-center flex-row justify-between mt-10 font-bold font-inter text-16 leading-30 text-dark">
+                        <div className="flex flex-row items-center justify-between mt-10 font-bold font-inter text-16 leading-30 text-dark">
                           <div className="w-1/2">
                             <label
                               htmlFor="regionId"
-                              className="inline-flex  justify-star items-center  w-1/2"
+                              className="inline-flex items-center w-1/2 justify-star"
                             >
                               Region
                             </label>
@@ -322,7 +321,7 @@ const ObjectsModal: React.FC<Props> = ({
                             </Field>
                           </div>
                         </div>
-                        <div className="flex w-full items-center justify-around mt-10 font-bold font-inter text-16 leading-30 text-dark">
+                        <div className="flex items-center justify-around w-full mt-10 font-bold font-inter text-16 leading-30 text-dark">
                           <button
                             type="button"
                             className="inline-flex items-center justify-center w-1/4 px-2 py-4 text-sm font-medium text-red-400 rounded-full outline font-inter"
