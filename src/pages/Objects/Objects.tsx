@@ -25,10 +25,9 @@ const Objects = () => {
   const openModalAdd = (): void => {
     setIsOpenAdd(true);
   };
-  const { data, error, isLoading } = useSWR(
+  const { data, error, isLoading, mutate } = useSWR(
     "/api/VendorObjects/GetAll",
-    (key) => GetAll.user(key),
-    { revalidateIfStale: true }
+    (key) => GetAll.user(key)
   );
 
   const headers: IHeaders[] = [
@@ -79,6 +78,7 @@ const Objects = () => {
             openModal={openModalAdd}
             modal={
               <ObjectsModal
+                mutate={mutate}
                 isOpen={isOpenAdd}
                 closeModal={closeModalAdd}
                 process={process}

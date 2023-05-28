@@ -14,6 +14,7 @@ type Props = {
   process: string;
   deleteId: number;
   selectedRow: any;
+  mutate: any;
 };
 type Values = {
   title: string;
@@ -26,6 +27,7 @@ const ObjectsModal: React.FC<Props> = ({
   process,
   deleteId,
   selectedRow,
+  mutate,
 }) => {
   const regions = [
     {
@@ -33,6 +35,7 @@ const ObjectsModal: React.FC<Props> = ({
       regionName: "Baki",
     },
   ];
+
   const mutateData = async () => {
     const { data, error } = await fetch("/api/VendorObjects/GetAll").then(
       (res) => res.json()
@@ -44,12 +47,14 @@ const ObjectsModal: React.FC<Props> = ({
     }
   };
   console.log(selectedRow, "selectedRowUser");
+
   const {
     trigger: triggerEdit,
     data: dataEdit,
     error: errorEdit,
     isMutating: isMutatingEdit,
   } = useSWRMutation("/api/VendorObjects/Update", EditObjects.user);
+
   const { trigger, data, error, isMutating } = useSWRMutation(
     "/api/VendorObjects/Create",
     AddObjects.user
@@ -61,6 +66,7 @@ const ObjectsModal: React.FC<Props> = ({
     error: errorDelete,
     isMutating: isMutatingDelete,
   } = useSWRMutation("/api/VendorObjects/Delete", Delete.user);
+
   useEffect(() => {
     if (dataEdit?.statusCode === 201) {
       alert(dataEdit.message);
@@ -69,14 +75,15 @@ const ObjectsModal: React.FC<Props> = ({
       console.log(errorEdit, "error");
     }
   }, [dataEdit]);
+
   useEffect(() => {
     if (data?.statusCode === 201) {
-      alert(data.message);
       closeModal();
     } else if (data?.statusCode === 400) {
       console.log(error, "error");
     }
   }, [data]);
+
   useEffect(() => {
     if (dataDelete?.statusCode === 201) {
       alert(dataDelete.message);
@@ -85,6 +92,7 @@ const ObjectsModal: React.FC<Props> = ({
       console.log(errorDelete, "error");
     }
   }, [dataDelete]);
+
   const handleSubmit = async (values: Values) => {
     console.log(values, "values");
     const parsedValues = {
@@ -99,8 +107,10 @@ const ObjectsModal: React.FC<Props> = ({
       console.log(data, "createdata");
       closeModal();
       mutateData();
+      mutate();
     }
   };
+
   const handleEdit = async (values: Values) => {
     console.log(values, "valuesedit");
 
@@ -117,6 +127,7 @@ const ObjectsModal: React.FC<Props> = ({
       mutateData();
     }
   };
+
   const handleDelete = async () => {
     const { data, error } = await triggerDelete({ deleteId });
     if (error) {

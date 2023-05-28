@@ -25,7 +25,7 @@ const Users = () => {
   const openModalAdd = (): void => {
     setIsOpenAdd(true);
   };
-  const { data, error, isLoading } = useSWR(
+  const { data, error, isLoading, mutate } = useSWR(
     "/api/VendorBuildings/GetAll",
     (key) => GetAll.user(key),
     { revalidateIfStale: true }
@@ -98,6 +98,8 @@ const Users = () => {
                 deleteId={buildingId}
                 selectedRow={selectedRow}
               />
+
+              mutate = {mutate}
             }
           />
           <OrderDate />
