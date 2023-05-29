@@ -48,28 +48,37 @@ export const RegisterUser = {
       name,
       surname,
       patrionimyc,
-      userName,
       email,
       phoneNumber,
       roleName,
+      customerStatusId,
+      propertyTypeId,
+      proportion,
+      apartmentId,
     }: {
       name: string;
       surname: string;
       patrionimyc: string;
-      userName: string;
       email: string;
       phoneNumber: string;
       roleName: string;
+      customerStatusId: number;
+      propertyTypeId: number;
+      proportion: string;
+      apartmentId: number;
     }
   ) => {
     const { data } = await admin.post(path, {
       name: name,
       surname: surname,
       patrionimyc: patrionimyc,
-      userName: userName,
       email: email,
       phoneNumber: phoneNumber,
       roleName: roleName,
+      customerStatusId: customerStatusId,
+      propertyTypeId: propertyTypeId,
+      proportion: proportion,
+      apartmentId: apartmentId,
     });
     return data;
   },

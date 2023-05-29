@@ -1,10 +1,8 @@
 import React, { Fragment, useState } from "react";
 import Tables, { IHeaders } from "../../components/Table/UsersTable";
-import SearchInput from "../../components/SearchInput";
 import Filter from "../../components/Filter";
 import OrderDate from "../../components/OrderDate";
 import AddBtn from "../../components/AddBtn";
-import DealsModal from "../../components/Modals/DealsModal";
 import UserModal from "../../components/Modals/UserModal";
 import useSWR from "swr";
 import { GetAll } from "../../api";
@@ -26,7 +24,7 @@ const Users = () => {
   const openModalAdd = (): void => {
     setIsOpenAdd(true);
   };
-  const { data, error, isLoading,mutate } = useSWR(
+  const { data, error, isLoading, mutate } = useSWR(
     "/api/Users/GetAllForAdmin",
     (key) => GetAll.user(key),
     { revalidateIfStale: true }
@@ -96,15 +94,20 @@ const Users = () => {
           Ümumi: 178 Sakin
         </p>{" "}
         <div className="flex items-center gap-4">
-          {/* <AddBtn
-          mutate={mutate}
+          <AddBtn
             openModal={openModalAdd}
             modal={
-              <AddCustomerModal isOpen={isOpenAdd} closeModal={closeModalAdd} />
-            
+              <UserModal
+              mutate={mutate}
+              isOpen={isOpen}
+              closeModal={closeModal}
+              process={process}
+              deleteId={orderId}
+              selectedRow={selectedRow}
+              />
             }
             setProcess={setProcess}
-          /> */}
+          />
           <OrderDate />
 
           <Filter />
@@ -114,7 +117,7 @@ const Users = () => {
         openModal={openModal}
         modal={
           <UserModal
-          mutate={mutate}
+            mutate={mutate}
             isOpen={isOpen}
             closeModal={closeModal}
             process={process}

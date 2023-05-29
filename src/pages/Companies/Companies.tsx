@@ -6,13 +6,10 @@ import OrderDate from "../../components/OrderDate";
 import AddBtn from "../../components/AddBtn";
 import useSWR from "swr";
 import { GetAll } from "../../api";
-import useStoreData from "../../hooks/useStoreData";
-import { useDealsStore } from "../../state/store";
 import CompaniesModal from "../../components/Modals/CompaniesModal";
 
 const Companies = () => {
   let [isOpen, setIsOpen] = useState<boolean>(false);
-  const [modalItem, setModalItem] = useState({});
   const [process, setProcess] = useState("");
   const [companyId, setCompanyId] = useState<number>(0);
   const [selectedRow, setSelectedRow] = useState(null);
@@ -27,21 +24,12 @@ const Companies = () => {
     setIsOpen(true);
   };
 
-  const { data, error, isLoading } = useSWR(
+  const { data, error, isLoading ,mutate} = useSWR(
     "/api/VendorCompany/GetAllByVendorId",
     (key) => GetAll.user(key),
     { revalidateIfStale: true }
   );
-  // const dealsStore = useDealsStore();
-
-  // useEffect(() => {}, []);
-
-  // console.log(dealsStore);
-  // useStoreData({
-  //   path: "/api/OrderAdmin/GetAll",
-  //   fetcher: DealsGetAll,
-  //   storeFunc: dealsStore?.updateDeal,
-  // });
+ 
   const headers: IHeaders[] = [
     {
       id: 1,
@@ -115,6 +103,7 @@ const Companies = () => {
             setProcess={setProcess}
             modal={
               <CompaniesModal
+              mutate={mutate}
                 isOpen={isOpen}
                 closeModal={closeModal}
                 process={process}
@@ -133,6 +122,7 @@ const Companies = () => {
         openModal={openModal}
         modal={
           <CompaniesModal
+          mutate={mutate}
             isOpen={isOpen}
             closeModal={closeModal}
             process={process}

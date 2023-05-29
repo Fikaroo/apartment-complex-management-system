@@ -7,8 +7,7 @@ import DealsModal from "../../components/Modals/DealsModal";
 import AddBtn from "../../components/AddBtn";
 import useSWR from "swr";
 import { GetAll } from "../../api";
-import useStoreData from "../../hooks/useStoreData";
-import { useDealsStore } from "../../state/store";
+
 const Deals = () => {
   let [isOpen, setIsOpen] = useState<boolean>(false);
   const [modalItem, setModalItem] = useState({});
@@ -26,21 +25,12 @@ const Deals = () => {
     setIsOpen(true);
   };
 
-  const { data, error, isLoading } = useSWR(
+  const { data, error, isLoading,mutate } = useSWR(
     "/api/OrderAdmin/GetAll",
     (key) => GetAll.user(key),
     { revalidateIfStale: true }
   );
-  // const dealsStore = useDealsStore();
 
-  // useEffect(() => {}, []);
-
-  // console.log(dealsStore);
-  // useStoreData({
-  //   path: "/api/OrderAdmin/GetAll",
-  //   fetcher: DealsGetAll,
-  //   storeFunc: dealsStore?.updateDeal,
-  // });
   const headers: IHeaders[] = [
     {
       id: 1,
@@ -114,6 +104,7 @@ const Deals = () => {
             setProcess={setProcess}
             modal={
               <DealsModal
+              mutate={mutate}
                 isOpen={isOpen}
                 closeModal={closeModal}
                 process={process}
@@ -129,9 +120,11 @@ const Deals = () => {
         </div>
       </div>
       <Tables
+      
         openModal={openModal}
         modal={
           <DealsModal
+          mutate={mutate}
             isOpen={isOpen}
             closeModal={closeModal}
             process={process}

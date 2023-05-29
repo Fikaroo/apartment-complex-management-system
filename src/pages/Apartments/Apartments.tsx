@@ -5,9 +5,8 @@ import Filter from "../../components/Filter";
 import OrderDate from "../../components/OrderDate";
 import DealsModal from "../../components/Modals/DealsModal";
 import AddBtn from "../../components/AddBtn";
-import useSWR from "swr";
+import useSWR, { mutate } from "swr";
 import { GetAll } from "../../api";
-import useStoreData from "../../hooks/useStoreData";
 import { useDealsStore } from "../../state/store";
 import ApartmentsModal from "../../components/Modals/ApartmentsModal";
 
@@ -28,21 +27,12 @@ const Apartments = () => {
     setIsOpen(true);
   };
 
-  const { data, error, isLoading } = useSWR(
+  const { data, error, isLoading ,mutate} = useSWR(
     "/api/VendorApartment/GetAll",
     (key) => GetAll.user(key),
     { revalidateIfStale: true }
   );
-  // const dealsStore = useDealsStore();
-
-  // useEffect(() => {}, []);
-
-  // console.log(dealsStore);
-  // useStoreData({
-  //   path: "/api/OrderAdmin/GetAll",
-  //   fetcher: DealsGetAll,
-  //   storeFunc: dealsStore?.updateDeal,
-  // });
+ 
   const headers: IHeaders[] = [
     {
       id: 1,
@@ -97,6 +87,7 @@ const Apartments = () => {
             setProcess={setProcess}
             modal={
               <ApartmentsModal
+              mutate={mutate}
                 isOpen={isOpen}
                 closeModal={closeModal}
                 process={process}
@@ -115,6 +106,7 @@ const Apartments = () => {
         openModal={openModal}
         modal={
           <ApartmentsModal
+          mutate={mutate}
             isOpen={isOpen}
             closeModal={closeModal}
             process={process}
