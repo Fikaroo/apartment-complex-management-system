@@ -1,15 +1,18 @@
+import { Fragment } from "react";
+
 import { Dialog, Transition } from "@headlessui/react";
-import React, { useEffect } from "react";
 import { XCircleIcon } from "@heroicons/react/24/solid";
-import { Fragment, useState } from "react";
-import { Formik, Field, Form, FormikHelpers } from "formik";
-import useSWR, { mutate } from "swr";
-import useSWRMutation from "swr/mutation";
+
+import { Formik, Field, Form } from "formik";
+import useSWR from "swr";
+
+import useGetResponse from "../../hooks/useGetResponse";
+
 import { Delete } from "../../api";
 import { AddObjects } from "../../api";
 import { EditObjects } from "../../api";
 import { GetAll } from "../../api";
-import axios from "axios";
+
 type Props = {
   isOpen: boolean;
   closeModal: () => void;
@@ -18,112 +21,76 @@ type Props = {
   selectedRow: any;
   mutate: any;
 };
+
 type Values = {
   title: string;
   address: string;
   regionId: string;
 };
-const ObjectsModal: React.FC<Props> = ({
+
+const ObjectsModal = ({
   isOpen,
   closeModal,
   process,
   deleteId,
   selectedRow,
   mutate,
-}) => {
+}: Props) => {
   const {
     data: dataRegions,
     error: errorRegions,
     isLoading: isLoadingRegions,
   } = useSWR("/api/Region/GetAll", (key) => GetAll.user(key));
-  console.log(dataRegions, "dataRegions");
-  console.log(selectedRow, "selectedRow");
-  const {
-    trigger: triggerEdit,
-    data: dataEdit,
-    error: errorEdit,
-    isMutating: isMutatingEdit,
-  } = useSWRMutation("/api/VendorObjects/Update", EditObjects.user);
-  const { trigger, data, error, isMutating } = useSWRMutation(
-    "/api/VendorObjects/Create",
-    AddObjects.user
-  );
-
-  const deleteObject = async (deleteId: any) => {
-    console.log(deleteId, "deleteid");
-    try {
-      const response = await Delete.user("/api/VendorObjects/Delete", {
-        arg: { deleteId },
-      });
-      if (response.statusCode === 201) {
-        console.log("Object deleted successfully");
-        alert("Object deleted successfully");
-        closeModal();
-        mutate();
-      } else if (response?.statusCode === 400) {
-        alert("Error deleting object");
-      }
-    } catch (error) {
-      console.log("Error deleting object:", error);
-      alert("Object deletion failed");
-    }
-  };
-  useEffect(() => {
-    if (dataEdit?.statusCode === 201) {
-      alert(dataEdit.message);
-      closeModal();
-    } else if (dataEdit?.statusCode === 400) {
-      console.log(errorEdit, "error");
-    }
-  }, [dataEdit]);
-  useEffect(() => {
-    if (data?.statusCode === 201) {
-      alert(data.message);
-      closeModal();
-    } else if (data?.statusCode === 400) {
-      console.log(error, "error");
-    }
-  }, [data]);
 
   const handleSubmit = async (values: Values) => {
-    console.log(values, "values");
     const parsedValues = {
       ...values,
       regionId: parseInt(values.regionId),
     };
-    const { data, error } = await trigger(parsedValues);
 
-    if (error) {
-      console.log(error);
-    } else {
-      console.log(data, "createdata");
-      closeModal();
-      mutate();
-    }
+    const res = await useGetResponse(
+      AddObjects.user("/api/VendorObjects/Create", {
+        arg: parsedValues,
+      }),
+      mutate,
+      closeModal
+    );
+
+    alert(res);
   };
-  const handleEdit = async (values: Values) => {
-    console.log(values, "valuesedit");
 
+  const handleEdit = async (values: Values) => {
     const parsedValues = {
       ...values,
       regionId: parseInt(values.regionId),
       id: selectedRow.id,
     };
-    const { data, error } = await triggerEdit(parsedValues);
-    if (error) {
-      console.log(error);
-    } else {
-      closeModal();
-      mutate();
-    }
+
+    const res = await useGetResponse(
+      EditObjects.user("/api/VendorObjects/Update", {
+        arg: parsedValues,
+      }),
+      mutate,
+      closeModal
+    );
+
+    alert(res);
   };
-  const handleDelete = async () => {
-    try {
-      await deleteObject(deleteId);
-    } catch (error) {
-      console.log(error);
-      alert("Object deletion failed");
-    }
+
+  const deleteObject = async (deleteId: any) => {
+    const res = await useGetResponse(
+      Delete.user("/api/VendorObjects/Delete", {
+        arg: { deleteId },
+      }),
+      mutate,
+      closeModal
+    );
+
+    alert(res);
+  };
+
+  const handleDelete = () => {
+    deleteObject(deleteId);
   };
 
   return (
@@ -174,11 +141,11 @@ const ObjectsModal: React.FC<Props> = ({
                       onSubmit={handleSubmit}
                     >
                       <Form action="">
-                        <div className="flex items-center flex-row justify-between mt-10 font-bold font-inter text-16 leading-30 text-dark">
+                        <div className="flex flex-row items-center justify-between mt-10 font-bold font-inter text-16 leading-30 text-dark">
                           <div>
                             <label
                               htmlFor="title"
-                              className="inline-flex  justify-star items-center  w-1/2"
+                              className="inline-flex items-center w-1/2 justify-star"
                             >
                               Title
                             </label>
@@ -192,7 +159,7 @@ const ObjectsModal: React.FC<Props> = ({
                           <div>
                             <label
                               htmlFor="address"
-                              className="inline-flex  justify-star items-center  w-1/2"
+                              className="inline-flex items-center w-1/2 justify-star"
                             >
                               Adress
                             </label>
@@ -204,11 +171,11 @@ const ObjectsModal: React.FC<Props> = ({
                             />
                           </div>
                         </div>
-                        <div className="flex items-center flex-row justify-between mt-10 font-bold font-inter text-16 leading-30 text-dark">
+                        <div className="flex flex-row items-center justify-between mt-10 font-bold font-inter text-16 leading-30 text-dark">
                           <div className="w-1/2">
                             <label
                               htmlFor="regionId"
-                              className="inline-flex  justify-star items-center  w-1/2"
+                              className="inline-flex items-center w-1/2 justify-star"
                             >
                               Region
                             </label>
@@ -226,10 +193,9 @@ const ObjectsModal: React.FC<Props> = ({
                             </Field>
                           </div>
                         </div>
-                        <div className="flex w-full items-center justify-around mt-10 font-bold font-inter text-16 leading-30 text-dark">
+                        <div className="flex items-center justify-around w-full mt-10 font-bold font-inter text-16 leading-30 text-dark">
                           <button
                             type="submit"
-                            disabled={isMutating}
                             className="flex items-center justify-center w-1/4 px-2 py-4 text-sm font-medium text-white border border-transparent rounded-full bg-primary hover:bg-primary-200 focus:outline-none"
                           >
                             Əlavə et
@@ -262,11 +228,11 @@ const ObjectsModal: React.FC<Props> = ({
                       onSubmit={handleEdit}
                     >
                       <Form action="">
-                        <div className="flex items-center flex-row justify-between mt-10 font-bold font-inter text-16 leading-30 text-dark">
+                        <div className="flex flex-row items-center justify-between mt-10 font-bold font-inter text-16 leading-30 text-dark">
                           <div>
                             <label
                               htmlFor="title"
-                              className="inline-flex  justify-star items-center  w-1/2"
+                              className="inline-flex items-center w-1/2 justify-star"
                             >
                               Title
                             </label>
@@ -280,7 +246,7 @@ const ObjectsModal: React.FC<Props> = ({
                           <div>
                             <label
                               htmlFor="address"
-                              className="inline-flex  justify-star items-center  w-1/2"
+                              className="inline-flex items-center w-1/2 justify-star"
                             >
                               Adress
                             </label>
@@ -292,11 +258,11 @@ const ObjectsModal: React.FC<Props> = ({
                             />
                           </div>
                         </div>
-                        <div className="flex items-center flex-row justify-between mt-10 font-bold font-inter text-16 leading-30 text-dark">
+                        <div className="flex flex-row items-center justify-between mt-10 font-bold font-inter text-16 leading-30 text-dark">
                           <div className="w-1/2">
                             <label
                               htmlFor="regionId"
-                              className="inline-flex  justify-star items-center  w-1/2"
+                              className="inline-flex items-center w-1/2 justify-star"
                             >
                               Region
                             </label>
@@ -314,7 +280,7 @@ const ObjectsModal: React.FC<Props> = ({
                             </Field>
                           </div>
                         </div>
-                        <div className="flex w-full items-center justify-around mt-10 font-bold font-inter text-16 leading-30 text-dark">
+                        <div className="flex items-center justify-around w-full mt-10 font-bold font-inter text-16 leading-30 text-dark">
                           <button
                             type="button"
                             className="inline-flex items-center justify-center w-1/4 px-2 py-4 text-sm font-medium text-red-400 rounded-full outline font-inter"
@@ -324,7 +290,6 @@ const ObjectsModal: React.FC<Props> = ({
                           </button>
                           <button
                             type="submit"
-                            disabled={isMutatingEdit}
                             className="flex items-center justify-center w-1/4 px-2 py-4 text-sm font-medium text-white border border-transparent rounded-full bg-primary hover:bg-primary-200 focus:outline-none"
                           >
                             Edit

@@ -30,6 +30,7 @@ export const LoginApi = {
     return data;
   },
 };
+
 export const LoginApprove = {
   user: async (
     path: string,
@@ -39,6 +40,7 @@ export const LoginApprove = {
     return data;
   },
 };
+
 export const RegisterUser = {
   user: async (
     path: string,
@@ -83,6 +85,7 @@ export const GetAll = {
     return data;
   },
 };
+
 export const CreateDeal = {
   user: async (
     path: string,
@@ -110,6 +113,7 @@ export const CreateDeal = {
     return data;
   },
 };
+
 export const Delete = {
   user: async (
     path: string,
@@ -159,6 +163,7 @@ export const EditDeal = {
     return data;
   },
 };
+
 export const OrderGetbyId = {
   user: async (path: string) => {
     const { data } = await admin.get(path, {
@@ -169,6 +174,7 @@ export const OrderGetbyId = {
     return data;
   },
 };
+
 export const EditUser = {
   user: async (
     path: string,
@@ -196,6 +202,7 @@ export const EditUser = {
     return data;
   },
 };
+
 export const EditObjects = {
   user: async (
     path: string,
@@ -218,6 +225,7 @@ export const EditObjects = {
     return data;
   },
 };
+
 export const AddObjects = {
   user: async (
     path: string,
@@ -288,6 +296,7 @@ export const EditApartment = {
     return data;
   },
 };
+
 export const CreateCompany = {
   user: async (
     path: string,
@@ -346,6 +355,7 @@ export const EditCompany = {
     return data;
   },
 };
+
 export const CreateBuilding = {
   user: async (
     path: string,

@@ -10,21 +10,27 @@ import { GetAll } from "../../api";
 const Objects = () => {
   let [isOpen, setIsOpen] = useState<boolean>(false);
   let [isOpenAdd, setIsOpenAdd] = useState<boolean>(false);
+
   const [process, setProcess] = useState("");
   const [vendorId, setVendorId] = useState<number>(0);
   const [selectedRow, setSelectedRow] = useState(null);
+
   const closeModal = (): void => {
     setIsOpen(false);
   };
+
   const closeModalAdd = (): void => {
     setIsOpenAdd(false);
   };
+
   const openModal = (): void => {
     setIsOpen(true);
   };
+
   const openModalAdd = (): void => {
     setIsOpenAdd(true);
   };
+
   const { data, error, isLoading, mutate } = useSWR(
     "/api/VendorObjects/GetAll",
     (key) => GetAll.user(key)
@@ -88,29 +94,37 @@ const Objects = () => {
             }
             setProcess={setProcess}
           />
+
           <OrderDate />
 
           <Filter />
         </div>
       </div>
-      <Tables
-        openModal={openModal}
-        modal={
-          <ObjectsModal
-          mutate={mutate}
-            isOpen={isOpen}
-            closeModal={closeModal}
-            process={process}
-            deleteId={vendorId}
-            selectedRow={selectedRow}
-          />
-        }
-        headers={headers}
-        data={data}
-        setProcess={setProcess}
-        setVendorId={setVendorId}
-        setSelectedRow={setSelectedRow}
-      />
+
+      {isLoading ? (
+        <div>Loading...</div>
+      ) : error ? (
+        <div>error</div>
+      ) : (
+        <Tables
+          openModal={openModal}
+          modal={
+            <ObjectsModal
+              mutate={mutate}
+              isOpen={isOpen}
+              closeModal={closeModal}
+              process={process}
+              deleteId={vendorId}
+              selectedRow={selectedRow}
+            />
+          }
+          headers={headers}
+          data={data}
+          setProcess={setProcess}
+          setVendorId={setVendorId}
+          setSelectedRow={setSelectedRow}
+        />
+      )}
     </Fragment>
   );
 };

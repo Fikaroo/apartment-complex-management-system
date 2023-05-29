@@ -44,7 +44,6 @@ const NavItem = ({
   iconSolid,
   children,
 }: NavItemProps & ISidebarItems) => {
-
   const [isExpanded, setIsExpanded] = useState(false);
   const { pathname } = useLocation();
 
@@ -99,7 +98,11 @@ const NavItem = ({
                   <NavLink
                     key={child.path}
                     to={`${child.path}`}
-                    className="flex flex-col text-[16px] font-medium cursor-pointer text-gray-500 mt-4 ml-6"
+                    className={`flex flex-col text-[16px] font-medium cursor-pointer  mt-4 ml-6 ${
+                      pathname === child?.path
+                        ? "text-indigo-600"
+                        : "text-gray-500"
+                    }`}
                   >
                     {child.name}
                   </NavLink>

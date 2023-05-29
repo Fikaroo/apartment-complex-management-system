@@ -38,22 +38,18 @@ const Tables = ({
     { id: 3, name: "Tenant" },
     { id: 4, name: "Family member" },
     { id: 5, name: "Child" },
-
   ];
   const propertyType = [
     { id: 1, name: "Apartment" },
     { id: 2, name: "Office" },
-    
-  ]
-  const atHome=[
+  ];
+  const atHome = [
     { id: 0, name: "NoSelect" },
     { id: 1, name: "Yes" },
     { id: 2, name: "No" },
-  ]
+  ];
 
- 
-
-//   const handleTableRow = ({id}:any) => nav(`/control-panel/deals/${id}`);
+  //   const handleTableRow = ({id}:any) => nav(`/control-panel/deals/${id}`);
 
   return (
     <div className="w-full mt-8 overflow-x-auto">
@@ -74,11 +70,11 @@ const Tables = ({
           {data?.data?.map((item: any) => (
             <tr
               key={item.id}
-              className="cursor-pointer  hover:bg-gray-200"
-            //   onClick={() => handleTableRow({ id: item.id })}
+              className="cursor-pointer hover:bg-gray-200"
+              //   onClick={() => handleTableRow({ id: item.id })}
             >
               <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-                <div className="flex-shrink-0 w-10 h-10">
+                <div className="flex items-center flex-shrink-0 w-10 h-10">
                   <img
                     className="rounded-full"
                     src="/icons/exclamation.svg"
@@ -89,44 +85,43 @@ const Tables = ({
               <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
                 <div className="ml-4">
                   <div className="text-sm font-medium leading-5 text-gray-900">
-                    {item.name}	
+                    {item.name}
                   </div>
                 </div>
               </td>
               <td className="px-6 py-4 text-sm leading-5 text-gray-500 whitespace-no-wrap border-b border-gray-200">
-              {item.surname}
+                {item.surname}
               </td>
               <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
                 <div className="text-sm leading-5 text-gray-900">
-                {item.patrionimyc}
+                  {item.patrionimyc}
                 </div>
               </td>
               <td className="px-6 py-4 text-sm leading-5 text-gray-500 whitespace-no-wrap border-b border-gray-200">
-              {item.email}
+                {item.email}
               </td>
               <td className="px-6 py-4 text-sm leading-5 text-gray-500 whitespace-no-wrap border-b border-gray-200">
-              {item.phoneNumber}
+                {item.phoneNumber}
               </td>
               <td className="px-6 py-4 text-sm leading-5 text-gray-500 whitespace-no-wrap border-b border-gray-200">
-
-              {new Date(item.createdDate)
-                      .toLocaleDateString("en-GB", {
-                        day: "2-digit",
-                        month: "2-digit",
-                        year: "numeric",
-                      })
-                      .split("/")
-                      .reverse()
-                      .join("-")}
+                {new Date(item.createdDate)
+                  .toLocaleDateString("en-GB", {
+                    day: "2-digit",
+                    month: "2-digit",
+                    year: "numeric",
+                  })
+                  .split("/")
+                  .reverse()
+                  .join("-")}
               </td>
               <td className="px-6 py-4 text-sm leading-5 text-gray-500 whitespace-no-wrap border-b border-gray-200">
-      {item.customerStatusName}
+                {item.customerStatusName}
               </td>
               <td className="px-6 py-4 text-sm leading-5 text-gray-500 whitespace-no-wrap border-b border-gray-200">
-      {item.propertyTypeName}
+                {item.propertyTypeName}
               </td>
               <td className="px-6 py-4 text-sm leading-5 text-gray-500 whitespace-no-wrap border-b border-gray-200">
-      {item.proportion}
+                {item.proportion}
               </td>
               {/* <td className="px-6 py-4 text-sm leading-5 text-gray-500 whitespace-no-wrap border-b border-gray-200">
                 {
@@ -134,7 +129,7 @@ const Tables = ({
                     ?.name
                 }
               </td> */}
-              
+
               <td
                 className="px-6 py-4 text-sm font-medium leading-5 text-right whitespace-no-wrap border-b border-gray-200"
                 onClick={(e) => e.stopPropagation()}
