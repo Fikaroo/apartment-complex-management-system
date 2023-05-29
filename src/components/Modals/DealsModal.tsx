@@ -11,6 +11,7 @@ import useSWRMutation from "swr/mutation";
 import { CreateDeal } from "../../api";
 import { Delete } from "../../api";
 import { EditDeal } from "../../api";
+import useGetResponse from "../../hooks/useGetResponse";
 
 type Props = {
   isOpen: boolean;
@@ -18,6 +19,7 @@ type Props = {
   process: string;
   deleteId: number;
   selectedRow: any;
+  mutate: any;
 };
 type Values = {
   description: string;
@@ -37,36 +39,13 @@ const DealsModal: React.FC<Props> = ({
   process,
   deleteId,
   selectedRow,
+  mutate
 }) => {
   const [isOpenSub, setIsOpenSub] = useState<boolean>(false);
-  console.log(process, "process");
-  const { trigger, data, error, isMutating } = useSWRMutation(
-    "/api/OrderAdmin/Create",
-    CreateDeal.user
-  );
-  const {
-    trigger: triggerDelete,
-    data: dataDelete,
-    error: errorDelete,
-    isMutating: isMutatingDelete,
-  } = useSWRMutation("/api/OrderAdmin/Delete", Delete.user);
-  const {
-    trigger: triggerEdit,
-    data: dataEdit,
-    error: errorEdit,
-    isMutating: isMutatingEdit,
-  } = useSWRMutation("/api/OrderAdmin/Update", EditDeal.user);
-  const mutateData = async () => {
-    const { data, error } = await fetch("/api/OrderAdmin/GetAll").then((res) =>
-      res.json()
-    );
-    if (error) {
-      console.log(error);
-    } else {
-      mutate("/api/OrderAdmin/GetAll", data, false);
-    }
-  };
 
+  
+ 
+  
   const closeModalSub = (): void => {
     setIsOpenSub(false);
   };
@@ -74,30 +53,9 @@ const DealsModal: React.FC<Props> = ({
   const openModalSub = (): void => {
     setIsOpenSub(true);
   };
-  useEffect(() => {
-    if (data?.statusCode === 201) {
-      alert(data.message);
-      closeModal();
-    } else if (data?.statusCode === 400) {
-      console.log(error, "error");
-    }
-  }, [data]);
-  useEffect(() => {
-    if (dataDelete?.statusCode === 201) {
-      alert(dataDelete.message);
-      closeModal();
-    } else if (dataDelete?.statusCode === 400) {
-      console.log(errorDelete, "error");
-    }
-  }, [dataDelete]);
-  useEffect(() => {
-    if (dataEdit?.statusCode === 201) {
-      alert(dataEdit.message);
-      closeModal();
-    } else if (dataEdit?.statusCode === 400) {
-      console.log(errorEdit, "error");
-    }
-  }, [dataEdit]);
+
+ 
+ 
 
   const handleSubmit = async (values: Values) => {
     console.log(values, "values");
@@ -128,17 +86,17 @@ const DealsModal: React.FC<Props> = ({
       statusId: parseInt(values.statusId),
       orderClassId: parseInt(values.orderClassId),
     };
-    const { data, error } = await trigger(parsedValues);
-    if (error) {
-      console.log(error);
-    } else {
-      alert(data.message);
-      closeModal();
-      mutateData();
-    }
+    const res = await useGetResponse(
+      CreateDeal.user("/api/OrderAdmin/Create", {
+        arg: parsedValues,
+      }),
+      mutate,
+      closeModal
+    );
+
+    alert(res);
   };
   const handleEdit = async (values: Values) => {
-    console.log(values, "editvalues");
     const parsedValues = {
       ...values,
       orderSourceId: parseInt(values.orderSourceId),
@@ -148,24 +106,31 @@ const DealsModal: React.FC<Props> = ({
       orderClassId: parseInt(values.orderClassId),
       id: selectedRow.id,
     };
-    const { data, error } = await triggerEdit(parsedValues);
-    if (error) {
-      console.log(error);
-    } else {
-      alert(data.message);
-      closeModal();
-      mutateData();
-    }
+    
+    const res = await useGetResponse(
+      EditDeal.user("/api/OrderAdmin/Update", {
+        arg: parsedValues,
+      }),
+      mutate,
+      closeModal
+    );
+
+    alert(res);
   };
-  const handleDelete = async () => {
-    const { data, error } = await triggerDelete({ deleteId });
-    if (error) {
-      console.log(error);
-    } else {
-      alert(data.message);
-      closeModal();
-      mutateData();
-    }
+  const deleteObject = async (deleteId: any) => {
+    const res = await useGetResponse(
+      Delete.user("/api/OrderAdmin/Delete", {
+        arg: { deleteId },
+      }),
+      mutate,
+      closeModal
+    );
+
+    alert(res);
+  };
+
+  const handleDelete = () => {
+    deleteObject(deleteId);
   };
 
   const options = [
@@ -441,7 +406,6 @@ const DealsModal: React.FC<Props> = ({
                         <div className="flex w-full items-center justify-around mt-10 font-bold font-inter text-16 leading-30 text-dark">
                           <button
                             type="submit"
-                            disabled={isMutating}
                             className="flex items-center justify-center w-1/4 px-2 py-4 text-sm font-medium text-white border border-transparent rounded-full bg-primary hover:bg-primary-200 focus:outline-none"
                           >
                             Əlavə et
@@ -663,13 +627,11 @@ const DealsModal: React.FC<Props> = ({
                             type="button"
                             className="inline-flex items-center justify-center w-1/4 px-2 py-4 text-sm font-medium text-red-400 rounded-full outline font-inter"
                             onClick={handleDelete}
-                            disabled={isMutatingDelete}
                           >
                             Delete
                           </button>
                           <button
                             type="submit"
-                            disabled={isMutatingEdit}
                             className="flex items-center justify-center w-1/4 px-2 py-4 text-sm font-medium text-white border border-transparent rounded-full bg-primary hover:bg-primary-200 focus:outline-none"
                           >
                             Edit

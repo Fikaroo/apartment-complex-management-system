@@ -7,28 +7,29 @@ import useSWR, { mutate } from "swr";
 import useSWRMutation from "swr/mutation";
 import { Delete } from "../../api";
 import { GetAll } from "../../api";
-import {EditApartment} from "../../api";
-import {CreateCompany} from "../../api";
-import {EditCompany} from "../../api";
+import { EditApartment } from "../../api";
+import { CreateCompany } from "../../api";
+import { EditCompany } from "../../api";
+import useGetResponse from "../../hooks/useGetResponse";
 type Props = {
   isOpen: boolean;
   closeModal: () => void;
   process: string;
   deleteId: number;
   selectedRow: any;
+  mutate: any;
 };
 type Values = {
-    directorName:string,
-    directorSurname: string,
-    directorFatherName: string,
-    phonenumber: string,
-    email: string,
-    logo: string,
-    objectId: string,
-    companyName: string,
-    voen: string,
-    vin: string,
-   
+  directorName: string;
+  directorSurname: string;
+  directorFatherName: string;
+  phonenumber: string;
+  email: string;
+  logo: string;
+  objectId: string;
+  companyName: string;
+  voen: string;
+  vin: string;
 };
 
 const CompaniesModal: React.FC<Props> = ({
@@ -37,116 +38,61 @@ const CompaniesModal: React.FC<Props> = ({
   process,
   deleteId,
   selectedRow,
+  mutate,
 }) => {
-    console.log(selectedRow, "selectedRowcompanies");
-  const { trigger, data, error, isMutating } = useSWRMutation(
-    "/api/VendorCompany/Create",
-    CreateCompany.user
-  );
   const {
-    trigger: triggerDelete,
-    data: dataDelete,
-    error: errorDelete,
-    isMutating: isMutatingDelete,
-  } = useSWRMutation("/api/VendorCompany/Delete", Delete.user);
-  const {
-    trigger: triggerEdit,
-    data: dataEdit,
-    error: errorEdit,
-    isMutating: isMutatingEdit,
-  } = useSWRMutation("/api/VendorCompany/Update", EditCompany.user);
- 
-  const mutateData = async () => {
-    const { data, error } = await fetch("/api/VendorCompany/GetAllByVendorId").then((res) =>
-      res.json()
-    );
-    if (error) {
-      console.log(error);
-    } else {
-      mutate("/api/VendorCompany/GetAllByVendorId", data, false);
-    }
-  };
-  const { data:dataObjects, error:errorObjects, isLoading:isLoadingObjects } = useSWR(
-    "/api/VendorObjects/GetAll",
-    (key) => GetAll.user(key),
-    
-  );
-
-
-
- 
-  useEffect(() => {
-    if (data?.statusCode === 201) {
-      alert(data.message);
-      closeModal();
-    } else if (data?.statusCode === 400) {
-      console.log(error, "error");
-    }
-  }, [data]);
-  useEffect(() => {
-    if (dataDelete?.statusCode === 201) {
-      alert(dataDelete.message);
-      closeModal();
-    } else if (dataDelete?.statusCode === 400) {
-      console.log(errorDelete, "error");
-    }
-  }, [dataDelete]);
-  useEffect(() => {
-    if (dataEdit?.statusCode === 201) {
-      alert(dataEdit.message);
-      closeModal();
-    } else if (dataEdit?.statusCode === 400) {
-      console.log(errorEdit, "error");
-    }
-  }, [dataEdit]);
+    data: dataObjects,
+    error: errorObjects,
+    isLoading: isLoadingObjects,
+  } = useSWR("/api/VendorObjects/GetAll", (key) => GetAll.user(key));
 
   const handleSubmit = async (values: Values) => {
-    console.log(values, "values");
-
     const parsedValues = {
       ...values,
-      objectId : parseInt(values.objectId),
-    
+      objectId: parseInt(values.objectId),
     };
-    const { data, error } = await trigger(parsedValues);
-    if (error) {
-      console.log(error);
-    } else {
-      alert(data.message);
-      closeModal();
-      mutateData();
-    }
+    const res = await useGetResponse(
+      CreateCompany.user("/api/VendorCompany/Create", {
+        arg: parsedValues,
+      }),
+      mutate,
+      closeModal
+    );
+
+    alert(res);
   };
   const handleEdit = async (values: Values) => {
-    console.log(values, "editvalues");
     const parsedValues = {
-        ...values,
-        objectId : parseInt(values.objectId),
-        id: selectedRow.id,
-      
-      };
-     
-    const { data, error } = await triggerEdit(parsedValues);
-    if (error) {
-      console.log(error);
-    } else {
-      alert(data.message);
-      closeModal();
-      mutateData();
-    }
-  };
-  const handleDelete = async () => {
-    const { data, error } = await triggerDelete({ deleteId });
-    if (error) {
-      console.log(error);
-    } else {
-      alert(data.message);
-      closeModal();
-      mutateData();
-    }
+      ...values,
+      objectId: parseInt(values.objectId),
+      id: selectedRow.id,
+    };
+    const res = await useGetResponse(
+      EditCompany.user("/api/VendorCompany/Update", {
+        arg: parsedValues,
+      }),
+      mutate,
+      closeModal
+    );
+
+    alert(res);
   };
 
+  const deleteObject = async (deleteId: any) => {
+    const res = await useGetResponse(
+      Delete.user("/api/VendorCompany/Delete", {
+        arg: { deleteId },
+      }),
+      mutate,
+      closeModal
+    );
 
+    alert(res);
+  };
+
+  const handleDelete = () => {
+    deleteObject(deleteId);
+  };
 
   return (
     <div>
@@ -189,7 +135,7 @@ const CompaniesModal: React.FC<Props> = ({
                     </Dialog.Title>
                     <Formik
                       initialValues={{
-                        directorName:"",
+                        directorName: "",
                         directorSurname: "",
                         directorFatherName: "",
                         phonenumber: "",
@@ -199,8 +145,6 @@ const CompaniesModal: React.FC<Props> = ({
                         companyName: "",
                         voen: "",
                         vin: "",
-                       
-                       
                       }}
                       onSubmit={handleSubmit}
                     >
@@ -222,10 +166,9 @@ const CompaniesModal: React.FC<Props> = ({
                               required
                             >
                               <option value="-1">Choose</option>
-                              {dataObjects?.data.map((item:any) => (
+                              {dataObjects?.data.map((item: any) => (
                                 <option value={item.id}>{item.title}</option>
                               ))}
-                             
                             </Field>
                           </div>
                           <div className="w-[48%]">
@@ -234,7 +177,7 @@ const CompaniesModal: React.FC<Props> = ({
                               htmlFor="directorName"
                               className="flex items-center justify-between mt-10 font-bold font-inter text-16 leading-30 text-dark"
                             >
-                       Director Name
+                              Director Name
                             </label>
                             <Field
                               type="text"
@@ -251,7 +194,7 @@ const CompaniesModal: React.FC<Props> = ({
                               htmlFor="directorSurname"
                               className="inline-flex  justify-star items-center  w-1/2"
                             >
-                             Director Surname
+                              Director Surname
                             </label>
                             <div className="flex items-center justify-between relative">
                               <Field
@@ -259,7 +202,6 @@ const CompaniesModal: React.FC<Props> = ({
                                 className="mt-3 w-full rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
                                 name="directorSurname"
                               />
-                              
                             </div>
                           </div>
                           <div className="w-[48%]">
@@ -267,13 +209,13 @@ const CompaniesModal: React.FC<Props> = ({
                               htmlFor="directorFatherName"
                               className="inline-flex  justify-star items-center  w-1/2"
                             >
-                        Father Name
+                              Father Name
                             </label>
                             <Field
-                                type="text"
-                                className="mt-3 w-full rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
-                                name="directorFatherName"
-                              />
+                              type="text"
+                              className="mt-3 w-full rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
+                              name="directorFatherName"
+                            />
                           </div>
                         </div>
                         <div className=" w-full flex items-center flex-row justify-between mt-5 font-bold font-inter text-16 leading-30 text-dark">
@@ -282,7 +224,7 @@ const CompaniesModal: React.FC<Props> = ({
                               htmlFor="email"
                               className="inline-flex  justify-star items-center  w-1/2"
                             >
-                            Email
+                              Email
                             </label>
                             <div className="flex items-center justify-between relative">
                               <Field
@@ -290,7 +232,6 @@ const CompaniesModal: React.FC<Props> = ({
                                 className="mt-3 w-full rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
                                 name="email"
                               />
-                              
                             </div>
                           </div>
                           <div className="w-[48%]">
@@ -298,13 +239,13 @@ const CompaniesModal: React.FC<Props> = ({
                               htmlFor="logo"
                               className="inline-flex  justify-star items-center  w-1/2"
                             >
-                      Logo
+                              Logo
                             </label>
                             <Field
-                                type="text"
-                                className="mt-3 w-full rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
-                                name="logo"
-                              />
+                              type="text"
+                              className="mt-3 w-full rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
+                              name="logo"
+                            />
                           </div>
                         </div>
 
@@ -314,7 +255,7 @@ const CompaniesModal: React.FC<Props> = ({
                               htmlFor="companyName"
                               className="inline-flex  justify-star items-center  w-1/2"
                             >
-                           Company Name
+                              Company Name
                             </label>
                             <div className="flex items-center justify-between relative">
                               <Field
@@ -322,7 +263,6 @@ const CompaniesModal: React.FC<Props> = ({
                                 className="mt-3 w-full rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
                                 name="companyName"
                               />
-                              
                             </div>
                           </div>
                           <div className="w-[48%]">
@@ -330,40 +270,39 @@ const CompaniesModal: React.FC<Props> = ({
                               htmlFor="voen"
                               className="inline-flex  justify-star items-center  w-1/2"
                             >
-                    Voen
+                              Voen
                             </label>
                             <Field
-                                type="text"
-                                className="mt-3 w-full rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
-                                name="voen"
-                              />
+                              type="text"
+                              className="mt-3 w-full rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
+                              name="voen"
+                            />
                           </div>
                         </div>
 
                         <div className=" w-full flex items-center flex-row justify-between mt-5 font-bold font-inter text-16 leading-30 text-dark">
-                         
                           <div className="w-[48%]">
                             <label
                               htmlFor="vin"
                               className="inline-flex  justify-star items-center  w-1/2"
                             >
-                   Vin
+                              Vin
                             </label>
                             <Field
-                                type="text"
-                                className="mt-3 w-full rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
-                                name="vin"
-                              />
+                              type="text"
+                              className="mt-3 w-full rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
+                              name="vin"
+                            />
                           </div>
                           <div className="w-[48%]">
                             <label
                               htmlFor="phonenumber"
                               className="inline-flex  justify-star items-center  w-1/2"
                             >
-                    Phone Number
+                              Phone Number
                             </label>
                             <div className="flex items-center justify-between relative">
-                            <Field
+                              <Field
                                 type="text"
                                 className="mt-3 w-full rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
                                 name="phonenumber"
@@ -371,12 +310,10 @@ const CompaniesModal: React.FC<Props> = ({
                             </div>
                           </div>
                         </div>
-                      
-                       
+
                         <div className="flex w-full items-center justify-around mt-10 font-bold font-inter text-16 leading-30 text-dark">
                           <button
                             type="submit"
-                            disabled={isMutating}
                             className="flex items-center justify-center w-1/4 px-2 py-4 text-sm font-medium text-white border border-transparent rounded-full bg-primary hover:bg-primary-200 focus:outline-none"
                           >
                             Əlavə et
@@ -399,24 +336,25 @@ const CompaniesModal: React.FC<Props> = ({
                     </Dialog.Title>
                     <Formik
                       initialValues={{
-                        objectId:dataObjects?.data.find(
-                            (item:any) =>
+                        objectId:
+                          dataObjects?.data.find(
+                            (item: any) =>
                               item.title === selectedRow?.objectName
                           )?.id || "",
-                          directorName: selectedRow?.directorName || "",
-                          directorSurname: selectedRow?.directorSurname || "",
-                          directorFatherName: selectedRow?.directorFatherName || "",
-                          phonenumber: selectedRow?.phonenumber || "",
-                          email: selectedRow?.email || "",
-                          logo: selectedRow?.logo || "",
-                          companyName: selectedRow?.companyName || "",
-                          voen: selectedRow?.voen || "",
-                          vin: selectedRow?.vin || "",
-                       
+                        directorName: selectedRow?.directorName || "",
+                        directorSurname: selectedRow?.directorSurname || "",
+                        directorFatherName:
+                          selectedRow?.directorFatherName || "",
+                        phonenumber: selectedRow?.phonenumber || "",
+                        email: selectedRow?.email || "",
+                        logo: selectedRow?.logo || "",
+                        companyName: selectedRow?.companyName || "",
+                        voen: selectedRow?.voen || "",
+                        vin: selectedRow?.vin || "",
                       }}
                       onSubmit={handleEdit}
                     >
-                       <Form>
+                      <Form>
                         <div className=" w-full flex items-center flex-row justify-between mt-5 font-bold font-inter text-16 leading-30 text-dark">
                           <div className="w-[48%]">
                             {" "}
@@ -424,7 +362,7 @@ const CompaniesModal: React.FC<Props> = ({
                               htmlFor="objectId"
                               className="flex items-center justify-between mt-10 font-bold font-inter text-16 leading-30 text-dark"
                             >
-                           Object Name
+                              Object Name
                             </label>
                             <Field
                               as="select"
@@ -434,10 +372,9 @@ const CompaniesModal: React.FC<Props> = ({
                               required
                             >
                               <option value="-1">Choose</option>
-                              {dataObjects?.data.map((item:any) => (
+                              {dataObjects?.data.map((item: any) => (
                                 <option value={item.id}>{item.title}</option>
                               ))}
-                             
                             </Field>
                           </div>
                           <div className="w-[48%]">
@@ -446,7 +383,7 @@ const CompaniesModal: React.FC<Props> = ({
                               htmlFor="directorName"
                               className="flex items-center justify-between mt-10 font-bold font-inter text-16 leading-30 text-dark"
                             >
-                       Director Name
+                              Director Name
                             </label>
                             <Field
                               type="text"
@@ -463,7 +400,7 @@ const CompaniesModal: React.FC<Props> = ({
                               htmlFor="directorSurname"
                               className="inline-flex  justify-star items-center  w-1/2"
                             >
-                             Director Surname
+                              Director Surname
                             </label>
                             <div className="flex items-center justify-between relative">
                               <Field
@@ -471,7 +408,6 @@ const CompaniesModal: React.FC<Props> = ({
                                 className="mt-3 w-full rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
                                 name="directorSurname"
                               />
-                              
                             </div>
                           </div>
                           <div className="w-[48%]">
@@ -479,13 +415,13 @@ const CompaniesModal: React.FC<Props> = ({
                               htmlFor="directorFatherName"
                               className="inline-flex  justify-star items-center  w-1/2"
                             >
-                        Father Name
+                              Father Name
                             </label>
                             <Field
-                                type="text"
-                                className="mt-3 w-full rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
-                                name="directorFatherName"
-                              />
+                              type="text"
+                              className="mt-3 w-full rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
+                              name="directorFatherName"
+                            />
                           </div>
                         </div>
                         <div className=" w-full flex items-center flex-row justify-between mt-5 font-bold font-inter text-16 leading-30 text-dark">
@@ -494,7 +430,7 @@ const CompaniesModal: React.FC<Props> = ({
                               htmlFor="email"
                               className="inline-flex  justify-star items-center  w-1/2"
                             >
-                            Email
+                              Email
                             </label>
                             <div className="flex items-center justify-between relative">
                               <Field
@@ -502,7 +438,6 @@ const CompaniesModal: React.FC<Props> = ({
                                 className="mt-3 w-full rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
                                 name="email"
                               />
-                              
                             </div>
                           </div>
                           <div className="w-[48%]">
@@ -510,13 +445,13 @@ const CompaniesModal: React.FC<Props> = ({
                               htmlFor="logo"
                               className="inline-flex  justify-star items-center  w-1/2"
                             >
-                      Logo
+                              Logo
                             </label>
                             <Field
-                                type="text"
-                                className="mt-3 w-full rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
-                                name="logo"
-                              />
+                              type="text"
+                              className="mt-3 w-full rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
+                              name="logo"
+                            />
                           </div>
                         </div>
 
@@ -526,7 +461,7 @@ const CompaniesModal: React.FC<Props> = ({
                               htmlFor="companyName"
                               className="inline-flex  justify-star items-center  w-1/2"
                             >
-                           Company Name
+                              Company Name
                             </label>
                             <div className="flex items-center justify-between relative">
                               <Field
@@ -534,7 +469,6 @@ const CompaniesModal: React.FC<Props> = ({
                                 className="mt-3 w-full rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
                                 name="companyName"
                               />
-                              
                             </div>
                           </div>
                           <div className="w-[48%]">
@@ -542,40 +476,39 @@ const CompaniesModal: React.FC<Props> = ({
                               htmlFor="voen"
                               className="inline-flex  justify-star items-center  w-1/2"
                             >
-                    Voen
+                              Voen
                             </label>
                             <Field
-                                type="text"
-                                className="mt-3 w-full rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
-                                name="voen"
-                              />
+                              type="text"
+                              className="mt-3 w-full rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
+                              name="voen"
+                            />
                           </div>
                         </div>
 
                         <div className=" w-full flex items-center flex-row justify-between mt-5 font-bold font-inter text-16 leading-30 text-dark">
-                         
                           <div className="w-[48%]">
                             <label
                               htmlFor="vin"
                               className="inline-flex  justify-star items-center  w-1/2"
                             >
-                   Vin
+                              Vin
                             </label>
                             <Field
-                                type="text"
-                                className="mt-3 w-full rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
-                                name="vin"
-                              />
+                              type="text"
+                              className="mt-3 w-full rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
+                              name="vin"
+                            />
                           </div>
                           <div className="w-[48%]">
                             <label
                               htmlFor="phonenumber"
                               className="inline-flex  justify-star items-center  w-1/2"
                             >
-                    Phone Number
+                              Phone Number
                             </label>
                             <div className="flex items-center justify-between relative">
-                            <Field
+                              <Field
                                 type="text"
                                 className="mt-3 w-full rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
                                 name="phonenumber"
@@ -583,20 +516,17 @@ const CompaniesModal: React.FC<Props> = ({
                             </div>
                           </div>
                         </div>
-                      
-                       
+
                         <div className="flex w-full items-center justify-around mt-10 font-bold font-inter text-16 leading-30 text-dark">
                           <button
                             type="button"
                             className="inline-flex items-center justify-center w-1/4 px-2 py-4 text-sm font-medium text-red-400 rounded-full outline font-inter"
                             onClick={handleDelete}
-                            disabled={isMutatingDelete}
                           >
                             Delete
                           </button>
                           <button
                             type="submit"
-                            disabled={isMutatingEdit}
                             className="flex items-center justify-center w-1/4 px-2 py-4 text-sm font-medium text-white border border-transparent rounded-full bg-primary hover:bg-primary-200 focus:outline-none"
                           >
                             Edit
@@ -611,7 +541,6 @@ const CompaniesModal: React.FC<Props> = ({
           </div>
         </Dialog>
       </Transition>
-     
     </div>
   );
 };

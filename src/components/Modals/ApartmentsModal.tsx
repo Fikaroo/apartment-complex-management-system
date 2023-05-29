@@ -1,6 +1,5 @@
 import React, { useEffect } from "react";
 import { Dialog, Transition } from "@headlessui/react";
-import { CheckIcon } from "@heroicons/react/24/solid";
 import { XCircleIcon } from "@heroicons/react/24/solid";
 import { Fragment, useState } from "react";
 import { Formik, Field, Form, FormikHelpers } from "formik";
@@ -8,9 +7,9 @@ import useSWR, { mutate } from "swr";
 import useSWRMutation from "swr/mutation";
 import { CreateApartment } from "../../api";
 import { Delete } from "../../api";
-import { EditDeal } from "../../api";
 import { GetAll } from "../../api";
-import {EditApartment} from "../../api";
+import { EditApartment } from "../../api";
+import useGetResponse from "../../hooks/useGetResponse";
 
 type Props = {
   isOpen: boolean;
@@ -18,14 +17,14 @@ type Props = {
   process: string;
   deleteId: number;
   selectedRow: any;
+  mutate: any;
 };
 type Values = {
-    vendorBuildingId:string,
-    apartmentNo: string,
-    entranceNo: string,
-    area: number,
-    floorNo: number,
-   
+  vendorBuildingId: string;
+  apartmentNo: string;
+  entranceNo: string;
+  area: number;
+  floorNo: number;
 };
 
 const ApartmentsModal: React.FC<Props> = ({
@@ -34,115 +33,61 @@ const ApartmentsModal: React.FC<Props> = ({
   process,
   deleteId,
   selectedRow,
+  mutate,
 }) => {
-    console.log(selectedRow, "selectedRowapartment");
-  const [isOpenSub, setIsOpenSub] = useState<boolean>(false);
-  console.log(process, "process");
-  const { trigger, data, error, isMutating } = useSWRMutation(
-    "/api/VendorApartment/Create",
-    CreateApartment.user
-  );
   const {
-    trigger: triggerDelete,
-    data: dataDelete,
-    error: errorDelete,
-    isMutating: isMutatingDelete,
-  } = useSWRMutation("/api/VendorApartment/Delete", Delete.user);
-  const {
-    trigger: triggerEdit,
-    data: dataEdit,
-    error: errorEdit,
-    isMutating: isMutatingEdit,
-  } = useSWRMutation("/api/VendorApartment/Update", EditApartment.user);
-  const mutateData = async () => {
-    const { data, error } = await fetch("/api/VendorApartment/GetAll").then((res) =>
-      res.json()
-    );
-    if (error) {
-      console.log(error);
-    } else {
-      mutate("/api/VendorApartment/GetAll", data, false);
-    }
-  };
-  const { data:dataBuilding, error:errorBuilding, isLoading:isLoadingBuilding } = useSWR(
-    "/api/VendorBuildings/GetAll",
-    (key) => GetAll.user(key),
-    
-  );
-
- 
-  useEffect(() => {
-    if (data?.statusCode === 201) {
-      alert(data.message);
-      closeModal();
-    } else if (data?.statusCode === 400) {
-      console.log(error, "error");
-    }
-  }, [data]);
-  useEffect(() => {
-    if (dataDelete?.statusCode === 201) {
-      alert(dataDelete.message);
-      closeModal();
-    } else if (dataDelete?.statusCode === 400) {
-      console.log(errorDelete, "error");
-    }
-  }, [dataDelete]);
-  useEffect(() => {
-    if (dataEdit?.statusCode === 201) {
-      alert(dataEdit.message);
-      closeModal();
-    } else if (dataEdit?.statusCode === 400) {
-      console.log(errorEdit, "error");
-    }
-  }, [dataEdit]);
+    data: dataBuilding,
+    error: errorBuilding,
+    isLoading: isLoadingBuilding,
+  } = useSWR("/api/VendorBuildings/GetAll", (key) => GetAll.user(key));
 
   const handleSubmit = async (values: Values) => {
-    console.log(values, "values");
-
     const parsedValues = {
       ...values,
-      vendorBuildingId : parseInt(values.vendorBuildingId),
-    
+      vendorBuildingId: parseInt(values.vendorBuildingId),
     };
-    const { data, error } = await trigger(parsedValues);
-    if (error) {
-      console.log(error);
-    } else {
-      alert(data.message);
-      closeModal();
-      mutateData();
-    }
+    const res = await useGetResponse(
+      CreateApartment.user("/api/VendorApartment/Create", {
+        arg: parsedValues,
+      }),
+      mutate,
+      closeModal
+    );
+    alert(res);
   };
   const handleEdit = async (values: Values) => {
-    console.log(values, "editvalues");
     const parsedValues = {
-        ...values,
-        vendorBuildingId : parseInt(values.vendorBuildingId),
-        id: selectedRow.id,
-      
-      };
-     
-    const { data, error } = await triggerEdit(parsedValues);
-    if (error) {
-      console.log(error);
-    } else {
-      alert(data.message);
-      closeModal();
-      mutateData();
-    }
-  };
-  const handleDelete = async () => {
-    const { data, error } = await triggerDelete({ deleteId });
-    if (error) {
-      console.log(error);
-    } else {
-      alert(data.message);
-      closeModal();
-      mutateData();
-    }
+      ...values,
+      vendorBuildingId: parseInt(values.vendorBuildingId),
+      id: selectedRow.id,
+    };
+
+    const res = await useGetResponse(
+      EditApartment.user("/api/VendorApartment/Update", {
+        arg: parsedValues,
+      }),
+      mutate,
+      closeModal
+    );
+
+    alert(res);
   };
 
+  const deleteObject = async (deleteId: any) => {
+    const res = await useGetResponse(
+      Delete.user("/api/VendorApartment/Delete", {
+        arg: { deleteId },
+      }),
+      mutate,
+      closeModal
+    );
 
+    alert(res);
+  };
+
+  const handleDelete = () => {
+    deleteObject(deleteId);
+  };
 
   return (
     <div>
@@ -185,13 +130,11 @@ const ApartmentsModal: React.FC<Props> = ({
                     </Dialog.Title>
                     <Formik
                       initialValues={{
-                        vendorBuildingId:"",
+                        vendorBuildingId: "",
                         apartmentNo: "",
                         entranceNo: "",
                         area: -1,
                         floorNo: -1,
-                       
-                       
                       }}
                       onSubmit={handleSubmit}
                     >
@@ -213,10 +156,9 @@ const ApartmentsModal: React.FC<Props> = ({
                               required
                             >
                               <option value="-1">Choose</option>
-                              {dataBuilding?.data.map((item:any) => (
+                              {dataBuilding?.data.map((item: any) => (
                                 <option value={item.id}>{item.name}</option>
                               ))}
-                             
                             </Field>
                           </div>
                           <div className="w-[48%]">
@@ -225,7 +167,7 @@ const ApartmentsModal: React.FC<Props> = ({
                               htmlFor="apartmentNo"
                               className="flex items-center justify-between mt-10 font-bold font-inter text-16 leading-30 text-dark"
                             >
-                          Apartment No
+                              Apartment No
                             </label>
                             <Field
                               type="text"
@@ -250,7 +192,6 @@ const ApartmentsModal: React.FC<Props> = ({
                                 className="mt-3 w-full rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
                                 name="entranceNo"
                               />
-                              
                             </div>
                           </div>
                           <div className="w-[48%]">
@@ -258,13 +199,13 @@ const ApartmentsModal: React.FC<Props> = ({
                               htmlFor="area"
                               className="inline-flex  justify-star items-center  w-1/2"
                             >
-                             Area
+                              Area
                             </label>
                             <Field
-                                type="number"
-                                className="mt-3 w-full rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
-                                name="area"
-                              />
+                              type="number"
+                              className="mt-3 w-full rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
+                              name="area"
+                            />
                           </div>
                         </div>
                         <div className=" w-full flex items-center flex-row justify-between mt-5 font-bold font-inter text-16 leading-30 text-dark">
@@ -273,24 +214,21 @@ const ApartmentsModal: React.FC<Props> = ({
                               htmlFor="floorNo"
                               className="inline-flex  justify-star items-center  w-1/2"
                             >
-                         Floor No
+                              Floor No
                             </label>
                             <div className="flex items-center justify-between relative">
-                            <Field
+                              <Field
                                 type="number"
                                 className="mt-3 w-full rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
                                 name="floorNo"
                               />
                             </div>
                           </div>
-                        
                         </div>
-                      
-                       
+
                         <div className="flex w-full items-center justify-around mt-10 font-bold font-inter text-16 leading-30 text-dark">
                           <button
                             type="submit"
-                            disabled={isMutating}
                             className="flex items-center justify-center w-1/4 px-2 py-4 text-sm font-medium text-white border border-transparent rounded-full bg-primary hover:bg-primary-200 focus:outline-none"
                           >
                             Əlavə et
@@ -313,19 +251,19 @@ const ApartmentsModal: React.FC<Props> = ({
                     </Dialog.Title>
                     <Formik
                       initialValues={{
-                        vendorBuildingId:dataBuilding?.data.find(
-                            (item:any) =>
+                        vendorBuildingId:
+                          dataBuilding?.data.find(
+                            (item: any) =>
                               item.name === selectedRow?.buildingName
                           )?.id || "",
                         apartmentNo: selectedRow?.apartmentNo || "",
                         entranceNo: selectedRow?.entranceNo || "",
                         area: selectedRow?.area || -1,
                         floorNo: selectedRow?.floorNo || -1,
-                       
                       }}
                       onSubmit={handleEdit}
                     >
-                     <Form>
+                      <Form>
                         <div className=" w-full flex items-center flex-row justify-between mt-5 font-bold font-inter text-16 leading-30 text-dark">
                           <div className="w-[48%]">
                             {" "}
@@ -343,10 +281,9 @@ const ApartmentsModal: React.FC<Props> = ({
                               required
                             >
                               <option value="-1">Choose</option>
-                              {dataBuilding?.data.map((item:any) => (
+                              {dataBuilding?.data.map((item: any) => (
                                 <option value={item.id}>{item.name}</option>
                               ))}
-                             
                             </Field>
                           </div>
                           <div className="w-[48%]">
@@ -355,7 +292,7 @@ const ApartmentsModal: React.FC<Props> = ({
                               htmlFor="apartmentNo"
                               className="flex items-center justify-between mt-10 font-bold font-inter text-16 leading-30 text-dark"
                             >
-                          Apartment No
+                              Apartment No
                             </label>
                             <Field
                               type="text"
@@ -380,7 +317,6 @@ const ApartmentsModal: React.FC<Props> = ({
                                 className="mt-3 w-full rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
                                 name="entranceNo"
                               />
-                              
                             </div>
                           </div>
                           <div className="w-[48%]">
@@ -388,13 +324,13 @@ const ApartmentsModal: React.FC<Props> = ({
                               htmlFor="area"
                               className="inline-flex  justify-star items-center  w-1/2"
                             >
-                             Area
+                              Area
                             </label>
                             <Field
-                                type="number"
-                                className="mt-3 w-full rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
-                                name="area"
-                              />
+                              type="number"
+                              className="mt-3 w-full rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
+                              name="area"
+                            />
                           </div>
                         </div>
                         <div className=" w-full flex items-center flex-row justify-between mt-5 font-bold font-inter text-16 leading-30 text-dark">
@@ -403,32 +339,28 @@ const ApartmentsModal: React.FC<Props> = ({
                               htmlFor="floorNo"
                               className="inline-flex  justify-star items-center  w-1/2"
                             >
-                         Floor No
+                              Floor No
                             </label>
                             <div className="flex items-center justify-between relative">
-                            <Field
+                              <Field
                                 type="number"
                                 className="mt-3 w-full rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
                                 name="floorNo"
                               />
                             </div>
                           </div>
-                        
                         </div>
-                      
-                       
+
                         <div className="flex w-full items-center justify-around mt-10 font-bold font-inter text-16 leading-30 text-dark">
                           <button
                             type="button"
                             className="inline-flex items-center justify-center w-1/4 px-2 py-4 text-sm font-medium text-red-400 rounded-full outline font-inter"
                             onClick={handleDelete}
-                            disabled={isMutatingDelete}
                           >
                             Delete
                           </button>
                           <button
                             type="submit"
-                            disabled={isMutatingEdit}
                             className="flex items-center justify-center w-1/4 px-2 py-4 text-sm font-medium text-white border border-transparent rounded-full bg-primary hover:bg-primary-200 focus:outline-none"
                           >
                             Edit
@@ -443,7 +375,6 @@ const ApartmentsModal: React.FC<Props> = ({
           </div>
         </Dialog>
       </Transition>
-     
     </div>
   );
 };
