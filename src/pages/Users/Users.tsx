@@ -26,7 +26,7 @@ const Users = () => {
   const openModalAdd = (): void => {
     setIsOpenAdd(true);
   };
-  const { data, error, isLoading } = useSWR(
+  const { data, error, isLoading,mutate } = useSWR(
     "/api/Users/GetAllForAdmin",
     (key) => GetAll.user(key),
     { revalidateIfStale: true }
@@ -97,6 +97,7 @@ const Users = () => {
         </p>{" "}
         <div className="flex items-center gap-4">
           {/* <AddBtn
+          mutate={mutate}
             openModal={openModalAdd}
             modal={
               <AddCustomerModal isOpen={isOpenAdd} closeModal={closeModalAdd} />
@@ -113,6 +114,7 @@ const Users = () => {
         openModal={openModal}
         modal={
           <UserModal
+          mutate={mutate}
             isOpen={isOpen}
             closeModal={closeModal}
             process={process}

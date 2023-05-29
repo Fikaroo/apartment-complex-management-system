@@ -97,6 +97,7 @@ const Objects = () => {
         openModal={openModal}
         modal={
           <ObjectsModal
+          mutate={mutate}
             isOpen={isOpen}
             closeModal={closeModal}
             process={process}

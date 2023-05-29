@@ -92,6 +92,7 @@ const Users = () => {
             setProcess={setProcess}
             modal={
               <BuildingsModal
+              mutate={mutate}
                 isOpen={isOpen}
                 closeModal={closeModal}
                 process={process}
@@ -99,7 +100,7 @@ const Users = () => {
                 selectedRow={selectedRow}
               />
 
-              mutate = {mutate}
+        
             }
           />
           <OrderDate />
@@ -111,6 +112,7 @@ const Users = () => {
         openModal={openModal}
         modal={
           <BuildingsModal
+          mutate={mutate}
             isOpen={isOpen}
             closeModal={closeModal}
             process={process}

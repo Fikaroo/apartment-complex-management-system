@@ -9,12 +9,14 @@ import useSWR, { mutate } from 'swr';
 import useSWRMutation from "swr/mutation";
 import {GetAll } from "../../api";
 import {EditUser } from "../../api";
+import {Delete } from "../../api";
 type Props = {
   isOpen: boolean;
   closeModal: () => void;
   process: string;
   deleteId: number;
   selectedRow: any;
+  mutate: any;
 };
 type Values = {
   name: string;
@@ -32,20 +34,33 @@ const UserModal: React.FC<Props> = ({
   process,
   deleteId,
   selectedRow,
+  mutate
 }) => {
-  const mutateData = async () => {
-    const { data, error } = await fetch('/api/Users/GetAllForAdmin').then(res => res.json());
-    if (error) {
-      console.log(error);
-    } else {
-      mutate('/api/Users/GetAllForAdmin', data, false);
-    }
-  };
+ 
   console.log(selectedRow,"selectedRowUser")
   const { trigger: triggerEdit, data: dataEdit, error: errorEdit, isMutating: isMutatingEdit } = useSWRMutation(
     "/api/Users/UpdateUserInfos",
     EditUser.user
   );
+  const deleteObject = async (deleteId: any) => {
+    console.log(deleteId, "deleteid");
+    try {
+      const response = await Delete.user("/api/Users/DeleteUser", {
+        arg: { deleteId },
+      });
+      if (response.statusCode === 201) {
+        console.log("Object deleted successfully");
+        alert("Object deleted successfully");
+        closeModal();
+        mutate();
+      } else if (response?.statusCode === 400) {
+        alert("Error deleting object");
+      }
+    } catch (error) {
+      console.log("Error deleting object:", error);
+      alert("Object deletion failed");
+    }
+  };
   useEffect(() => {
     if (dataEdit?.statusCode === 201) {
       alert(dataEdit.message)
@@ -89,11 +104,19 @@ const UserModal: React.FC<Props> = ({
     if (error) {
       console.log(error);
     } else {
-     console.log("hii");
       closeModal();
-      mutateData();
+      mutate();
     }
   }
+  const handleDelete = async () => {
+    console.log("delte")
+    try {
+      await deleteObject(deleteId);
+    } catch (error) {
+      console.log(error);
+      alert("Object deletion failed");
+    }
+  };
   const userStatus = [
     { id: 1, name: "Landlord" },
     { id: 2, name: "Resident" },
@@ -471,7 +494,7 @@ const UserModal: React.FC<Props> = ({
             <button
               type="submit"
               disabled={isMutatingEdit}
-         
+         onClick={handleDelete}
               className="flex items-center justify-center w-1/4 px-2 py-4 text-sm font-medium text-white border border-transparent rounded-full bg-primary hover:bg-primary-200 focus:outline-none"
             >
           Edit

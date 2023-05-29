@@ -8,6 +8,8 @@ import useSWRMutation from "swr/mutation";
 import { Delete } from "../../api";
 import { AddObjects } from "../../api";
 import { EditObjects } from "../../api";
+import { GetAll } from "../../api";
+import axios from "axios";
 type Props = {
   isOpen: boolean;
   closeModal: () => void;
@@ -29,44 +31,43 @@ const ObjectsModal: React.FC<Props> = ({
   selectedRow,
   mutate,
 }) => {
-  const regions = [
-    {
-      regionId: "1",
-      regionName: "Baki",
-    },
-  ];
-
-  const mutateData = async () => {
-    const { data, error } = await fetch("/api/VendorObjects/GetAll").then(
-      (res) => res.json()
-    );
-    if (error) {
-      console.log(error);
-    } else {
-      mutate("/api/VendorObjects/GetAll/", data, false);
-    }
-  };
-  console.log(selectedRow, "selectedRowUser");
-
+  const {
+    data: dataRegions,
+    error: errorRegions,
+    isLoading: isLoadingRegions,
+  } = useSWR("/api/Region/GetAll", (key) => GetAll.user(key));
+  console.log(dataRegions, "dataRegions");
+  console.log(selectedRow, "selectedRow");
   const {
     trigger: triggerEdit,
     data: dataEdit,
     error: errorEdit,
     isMutating: isMutatingEdit,
   } = useSWRMutation("/api/VendorObjects/Update", EditObjects.user);
-
   const { trigger, data, error, isMutating } = useSWRMutation(
     "/api/VendorObjects/Create",
     AddObjects.user
   );
 
-  const {
-    trigger: triggerDelete,
-    data: dataDelete,
-    error: errorDelete,
-    isMutating: isMutatingDelete,
-  } = useSWRMutation("/api/VendorObjects/Delete", Delete.user);
-
+  const deleteObject = async (deleteId: any) => {
+    console.log(deleteId, "deleteid");
+    try {
+      const response = await Delete.user("/api/VendorObjects/Delete", {
+        arg: { deleteId },
+      });
+      if (response.statusCode === 201) {
+        console.log("Object deleted successfully");
+        alert("Object deleted successfully");
+        closeModal();
+        mutate();
+      } else if (response?.statusCode === 400) {
+        alert("Error deleting object");
+      }
+    } catch (error) {
+      console.log("Error deleting object:", error);
+      alert("Object deletion failed");
+    }
+  };
   useEffect(() => {
     if (dataEdit?.statusCode === 201) {
       alert(dataEdit.message);
@@ -75,23 +76,14 @@ const ObjectsModal: React.FC<Props> = ({
       console.log(errorEdit, "error");
     }
   }, [dataEdit]);
-
   useEffect(() => {
     if (data?.statusCode === 201) {
+      alert(data.message);
       closeModal();
     } else if (data?.statusCode === 400) {
       console.log(error, "error");
     }
   }, [data]);
-
-  useEffect(() => {
-    if (dataDelete?.statusCode === 201) {
-      alert(dataDelete.message);
-      closeModal();
-    } else if (dataDelete?.statusCode === 400) {
-      console.log(errorDelete, "error");
-    }
-  }, [dataDelete]);
 
   const handleSubmit = async (values: Values) => {
     console.log(values, "values");
@@ -106,11 +98,9 @@ const ObjectsModal: React.FC<Props> = ({
     } else {
       console.log(data, "createdata");
       closeModal();
-      mutateData();
       mutate();
     }
   };
-
   const handleEdit = async (values: Values) => {
     console.log(values, "valuesedit");
 
@@ -124,18 +114,15 @@ const ObjectsModal: React.FC<Props> = ({
       console.log(error);
     } else {
       closeModal();
-      mutateData();
+      mutate();
     }
   };
-
   const handleDelete = async () => {
-    const { data, error } = await triggerDelete({ deleteId });
-    if (error) {
+    try {
+      await deleteObject(deleteId);
+    } catch (error) {
       console.log(error);
-    } else {
-      alert(data.message);
-      closeModal();
-      mutateData();
+      alert("Object deletion failed");
     }
   };
 
@@ -187,11 +174,11 @@ const ObjectsModal: React.FC<Props> = ({
                       onSubmit={handleSubmit}
                     >
                       <Form action="">
-                        <div className="flex flex-row items-center justify-between mt-10 font-bold font-inter text-16 leading-30 text-dark">
+                        <div className="flex items-center flex-row justify-between mt-10 font-bold font-inter text-16 leading-30 text-dark">
                           <div>
                             <label
                               htmlFor="title"
-                              className="inline-flex items-center w-1/2 justify-star"
+                              className="inline-flex  justify-star items-center  w-1/2"
                             >
                               Title
                             </label>
@@ -205,7 +192,7 @@ const ObjectsModal: React.FC<Props> = ({
                           <div>
                             <label
                               htmlFor="address"
-                              className="inline-flex items-center w-1/2 justify-star"
+                              className="inline-flex  justify-star items-center  w-1/2"
                             >
                               Adress
                             </label>
@@ -217,11 +204,11 @@ const ObjectsModal: React.FC<Props> = ({
                             />
                           </div>
                         </div>
-                        <div className="flex flex-row items-center justify-between mt-10 font-bold font-inter text-16 leading-30 text-dark">
+                        <div className="flex items-center flex-row justify-between mt-10 font-bold font-inter text-16 leading-30 text-dark">
                           <div className="w-1/2">
                             <label
                               htmlFor="regionId"
-                              className="inline-flex items-center w-1/2 justify-star"
+                              className="inline-flex  justify-star items-center  w-1/2"
                             >
                               Region
                             </label>
@@ -233,15 +220,13 @@ const ObjectsModal: React.FC<Props> = ({
                               required
                             >
                               <option value="-1">Choose</option>
-                              {regions.map((item) => (
-                                <option value={item.regionId}>
-                                  {item.regionName}
-                                </option>
+                              {dataRegions?.data.map((item: any) => (
+                                <option value={item.id}>{item.name}</option>
                               ))}
                             </Field>
                           </div>
                         </div>
-                        <div className="flex items-center justify-around w-full mt-10 font-bold font-inter text-16 leading-30 text-dark">
+                        <div className="flex w-full items-center justify-around mt-10 font-bold font-inter text-16 leading-30 text-dark">
                           <button
                             type="submit"
                             disabled={isMutating}
@@ -270,19 +255,18 @@ const ObjectsModal: React.FC<Props> = ({
                         title: selectedRow?.title || "",
                         address: selectedRow?.address || "",
                         regionId:
-                          regions.find(
-                            (item) =>
-                              item.regionName === selectedRow?.regionName
-                          )?.regionId || "",
+                          dataRegions?.data.find(
+                            (item: any) => item.name === selectedRow?.regionName
+                          )?.id || "",
                       }}
                       onSubmit={handleEdit}
                     >
                       <Form action="">
-                        <div className="flex flex-row items-center justify-between mt-10 font-bold font-inter text-16 leading-30 text-dark">
+                        <div className="flex items-center flex-row justify-between mt-10 font-bold font-inter text-16 leading-30 text-dark">
                           <div>
                             <label
                               htmlFor="title"
-                              className="inline-flex items-center w-1/2 justify-star"
+                              className="inline-flex  justify-star items-center  w-1/2"
                             >
                               Title
                             </label>
@@ -296,7 +280,7 @@ const ObjectsModal: React.FC<Props> = ({
                           <div>
                             <label
                               htmlFor="address"
-                              className="inline-flex items-center w-1/2 justify-star"
+                              className="inline-flex  justify-star items-center  w-1/2"
                             >
                               Adress
                             </label>
@@ -308,11 +292,11 @@ const ObjectsModal: React.FC<Props> = ({
                             />
                           </div>
                         </div>
-                        <div className="flex flex-row items-center justify-between mt-10 font-bold font-inter text-16 leading-30 text-dark">
+                        <div className="flex items-center flex-row justify-between mt-10 font-bold font-inter text-16 leading-30 text-dark">
                           <div className="w-1/2">
                             <label
                               htmlFor="regionId"
-                              className="inline-flex items-center w-1/2 justify-star"
+                              className="inline-flex  justify-star items-center  w-1/2"
                             >
                               Region
                             </label>
@@ -324,20 +308,17 @@ const ObjectsModal: React.FC<Props> = ({
                               required
                             >
                               <option value="-1">Choose</option>
-                              {regions.map((item) => (
-                                <option value={item.regionId}>
-                                  {item.regionName}
-                                </option>
+                              {dataRegions?.data.map((item: any) => (
+                                <option value={item.id}>{item.name}</option>
                               ))}
                             </Field>
                           </div>
                         </div>
-                        <div className="flex items-center justify-around w-full mt-10 font-bold font-inter text-16 leading-30 text-dark">
+                        <div className="flex w-full items-center justify-around mt-10 font-bold font-inter text-16 leading-30 text-dark">
                           <button
                             type="button"
                             className="inline-flex items-center justify-center w-1/4 px-2 py-4 text-sm font-medium text-red-400 rounded-full outline font-inter"
                             onClick={handleDelete}
-                            disabled={isMutatingDelete}
                           >
                             Delete
                           </button>

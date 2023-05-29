@@ -346,3 +346,30 @@ export const EditCompany = {
     return data;
   },
 };
+export const CreateBuilding = {
+  user: async (
+    path: string,
+    {
+      arg,
+    }: {
+      arg: {
+        image: any;
+        name: string;
+        regionId: number;
+        street: string;
+        buildingNo: string;
+        securityPhone: string;
+        floor: number;
+        entrance: number;
+        vendorObjectId: number;
+      };
+    }
+  ) => {
+    const { data } = await company.post(path, arg, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("user-token")}`,
+      },
+    });
+    return data;
+  },
+};
