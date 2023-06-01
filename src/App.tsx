@@ -16,6 +16,8 @@ import Apartments from "./pages/Apartments/Apartments";
 import ApartmentDetail from "./pages/Apartments/ApartmentDetail";
 import Companies from "./pages/Companies/Companies";
 import CompanyDetail from "./pages/Companies/CompanyDetail";
+import Employees from "./pages/Employees/Employees";
+import EmployeesDetail from "./pages/Employees/EmployeesDetail";
 const App = () => {
   return (
     <div className="w-full min-h-screen overflow-hidden bg-background/90 text-dark">
@@ -37,7 +39,7 @@ const App = () => {
             </Layout>
           }
         />
-       
+
         <Route
           path="/control-panel/deals"
           element={
@@ -50,12 +52,11 @@ const App = () => {
           path="/control-panel/deals/:dealId"
           element={
             <Layout>
-              <DealsDetail/>
+              <DealsDetail />
             </Layout>
           }
         />
 
-       
         <Route
           path="/references/users"
           element={
@@ -72,7 +73,7 @@ const App = () => {
             </Layout>
           }
         />
-         <Route
+        <Route
           path="/references/objects"
           element={
             <Layout>
@@ -80,7 +81,7 @@ const App = () => {
             </Layout>
           }
         />
-           <Route
+        <Route
           path="/references/objects/:objectId"
           element={
             <Layout>
@@ -88,15 +89,15 @@ const App = () => {
             </Layout>
           }
         />
-         <Route
+        <Route
           path="/references/buildings"
           element={
             <Layout>
-              <Buildings/>
+              <Buildings />
             </Layout>
           }
         />
-           <Route
+        <Route
           path="/references/buildings/:buildingId"
           element={
             <Layout>
@@ -104,15 +105,15 @@ const App = () => {
             </Layout>
           }
         />
-           <Route
+        <Route
           path="/references/apartments"
           element={
             <Layout>
-              <Apartments/>
+              <Apartments />
             </Layout>
           }
         />
-         <Route
+        <Route
           path="/references/apartments/:apartmentId"
           element={
             <Layout>
@@ -120,11 +121,11 @@ const App = () => {
             </Layout>
           }
         />
-            <Route
+        <Route
           path="/references/companies"
           element={
             <Layout>
-              <Companies/>
+              <Companies />
             </Layout>
           }
         />
@@ -133,6 +134,22 @@ const App = () => {
           element={
             <Layout>
               <CompanyDetail />
+            </Layout>
+          }
+        />
+        <Route
+          path="/references/employees"
+          element={
+            <Layout>
+              <Employees />
+            </Layout>
+          }
+        />
+        <Route
+          path="/references/employees/:employeesId"
+          element={
+            <Layout>
+              <EmployeesDetail />
             </Layout>
           }
         />

@@ -134,6 +134,7 @@ const Navbar = () => {
         { name: "Buildings", path: "/references/buildings" },
         { name: "Companies", path: "/references/companies" },
         { name: "Apartments", path: "/references/apartments" },
+        { name: "Employees", path: "/references/employees" },
       ],
     },
     {
