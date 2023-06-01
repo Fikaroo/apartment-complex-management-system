@@ -1,6 +1,4 @@
-import { Dialog, Transition } from "@headlessui/react";
-import { Fragment, useState } from "react";
-import SosModal from "../Modals/SosModal";
+
 import { Link, useNavigate } from "react-router-dom";
 export interface IHeaders {
   isStatus?: boolean;
@@ -17,8 +15,8 @@ type PropsType = {
   openModal: () => void;
   data: any;
   setProcess: React.Dispatch<React.SetStateAction<string>>;
-  setBuildingId: React.Dispatch<React.SetStateAction<number>>;
   setSelectedRow: React.Dispatch<React.SetStateAction<any>>;
+  setResidentId: React.Dispatch<React.SetStateAction<number>>;
 };
 
 const Tables = ({
@@ -27,19 +25,12 @@ const Tables = ({
   openModal,
   data,
   setProcess,
-  setBuildingId,
   setSelectedRow,
+  setResidentId
 }: PropsType) => {
   const nav = useNavigate();
 
-
-console.log(data,'buildingsdata')
-  function isValidDate(dateString: any) {
-    const date = new Date(dateString);
-    return !isNaN(date.getTime());
-  }
-const [tableId,setTableId]=useState<number>(0);
-  const handleTableRow = ({id}:any) => nav(`/references/buildings/${id}`);
+   const handleTableRow = ({id}:any) => nav(`/references/residents/${id}`);
 
   return (
     <div className="w-full mt-8 overflow-x-auto">
@@ -61,7 +52,7 @@ const [tableId,setTableId]=useState<number>(0);
             <tr
               key={item.id}
               className="cursor-pointer  hover:bg-gray-200"
-              onClick={() => handleTableRow({ id: item.id })}
+                onClick={() => handleTableRow({ id: item.id })}
             >
               <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
                 <div className="flex-shrink-0 w-10 h-10">
@@ -75,33 +66,27 @@ const [tableId,setTableId]=useState<number>(0);
               <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
                 <div className="ml-4">
                   <div className="text-sm font-medium leading-5 text-gray-900">
-                    {item?.name}
+                    {item.name}
                   </div>
                 </div>
               </td>
               <td className="px-6 py-4 text-sm leading-5 text-gray-500 whitespace-no-wrap border-b border-gray-200">
-                {item?.regionName}
+                {item.surname}
               </td>
               <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
                 <div className="text-sm leading-5 text-gray-900">
-                  {item?.street}
+                  {item.fatherName}
                 </div>
               </td>
               <td className="px-6 py-4 text-sm leading-5 text-gray-500 whitespace-no-wrap border-b border-gray-200">
-                {item?.buildingNo}
-              </td>
-            
-              <td className="px-6 py-4 text-sm leading-5 text-gray-500 whitespace-no-wrap border-b border-gray-200">
-                {item?.securityPhone}
+                {item.phonenumber}
               </td>
               <td className="px-6 py-4 text-sm leading-5 text-gray-500 whitespace-no-wrap border-b border-gray-200">
-                {item?.floor}
+                {item.email}
               </td>
               <td className="px-6 py-4 text-sm leading-5 text-gray-500 whitespace-no-wrap border-b border-gray-200">
-                {item?.entrance}
+                {item.companyName}
               </td>
-              
-              <td className="px-6 py-4 text-sm leading-5 text-gray-500 whitespace-no-wrap border-b border-gray-200"></td>
               <td
                 className="px-6 py-4 text-sm font-medium leading-5 text-right whitespace-no-wrap border-b border-gray-200"
                 onClick={(e) => e.stopPropagation()}
@@ -110,9 +95,10 @@ const [tableId,setTableId]=useState<number>(0);
                   onClick={() => {
                     openModal();
                     setProcess("Edit");
-                    setBuildingId(item.id);
-                    setSelectedRow(item);
-                 
+                    setSelectedRow(
+                      item
+                    );
+                    setResidentId(item.id);
                   }}
                   className="absolute z-50 ml-4 cursor-pointer"
                   src="/icons/edit.svg"

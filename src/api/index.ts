@@ -135,7 +135,7 @@ export const Delete = {
     }
   ) => {
     console.log(arg, "argg");
-    const { data } = await admin.delete(`${path}?Id=${arg.deleteId}`, {
+    const { data } = await admin.delete(`${path}?id=${arg.deleteId}`, {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("user-token")}`,
       },
@@ -371,20 +371,63 @@ export const CreateBuilding = {
     {
       arg,
     }: {
-      arg: {
-        image: any;
-        name: string;
-        regionId: number;
-        street: string;
-        buildingNo: string;
-        securityPhone: string;
-        floor: number;
-        entrance: number;
-        vendorObjectId: number;
-      };
+      arg: FormData;
     }
   ) => {
     const { data } = await company.post(path, arg, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("user-token")}`,
+      },
+    });
+    return data;
+  },
+};
+
+export const CreateResident = {
+  user: async (
+    path: string,
+    {
+      arg,
+    }: {
+      arg: FormData;
+    }
+  ) => {
+    const { data } = await company.post(path, arg, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("user-token")}`,
+      },
+    });
+    return data;
+  },
+};
+
+export const EditResidents = {
+  user: async (
+    path: string,
+    {
+      arg,
+    }: {
+      arg: FormData;
+    }
+  ) => {
+    const { data } = await company.put(path, arg, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("user-token")}`,
+      },
+    });
+    return data;
+  },
+};
+export const EditBuilding = {
+  user: async (
+    path: string,
+    {
+      arg,
+    }: {
+      arg: FormData;
+    }
+  ) => {
+    const { data } = await company.put(path, arg, {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("user-token")}`,
       },

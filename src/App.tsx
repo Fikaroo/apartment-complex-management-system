@@ -14,8 +14,9 @@ import ObjectDetail from "./pages/Objects/ObjectDetail";
 import Buildings from "./pages/Buildings/Buildings";
 import Apartments from "./pages/Apartments/Apartments";
 import ApartmentDetail from "./pages/Apartments/ApartmentDetail";
-import Companies from "./pages/Companies/Companies";
+import Companies from "./pages/Companies/Companies"; 
 import CompanyDetail from "./pages/Companies/CompanyDetail";
+import Residents from "./pages/Residents/Residents";
 const App = () => {
   return (
     <div className="w-full min-h-screen overflow-hidden bg-background/90 text-dark">
@@ -136,6 +137,15 @@ const App = () => {
             </Layout>
           }
         />
+            <Route
+          path="/references/residents"
+          element={
+            <Layout>
+              <Residents/>
+            </Layout>
+          }
+        />
+        
         <Route
           path="/blog"
           element={
