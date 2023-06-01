@@ -16,6 +16,7 @@ import Apartments from "./pages/Apartments/Apartments";
 import ApartmentDetail from "./pages/Apartments/ApartmentDetail";
 import Companies from "./pages/Companies/Companies";
 import CompanyDetail from "./pages/Companies/CompanyDetail";
+import Residents from "./pages/Residents/Residents";
 import Employees from "./pages/Employees/Employees";
 import EmployeesDetail from "./pages/Employees/EmployeesDetail";
 const App = () => {
@@ -137,6 +138,15 @@ const App = () => {
             </Layout>
           }
         />
+        <Route
+          path="/references/residents"
+          element={
+            <Layout>
+              <Residents />
+            </Layout>
+          }
+        />
+
         <Route
           path="/references/employees"
           element={
