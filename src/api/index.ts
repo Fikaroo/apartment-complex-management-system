@@ -1,4 +1,5 @@
 import axios from "axios";
+import { EmployeeValues } from "../components/Modals/EmployeesModal";
 
 const baseUrl = import.meta.env.VITE_BASE_URL;
 
@@ -401,33 +402,16 @@ export const CreateResident = {
   },
 };
 
-export const EditResidents = {
+export const CreateEmployees = {
   user: async (
     path: string,
     {
       arg,
     }: {
-      arg: FormData;
+      arg: EmployeeValues;
     }
   ) => {
-    const { data } = await company.put(path, arg, {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("user-token")}`,
-      },
-    });
-    return data;
-  },
-};
-export const EditBuilding = {
-  user: async (
-    path: string,
-    {
-      arg,
-    }: {
-      arg: FormData;
-    }
-  ) => {
-    const { data } = await company.put(path, arg, {
+    const { data } = await company.post(path, arg, {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("user-token")}`,
       },

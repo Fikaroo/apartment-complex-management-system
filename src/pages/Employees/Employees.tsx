@@ -5,7 +5,7 @@ import { GetAll } from "../../api";
 import OrderDate from "../../components/OrderDate";
 import Filter from "../../components/Filter";
 import Tables, { IHeaders } from "../../components/Table/EmployeesTable";
-import UserModal from "../../components/Modals/UserModal";
+import EmployeesModal from "../../components/Modals/EmployeesModal";
 
 const Employees = () => {
   let [isOpen, setIsOpen] = useState<boolean>(false);
@@ -13,18 +13,23 @@ const Employees = () => {
   const [process, setProcess] = useState("");
   const [orderId, setOrderId] = useState<number>(0);
   const [selectedRow, setSelectedRow] = useState(null);
+
   const closeModal = (): void => {
     setIsOpen(false);
   };
+
   const closeModalAdd = (): void => {
     setIsOpenAdd(false);
   };
+
   const openModal = (): void => {
     setIsOpen(true);
   };
+
   const openModalAdd = (): void => {
     setIsOpenAdd(true);
   };
+
   const { data, error, isLoading, mutate } = useSWR(
     "/api/Employees/GetAll",
     (key) => GetAll.user(key)
@@ -83,10 +88,10 @@ const Employees = () => {
           <AddBtn
             openModal={openModalAdd}
             modal={
-              <UserModal
+              <EmployeesModal
                 mutate={mutate}
-                isOpen={isOpen}
-                closeModal={closeModal}
+                isOpen={isOpenAdd}
+                closeModal={closeModalAdd}
                 process={process}
                 deleteId={orderId}
                 selectedRow={selectedRow}
@@ -101,7 +106,7 @@ const Employees = () => {
       <Tables
         openModal={openModal}
         modal={
-          <UserModal
+          <EmployeesModal
             mutate={mutate}
             isOpen={isOpen}
             closeModal={closeModal}
