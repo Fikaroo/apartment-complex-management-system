@@ -8,9 +8,7 @@ import useSWR from "swr";
 
 import useGetResponse from "../../hooks/useGetResponse";
 
-import { CreateEmployees, Delete } from "../../api";
-import { AddObjects } from "../../api";
-import { EditObjects } from "../../api";
+import { CreateTransport, Delete } from "../../api";
 import { GetAll } from "../../api";
 
 type Props = {
@@ -37,40 +35,15 @@ const TransportModal = ({
   selectedRow,
   mutate,
 }: Props) => {
-  const {
-    data: dataVendorCompany,
-    error: errVendorCompany,
-    isLoading: isLoadingVendorCompany,
-  } = useSWR("/api/VendorCompany/GetAllByVendorId", (key) => GetAll.user(key));
-
-  const {
-    data: dataVendorObjects,
-    error: errVendorObjects,
-    isLoading: isLoadingVendorObjects,
-  } = useSWR("/api/VendorObjects/GetAll", (key) => GetAll.user(key));
-
-  const {
-    data: dataVendorBuildings,
-    error: errVendorBuildings,
-    isLoading: isLoadingVendorBuildings,
-  } = useSWR("/api/VendorBuildings/GetAll", (key) => GetAll.user(key));
-
-  const {
-    data: dataRoleAdmin,
-    error: errRoleAdmin,
-    isLoading: isLoadingRoleAdmin,
-  } = useSWR("/api/RoleAdmin/GetAll", (key) => GetAll.user(key));
-
-  const handleSubmit = async (values: EmployeeValues) => {
+  const handleSubmit = async (values: TransportValues) => {
     const parsedValues = {
       ...values,
-      Image: values.image,
     };
 
     console.log("dataRegions", values);
 
     const res = await useGetResponse(
-      CreateEmployees.user("/api/Employess/Create", {
+      CreateTransport.user("/api/Transport/Create", {
         arg: parsedValues,
       }),
       mutate,
@@ -80,14 +53,14 @@ const TransportModal = ({
     alert(res);
   };
 
-  const handleEdit = async (values: EmployeeValues) => {
+  const handleEdit = async (values: TransportValues) => {
     const parsedValues = {
       ...values,
       id: selectedRow.id,
     };
 
     const res = await useGetResponse(
-      CreateEmployees.user("/api/Employees/Update", {
+      CreateTransport.user("/api/Transport/Update", {
         arg: parsedValues,
       }),
       mutate,
@@ -99,7 +72,7 @@ const TransportModal = ({
 
   const deleteObject = async (deleteId: any) => {
     const res = await useGetResponse(
-      Delete.user("/api/Employees/Delete", {
+      Delete.user("/api/Transport/Delete", {
         arg: { deleteId },
       }),
       mutate,
@@ -113,50 +86,6 @@ const TransportModal = ({
     deleteObject(deleteId);
   };
 
-  if (
-    isLoadingVendorCompany &&
-    isLoadingVendorObjects &&
-    isLoadingVendorBuildings &&
-    isLoadingRoleAdmin
-  )
-    <div>Loading...</div>;
-
-  if (
-    errVendorCompany &&
-    errVendorObjects &&
-    errVendorBuildings &&
-    errRoleAdmin
-  )
-    <div>Err</div>;
-
-  const vendorCompanyIds = dataVendorCompany?.data?.map(
-    ({ id, companyName }: { id: number; companyName: string }) => ({
-      id,
-      companyName,
-    })
-  );
-
-  const vendorObjectsIds = dataVendorObjects?.data?.map(
-    ({ id, vendorName }: { id: number; vendorName: string }) => ({
-      id,
-      vendorName,
-    })
-  );
-
-  const vendorBuildingsIds = dataVendorBuildings?.data?.map(
-    ({ id }: { id: number }) => ({
-      id,
-    })
-  );
-
-  const roleAdminIds = dataRoleAdmin?.data?.map(
-    ({ id, name }: { id: string; name: string }) => ({
-      id,
-      name,
-    })
-  );
-
-  console.log(vendorCompanyIds, vendorObjectsIds, selectedRow);
   return (
     <div>
       <Transition appear show={isOpen} as={Fragment}>
@@ -190,7 +119,7 @@ const TransportModal = ({
                       as="h3"
                       className="flex items-center justify-between font-bold font-inter text-16 leading-30 text-dark"
                     >
-                      Employee əlavə et
+                      Transport əlavə et
                       <XCircleIcon
                         onClick={closeModal}
                         className="w-6 h-6 cursor-pointer fill-icon"
@@ -210,13 +139,13 @@ const TransportModal = ({
                           <div className="grid items-center justify-between grid-cols-2 gap-4 mt-10 font-bold font-inter text-16 leading-30 text-dark">
                             <div>
                               <label
-                                htmlFor="name"
+                                htmlFor="brand"
                                 className="inline-flex items-center w-1/2 justify-star"
                               >
-                                Name
+                                Brand
                               </label>
                               <Field
-                                name="name"
+                                name="brand"
                                 type="text"
                                 className="mt-3 w-[95%] rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
                                 required
@@ -225,13 +154,13 @@ const TransportModal = ({
 
                             <div>
                               <label
-                                htmlFor="surname"
+                                htmlFor="serialNumber"
                                 className="inline-flex items-center w-1/2 justify-star"
                               >
-                                Surname
+                                Serial Number
                               </label>
                               <Field
-                                name="surname"
+                                name="serialNumber"
                                 type="text"
                                 className="mt-3 w-[95%] rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
                                 required
@@ -240,282 +169,20 @@ const TransportModal = ({
 
                             <div>
                               <label
-                                htmlFor="email"
+                                htmlFor="color"
                                 className="inline-flex items-center w-1/2 justify-star"
                               >
-                                Email
+                                Color
                               </label>
                               <Field
-                                name="email"
-                                type="email"
-                                className="mt-3 w-[95%] rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
-                                required
-                              />
-                            </div>
-
-                            <div>
-                              <label
-                                htmlFor="username"
-                                className="inline-flex items-center w-1/2 justify-star"
-                              >
-                                Username
-                              </label>
-                              <Field
-                                name="username"
+                                name="color"
                                 type="text"
-                                className="mt-3 w-[95%] rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
-                                required
-                              />
-                            </div>
-
-                            <div>
-                              <label
-                                htmlFor="password"
-                                className="inline-flex items-center w-1/2 justify-star"
-                              >
-                                Password
-                              </label>
-                              <Field
-                                name="password"
-                                type="text"
-                                className="mt-3 w-[95%] rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
-                                required
-                              />
-                            </div>
-
-                            <div>
-                              <label
-                                htmlFor="patrionimyc"
-                                className="inline-flex items-center w-1/2 justify-star"
-                              >
-                                Patrionimyc
-                              </label>
-                              <Field
-                                name="patrionimyc"
-                                type="text"
-                                className="mt-3 w-[95%] rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
-                                required
-                              />
-                            </div>
-
-                            <div>
-                              <label
-                                htmlFor="jobPosition"
-                                className="inline-flex items-center w-1/2 justify-star"
-                              >
-                                Job Position
-                              </label>
-                              <Field
-                                name="jobPosition"
-                                type="text"
-                                className="mt-3 w-[95%] rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
-                                required
-                              />
-                            </div>
-
-                            <div>
-                              <label
-                                htmlFor="voen"
-                                className="inline-flex items-center w-1/2 justify-star"
-                              >
-                                Voen
-                              </label>
-                              <Field
-                                name="voen"
-                                type="text"
-                                className="mt-3 w-[95%] rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
-                                required
-                              />
-                            </div>
-
-                            <div>
-                              <label
-                                htmlFor="phoneNumber"
-                                className="inline-flex items-center w-1/2 justify-star"
-                              >
-                                Phone Number
-                              </label>
-                              <Field
-                                name="phoneNumber"
-                                type="text"
-                                className="mt-3 w-[95%] rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
-                                required
-                              />
-                            </div>
-
-                            <div>
-                              <label
-                                htmlFor="hasCompany"
-                                className="inline-flex items-center w-1/2 justify-star"
-                              >
-                                Has Company
-                              </label>
-                              <Field
-                                name="hasCompany"
-                                as="select"
-                                className="mt-3 w-[95%] rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
-                                required
-                              >
-                                <option value="" selected disabled>
-                                  Select
-                                </option>
-                                <option value="true">true</option>
-                                <option value="false">false</option>
-                              </Field>
-                            </div>
-
-                            <div>
-                              <label
-                                htmlFor="image"
-                                className="inline-flex items-center w-1/2 justify-star"
-                              >
-                                image
-                              </label>
-
-                              <input
-                                type="file"
-                                id="image"
-                                name="image"
-                                accept="image/*"
-                                onChange={(event) => {
-                                  const file = (
-                                    event.currentTarget as HTMLInputElement
-                                  ).files?.[0];
-                                  formikProps.setFieldValue("Image", file);
-                                }}
                                 className="mt-3 w-[95%] rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
                                 required
                               />
                             </div>
                           </div>
 
-                          <div className="grid items-center justify-between grid-cols-2 gap-4 mt-10 font-bold font-inter text-16 leading-30 text-dark">
-                            <div>
-                              <label
-                                htmlFor="vendorCompanyId"
-                                className="inline-flex items-center "
-                              >
-                                Vendor Company
-                              </label>
-                              <Field
-                                as="select"
-                                name="vendorCompanyId"
-                                id="vendorCompanyId"
-                                className="flex items-center justify-center px-5 py-2 mt-3 font-medium border rounded-lg border-line bg-background focus:outline-none text-md"
-                                required
-                              >
-                                <option value="" selected disabled>
-                                  Choose
-                                </option>
-                                {vendorCompanyIds?.map(
-                                  ({
-                                    id,
-                                    companyName,
-                                  }: {
-                                    id: number;
-                                    companyName: string;
-                                  }) => (
-                                    <option key={id} value={id}>
-                                      {companyName}
-                                    </option>
-                                  )
-                                )}
-                              </Field>
-                            </div>
-
-                            <div>
-                              <label
-                                htmlFor="vendorObjectsId"
-                                className="inline-flex items-center "
-                              >
-                                Vendor Objects
-                              </label>
-                              <Field
-                                as="select"
-                                name="vendorObjectsId"
-                                id="vendorObjectsId"
-                                className="flex items-center justify-center px-5 py-2 mt-3 font-medium border rounded-lg border-line bg-background focus:outline-none text-md"
-                                required
-                              >
-                                <option value="" selected disabled>
-                                  Choose
-                                </option>
-                                {vendorObjectsIds?.map(
-                                  ({
-                                    id,
-                                    vendorName,
-                                  }: {
-                                    id: number;
-                                    vendorName: string;
-                                  }) => (
-                                    <option key={id} value={id}>
-                                      {vendorName}
-                                    </option>
-                                  )
-                                )}
-                              </Field>
-                            </div>
-
-                            <div>
-                              <label
-                                htmlFor="vendorBuldingsId"
-                                className="inline-flex items-center "
-                              >
-                                Vendor Building
-                              </label>
-                              <Field
-                                as="select"
-                                name="vendorBuldingsId"
-                                id="vendorBuldingsId"
-                                className="flex items-center justify-center px-5 py-2 mt-3 font-medium border rounded-lg border-line bg-background focus:outline-none text-md"
-                                required
-                              >
-                                <option value="" selected disabled>
-                                  Choose
-                                </option>
-                                {vendorBuildingsIds?.map(
-                                  ({ id }: { id: number }) => (
-                                    <option key={id} value={id}>
-                                      {id}
-                                    </option>
-                                  )
-                                )}
-                              </Field>
-                            </div>
-
-                            <div>
-                              <label
-                                htmlFor="roleName"
-                                className="inline-flex items-center "
-                              >
-                                Role Name
-                              </label>
-                              <Field
-                                as="select"
-                                name="roleName"
-                                id="roleName"
-                                className="flex items-center justify-center px-5 py-2 mt-3 font-medium border rounded-lg border-line bg-background focus:outline-none text-md"
-                                required
-                              >
-                                <option value="" selected disabled>
-                                  Choose
-                                </option>
-                                {roleAdminIds?.map(
-                                  ({
-                                    id,
-                                    name,
-                                  }: {
-                                    id: string;
-                                    name: string;
-                                  }) => (
-                                    <option key={id} value={id}>
-                                      {name}
-                                    </option>
-                                  )
-                                )}
-                              </Field>
-                            </div>
-                          </div>
                           <div className="flex items-center justify-around w-full mt-10 font-bold font-inter text-16 leading-30 text-dark">
                             <button
                               type="submit"
@@ -534,7 +201,7 @@ const TransportModal = ({
                       as="h3"
                       className="flex items-center justify-between font-bold font-inter text-16 leading-30 text-dark"
                     >
-                      Objects Edit
+                      Transport Edit
                       <XCircleIcon
                         onClick={closeModal}
                         className="w-6 h-6 cursor-pointer fill-icon"
@@ -543,19 +210,10 @@ const TransportModal = ({
                     <Formik
                       initialValues={
                         selectedRow || {
-                          image: "",
-                          name: "",
-                          surname: "",
-                          patrionimyc: "",
-                          hasCompany: null,
-                          jobPosition: "",
-                          vendorCompanyId: null,
-                          vendorObjectsId: [],
-                          vendorBuildingsId: [],
-                          roleName: "",
-                          voen: "",
-                          email: "",
-                          phoneNumber: "",
+                          brand: "",
+                          serialNumber: "",
+                          color: "",
+                          employeeId: "",
                         }
                       }
                       onSubmit={handleEdit}
@@ -565,13 +223,13 @@ const TransportModal = ({
                           <div className="grid items-center justify-between grid-cols-2 gap-4 mt-10 font-bold font-inter text-16 leading-30 text-dark">
                             <div>
                               <label
-                                htmlFor="name"
+                                htmlFor="brand"
                                 className="inline-flex items-center w-1/2 justify-star"
                               >
-                                Name
+                                Brand
                               </label>
                               <Field
-                                name="name"
+                                name="brand"
                                 type="text"
                                 className="mt-3 w-[95%] rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
                                 required
@@ -580,13 +238,13 @@ const TransportModal = ({
 
                             <div>
                               <label
-                                htmlFor="surname"
+                                htmlFor="serialNumber"
                                 className="inline-flex items-center w-1/2 justify-star"
                               >
-                                Surname
+                                Serial Number
                               </label>
                               <Field
-                                name="surname"
+                                name="serialNumber"
                                 type="text"
                                 className="mt-3 w-[95%] rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
                                 required
@@ -595,280 +253,17 @@ const TransportModal = ({
 
                             <div>
                               <label
-                                htmlFor="email"
+                                htmlFor="color"
                                 className="inline-flex items-center w-1/2 justify-star"
                               >
-                                Email
+                                Color
                               </label>
                               <Field
-                                name="email"
-                                type="email"
-                                className="mt-3 w-[95%] rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
-                                required
-                              />
-                            </div>
-
-                            <div>
-                              <label
-                                htmlFor="username"
-                                className="inline-flex items-center w-1/2 justify-star"
-                              >
-                                Username
-                              </label>
-                              <Field
-                                name="username"
+                                name="color"
                                 type="text"
                                 className="mt-3 w-[95%] rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
                                 required
                               />
-                            </div>
-
-                            <div>
-                              <label
-                                htmlFor="password"
-                                className="inline-flex items-center w-1/2 justify-star"
-                              >
-                                Password
-                              </label>
-                              <Field
-                                name="password"
-                                type="text"
-                                className="mt-3 w-[95%] rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
-                                required
-                              />
-                            </div>
-
-                            <div>
-                              <label
-                                htmlFor="patrionimyc"
-                                className="inline-flex items-center w-1/2 justify-star"
-                              >
-                                Patrionimyc
-                              </label>
-                              <Field
-                                name="patrionimyc"
-                                type="text"
-                                className="mt-3 w-[95%] rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
-                                required
-                              />
-                            </div>
-
-                            <div>
-                              <label
-                                htmlFor="jobPosition"
-                                className="inline-flex items-center w-1/2 justify-star"
-                              >
-                                Job Position
-                              </label>
-                              <Field
-                                name="jobPosition"
-                                type="text"
-                                className="mt-3 w-[95%] rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
-                                required
-                              />
-                            </div>
-
-                            <div>
-                              <label
-                                htmlFor="voen"
-                                className="inline-flex items-center w-1/2 justify-star"
-                              >
-                                Voen
-                              </label>
-                              <Field
-                                name="voen"
-                                type="text"
-                                className="mt-3 w-[95%] rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
-                                required
-                              />
-                            </div>
-
-                            <div>
-                              <label
-                                htmlFor="phoneNumber"
-                                className="inline-flex items-center w-1/2 justify-star"
-                              >
-                                Phone Number
-                              </label>
-                              <Field
-                                name="phoneNumber"
-                                type="text"
-                                className="mt-3 w-[95%] rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
-                                required
-                              />
-                            </div>
-
-                            <div>
-                              <label
-                                htmlFor="hasCompany"
-                                className="inline-flex items-center w-1/2 justify-star"
-                              >
-                                Has Company
-                              </label>
-                              <Field
-                                name="hasCompany"
-                                as="select"
-                                className="mt-3 w-[95%] rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
-                                required
-                              >
-                                <option value="" selected disabled>
-                                  Select
-                                </option>
-                                <option value="true">true</option>
-                                <option value="false">false</option>
-                              </Field>
-                            </div>
-
-                            <div>
-                              <label
-                                htmlFor="image"
-                                className="inline-flex items-center w-1/2 justify-star"
-                              >
-                                image
-                              </label>
-
-                              <input
-                                type="file"
-                                id="image"
-                                name="image"
-                                accept="image/*"
-                                onChange={(event) => {
-                                  const file = (
-                                    event.currentTarget as HTMLInputElement
-                                  ).files?.[0];
-                                  formikProps.setFieldValue("Image", file);
-                                }}
-                                className="mt-3 w-[95%] rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
-                                required
-                              />
-                            </div>
-                          </div>
-
-                          <div className="grid items-center justify-between grid-cols-2 gap-4 mt-10 font-bold font-inter text-16 leading-30 text-dark">
-                            <div>
-                              <label
-                                htmlFor="vendorCompanyId"
-                                className="inline-flex items-center "
-                              >
-                                Vendor Company
-                              </label>
-                              <Field
-                                as="select"
-                                name="vendorCompanyId"
-                                id="vendorCompanyId"
-                                className="flex items-center justify-center px-5 py-2 mt-3 font-medium border rounded-lg border-line bg-background focus:outline-none text-md"
-                                required
-                              >
-                                <option value="" selected disabled>
-                                  Choose
-                                </option>
-                                {vendorCompanyIds?.map(
-                                  ({
-                                    id,
-                                    companyName,
-                                  }: {
-                                    id: number;
-                                    companyName: string;
-                                  }) => (
-                                    <option key={id} value={id}>
-                                      {companyName}
-                                    </option>
-                                  )
-                                )}
-                              </Field>
-                            </div>
-
-                            <div>
-                              <label
-                                htmlFor="vendorObjectsId"
-                                className="inline-flex items-center "
-                              >
-                                Vendor Objects
-                              </label>
-                              <Field
-                                as="select"
-                                name="vendorObjectsId"
-                                id="vendorObjectsId"
-                                className="flex items-center justify-center px-5 py-2 mt-3 font-medium border rounded-lg border-line bg-background focus:outline-none text-md"
-                                required
-                              >
-                                <option value="" selected disabled>
-                                  Choose
-                                </option>
-                                {vendorObjectsIds?.map(
-                                  ({
-                                    id,
-                                    vendorName,
-                                  }: {
-                                    id: number;
-                                    vendorName: string;
-                                  }) => (
-                                    <option key={id} value={id}>
-                                      {vendorName}
-                                    </option>
-                                  )
-                                )}
-                              </Field>
-                            </div>
-
-                            <div>
-                              <label
-                                htmlFor="vendorBuldingsId"
-                                className="inline-flex items-center "
-                              >
-                                Vendor Building
-                              </label>
-                              <Field
-                                as="select"
-                                name="vendorBuldingsId"
-                                id="vendorBuldingsId"
-                                className="flex items-center justify-center px-5 py-2 mt-3 font-medium border rounded-lg border-line bg-background focus:outline-none text-md"
-                                required
-                              >
-                                <option value="" selected disabled>
-                                  Choose
-                                </option>
-                                {vendorBuildingsIds?.map(
-                                  ({ id }: { id: number }) => (
-                                    <option key={id} value={id}>
-                                      {id}
-                                    </option>
-                                  )
-                                )}
-                              </Field>
-                            </div>
-
-                            <div>
-                              <label
-                                htmlFor="roleName"
-                                className="inline-flex items-center "
-                              >
-                                Role Name
-                              </label>
-                              <Field
-                                as="select"
-                                name="roleName"
-                                id="roleName"
-                                className="flex items-center justify-center px-5 py-2 mt-3 font-medium border rounded-lg border-line bg-background focus:outline-none text-md"
-                                required
-                              >
-                                <option value="" selected disabled>
-                                  Choose
-                                </option>
-                                {roleAdminIds?.map(
-                                  ({
-                                    id,
-                                    name,
-                                  }: {
-                                    id: string;
-                                    name: string;
-                                  }) => (
-                                    <option key={id} value={id}>
-                                      {name}
-                                    </option>
-                                  )
-                                )}
-                              </Field>
                             </div>
                           </div>
                           <div className="flex items-center justify-around w-full mt-10 font-bold font-inter text-16 leading-30 text-dark">

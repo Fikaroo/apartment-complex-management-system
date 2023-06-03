@@ -31,11 +31,9 @@ const Transport = () => {
   };
 
   const { data, error, isLoading, mutate } = useSWR(
-    "/api/Employees/GetAll",
+    "api/Transport/GetAllWithPagination",
     (key) => GetAll.user(key)
   );
-
-  console.log(data);
 
   const headers: IHeaders[] = [
     {
@@ -72,16 +70,24 @@ const Transport = () => {
 
     {
       id: 5,
-      title: "Employee Id",
+      title: "Owner",
+    },
+    {
+      id: 6,
+      title: "Phone Number",
     },
   ];
 
+  if (isLoading) <div>Loading...</div>;
+  if (error) <div>error</div>;
+
+  const transportData = data?.data?.items;
   return (
     <Fragment>
       <div className="flex items-center justify-between">
         <p className="font-bold font-inter text-16 leading-30 text-dark">
           Ümumi: 178 Sakin
-        </p>{" "}
+        </p>
         <div className="flex items-center gap-4">
           <AddBtn
             openModal={openModalAdd}
@@ -114,7 +120,7 @@ const Transport = () => {
           />
         }
         headers={headers}
-        data={data}
+        data={transportData}
         setProcess={setProcess}
         setOrderId={setOrderId}
         setSelectedRow={setSelectedRow}

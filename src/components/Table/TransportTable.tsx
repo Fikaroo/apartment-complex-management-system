@@ -51,7 +51,7 @@ const Tables = ({
     return !isNaN(date.getTime());
   }
   const [tableId, setTableId] = useState<number>(0);
-  const handleTableRow = ({ id }: any) => nav(`/control-panel/deals/${id}`);
+  //   const handleTableRow = ({ id }: any) => nav(`/control-panel/deals/${id}`);
 
   return (
     <div className="w-full mt-8 overflow-x-auto">
@@ -69,11 +69,11 @@ const Tables = ({
           </tr>
         </thead>
         <tbody>
-          {data?.data?.map((item: any) => (
+          {data?.map((item: any) => (
             <tr
               key={item.id}
               className="cursor-pointer hover:bg-gray-200"
-              onClick={() => handleTableRow({ id: item.id })}
+              //   onClick={() => handleTableRow({ id: item.id })}
             >
               <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
                 <div className="flex-shrink-0 w-10 h-10">
@@ -84,45 +84,20 @@ const Tables = ({
                   />
                 </div>
               </td>
-              <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-                <div className="ml-4">
-                  <div className="text-sm font-medium leading-5 text-gray-900">
-                    {new Date(item.actualDeadline)
-                      .toLocaleDateString("en-GB", {
-                        day: "2-digit",
-                        month: "2-digit",
-                        year: "numeric",
-                      })
-                      .split("/")
-                      .reverse()
-                      .join("-")}
-                  </div>
-                </div>
-              </td>
-              <td className="px-6 py-4 text-sm leading-5 text-gray-500 whitespace-no-wrap border-b border-gray-200">
-                {new Date(item.normativeDeadline)
-                  .toLocaleDateString("en-GB", {
-                    day: "2-digit",
-                    month: "2-digit",
-                    year: "numeric",
-                  })
-                  .split("/")
-                  .reverse()
-                  .join("-")}
-              </td>
+
               <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
                 <div className="text-sm leading-5 text-gray-900">
-                  {item.description}
+                  {item.brand}
                 </div>
               </td>
               <td className="px-6 py-4 text-sm leading-5 text-gray-500 whitespace-no-wrap border-b border-gray-200">
-                {item.orderClass.name}
+                {item.serialNumber}
               </td>
               <td className="px-6 py-4 text-sm leading-5 text-gray-500 whitespace-no-wrap border-b border-gray-200">
-                {item.orderSource.name}
+                {item.color}
               </td>
               <td className="px-6 py-4 text-sm leading-5 text-gray-500 whitespace-no-wrap border-b border-gray-200">
-                {item.orderType.name}
+                {item.owner}
               </td>
               <td className="px-6 py-4 text-sm leading-5 text-gray-500 whitespace-no-wrap border-b border-gray-200">
                 {item.phoneNumber}
