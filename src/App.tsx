@@ -19,6 +19,7 @@ import CompanyDetail from "./pages/Companies/CompanyDetail";
 import Residents from "./pages/Residents/Residents";
 import Employees from "./pages/Employees/Employees";
 import EmployeesDetail from "./pages/Employees/EmployeesDetail";
+import Transport from "./pages/Transport";
 const App = () => {
   return (
     <div className="w-full min-h-screen overflow-hidden bg-background/90 text-dark">
@@ -160,6 +161,15 @@ const App = () => {
           element={
             <Layout>
               <EmployeesDetail />
+            </Layout>
+          }
+        />
+
+        <Route
+          path="/references/transport"
+          element={
+            <Layout>
+              <Transport />
             </Layout>
           }
         />
