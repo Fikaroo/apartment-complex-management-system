@@ -83,6 +83,7 @@ console.log(selectedRow,"selectedRow")
         id: selectedRow.id,
       };
       const formData = new FormData();
+      formData.append("Id", parsedValues.id);
       formData.append("Name", parsedValues.Name);
       formData.append("Surname", parsedValues.Surname);
       formData.append("FatherName", parsedValues.FatherName);
@@ -273,6 +274,7 @@ console.log(selectedRow,"selectedRow")
                                   formikProps.setFieldValue("Image", file);
                                 }}
                                 className="mt-3 w-[95%] rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
+                                required
                               />
                             </div>
                           </div>
@@ -468,6 +470,7 @@ console.log(selectedRow,"selectedRow")
                                   formikProps.setFieldValue("Image", file);
                                 }}
                                 className="mt-3 w-[95%] rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
+                                required
                               />
                               
                             </div>

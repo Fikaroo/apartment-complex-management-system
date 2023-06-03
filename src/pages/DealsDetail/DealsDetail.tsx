@@ -1,5 +1,5 @@
 import React from "react";
-import {OrderGetbyId} from "../../api";
+import {GetbyId} from "../../api";
 import useSWR from 'swr'
 import { useParams } from "react-router-dom";
 type Props = {};
@@ -7,7 +7,7 @@ type Props = {};
 const DealsDetail = (props: Props) => {
   const { dealId } = useParams()
   console.log(dealId,"idddd")
-  const { data, error, isLoading } = useSWR(`/api/OrderAdmin/GetById?Id=${dealId}`,OrderGetbyId.user)
+  const { data, error, isLoading } = useSWR(`/api/OrderAdmin/GetById?Id=${dealId}`,GetbyId.user)
   console.log(data,"data")
   const handleDetail = async () => {
     

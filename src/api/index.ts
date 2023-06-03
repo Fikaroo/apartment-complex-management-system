@@ -173,7 +173,7 @@ export const EditDeal = {
   },
 };
 
-export const OrderGetbyId = {
+export const GetbyId = {
   user: async (path: string) => {
     const { data } = await admin.get(path, {
       headers: {
@@ -428,6 +428,55 @@ export const EditBuilding = {
     }
   ) => {
     const { data } = await company.put(path, arg, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("user-token")}`,
+      },
+    });
+    return data;
+  },
+};
+export const AddVendorRooms = {
+  user: async (
+    path: string,
+    {
+      arg,
+    }: {
+      arg: {
+        name: string;
+        vendorCompanyId: number;
+      regionId: number;
+      roomTypeId: number;
+      isRentAviable: boolean;
+      rentPrice: number;
+      };
+    }
+  ) => {
+    const { data } = await admin.post(path, arg, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("user-token")}`,
+      },
+    });
+    return data;
+  },
+};
+export const EditVendorRoom = {
+  user: async (
+    path: string,
+    {
+      arg,
+    }: {
+      arg: {
+        id: number;
+        name: string;
+        vendorCompanyId: number;
+        regionId: number;
+        roomTypeId: number;
+        isRentAviable: boolean;
+        rentPrice: number;
+      };
+    }
+  ) => {
+    const { data } = await admin.put(path, arg, {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("user-token")}`,
       },

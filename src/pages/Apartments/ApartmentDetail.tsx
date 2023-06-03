@@ -1,5 +1,5 @@
 import React,{useState} from "react";
-import {OrderGetbyId} from "../../api";
+import {GetbyId} from "../../api";
 import useSWR from 'swr'
 import { useParams } from "react-router-dom";
 import ObjectsModal from "../../components/Modals/ObjectsModal";
@@ -7,7 +7,7 @@ type Props = {};
 
 const ApartmentDetail = (props: Props) => {
   const { apartmentId } = useParams()
-  const { data, error, isLoading } = useSWR(`/api/VendorApartment/GetById?id=${apartmentId}`,OrderGetbyId.user)
+  const { data, error, isLoading } = useSWR(`/api/VendorApartment/GetById?id=${apartmentId}`,GetbyId.user)
   let [isOpen, setIsOpen] = useState<boolean>(false);
   const [process, setProcess] = useState("");
   const closeModal = (): void => {

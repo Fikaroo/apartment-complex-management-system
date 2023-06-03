@@ -89,9 +89,11 @@ const BuildingsModal: React.FC<Props> = ({
       ...values,
       VendorObjectId: Number(values.VendorObjectId),
       RegionId: Number(values.RegionId),
+      Id:selectedRow.id
     };
     console.log(parsedValues, "parsedValues");
     const formData = new FormData();
+    formData.append("Id",parsedValues.Id)
     formData.append("Name", parsedValues.Name);
     formData.append("Street", parsedValues.Street);
     formData.append("BuildingNo", parsedValues.BuildingNo);

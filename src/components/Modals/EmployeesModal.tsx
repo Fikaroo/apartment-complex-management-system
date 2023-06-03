@@ -1,17 +1,14 @@
-import { Fragment } from "react";
-
+import React, { Fragment, useEffect } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { XCircleIcon } from "@heroicons/react/24/solid";
-
 import { Formik, Field, Form } from "formik";
-import useSWR from "swr";
-
-import useGetResponse from "../../hooks/useGetResponse";
-
-import { Delete } from "../../api";
-import { AddObjects } from "../../api";
-import { EditObjects } from "../../api";
+import useSWR, { mutate } from "swr";
+import useSWRMutation from "swr/mutation";
+import { CreateBuilding } from "../../api";
 import { GetAll } from "../../api";
+import { EditBuilding } from "../../api";
+import { Delete } from "../../api";
+import useGetResponse from "../../hooks/useGetResponse";
 
 type Props = {
   isOpen: boolean;
@@ -21,36 +18,77 @@ type Props = {
   selectedRow: any;
   mutate: any;
 };
-
 type Values = {
-  title: string;
-  address: string;
-  regionId: string;
+  ProfileImage: any;
+  Name: string;
+  Surname: string;
+  Patrionimyc: string;
+  BuildingNo: string;
+  HasCompany: string;
+  JobPosition: string;
+  VendorObjectsId: [];
+  VendorBuildingsId:[];
+  VendorCompanyId: string;
+  RoleId: string;
+  VOEN: string;
+  PhoneNumber: string;
+  Email: string;
+  UserName: string;
+  Password: string;
+
 };
 
-const EmployeesModal = ({
+const EmployeesModal: React.FC<Props> = ({
   isOpen,
   closeModal,
   process,
   deleteId,
   selectedRow,
   mutate,
-}: Props) => {
+}) => {
   const {
-    data: dataRegions,
-    error: errorRegions,
-    isLoading: isLoadingRegions,
-  } = useSWR("/api/Region/GetAll", (key) => GetAll.user(key));
-
+    data: dataCompany,
+    error: errorCompany,
+    isLoading: isLoadingCompany,
+  } = useSWR("/api/VendorCompany/GetAllByVendorId", (key) => GetAll.user(key));
+  const {
+    data: dataObjects,
+    error: errorObjects,
+    isLoading: isLoadingObjects,
+  } = useSWR("/api/VendorObjects/GetAll", (key) => GetAll.user(key));
+  const {
+    data: dataBuildings,
+    error: errorBuildings,
+    isLoading: isLoadingBuildings,
+  } = useSWR("/api/VendorBuildings/GetAll", (key) => GetAll.user(key));
+  console.log(selectedRow, "selectedRow");
   const handleSubmit = async (values: Values) => {
+    console.log(values, "values");
+
+
     const parsedValues = {
       ...values,
-      regionId: parseInt(values.regionId),
+      VendorObjectId: Number(values.VendorObjectId),
+    
     };
+    console.log(parsedValues, "parsedValues");
+    const formData = new FormData();
+    if (parsedValues.ProfileImage) {
+      formData.append("Image", parsedValues.ProfileImage);
+    }
+    formData.append("Name", parsedValues.Name);
+    formData.append("Surname", parsedValues.Surname);
+    formData.append("Patrionimyc", parsedValues.Patrionimyc);
+    formData.append("HasCompany", parsedValues.HasCompany);
+    formData.append("JobPosition", parsedValues.JobPosition);
+   
+    formData.append("VendorObjectId", String(parsedValues.VendorObjectId));
+    formData.append("VendorCompanyId", String(parsedValues.VendorCompanyId));
+   
 
     const res = await useGetResponse(
-      AddObjects.user("/api/VendorObjects/Create", {
-        arg: parsedValues,
+      CreateBuilding.user("/api/VendorBuildings/Create", {
+        arg: formData,
       }),
       mutate,
       closeModal
@@ -58,28 +96,41 @@ const EmployeesModal = ({
 
     alert(res);
   };
-
   const handleEdit = async (values: Values) => {
     const parsedValues = {
       ...values,
-      regionId: parseInt(values.regionId),
-      id: selectedRow.id,
+      VendorObjectId: Number(values.VendorObjectId),
+      RegionId: Number(values.RegionId),
+      Id:selectedRow.id
     };
-
+    console.log(parsedValues, "parsedValues");
+    const formData = new FormData();
+    formData.append("Id",parsedValues.Id)
+    formData.append("Name", parsedValues.Name);
+    formData.append("Street", parsedValues.Street);
+    formData.append("BuildingNo", parsedValues.BuildingNo);
+    formData.append("SecurityPhone", parsedValues.SecurityPhone);
+    formData.append("Floor", String(parsedValues.Floor));
+    formData.append("Entrance", String(parsedValues.Entrance));
+    if (parsedValues.Image) {
+      formData.append("Image", parsedValues.Image);
+    }
+    formData.append("VendorObjectId", String(parsedValues.VendorObjectId));
+    formData.append("RegionId", String(parsedValues.RegionId));
     const res = await useGetResponse(
-      EditObjects.user("/api/VendorObjects/Update", {
-        arg: parsedValues,
+      EditBuilding.user("/api/VendorResident/Update", {
+        arg: formData,
       }),
       mutate,
       closeModal
     );
 
     alert(res);
+   
   };
-
   const deleteObject = async (deleteId: any) => {
     const res = await useGetResponse(
-      Delete.user("/api/VendorObjects/Delete", {
+      Delete.user("/api/VendorBuildings/Delete", {
         arg: { deleteId },
       }),
       mutate,
@@ -90,6 +141,7 @@ const EmployeesModal = ({
   };
 
   const handleDelete = () => {
+    console.log(deleteId, "deleteId");
     deleteObject(deleteId);
   };
 
@@ -121,12 +173,12 @@ const EmployeesModal = ({
                 leaveTo="opacity-0 scale-95"
               >
                 {process === "Add" ? (
-                  <Dialog.Panel className="w-full max-w-xl p-6 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl rounded-2xl">
+                  <Dialog.Panel className="w-full max-w-[40em] p-6 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl rounded-2xl">
                     <Dialog.Title
                       as="h3"
                       className="flex items-center justify-between font-bold font-inter text-16 leading-30 text-dark"
                     >
-                      Object əlavə et
+                      Add Apartment
                       <XCircleIcon
                         onClick={closeModal}
                         className="w-6 h-6 cursor-pointer fill-icon"
@@ -134,168 +186,423 @@ const EmployeesModal = ({
                     </Dialog.Title>
                     <Formik
                       initialValues={{
-                        title: "",
-                        address: "",
-                        regionId: "",
+                        Image: null,
+                        Name: "",
+                        RegionId: "",
+                        Street: "",
+                        BuildingNo: "",
+                        SecurityPhone: "",
+                        Floor: -1,
+                        Entrance: -1,
+                        VendorObjectId: "",
                       }}
                       onSubmit={handleSubmit}
                     >
-                      <Form action="">
-                        <div className="flex flex-row items-center justify-between mt-10 font-bold font-inter text-16 leading-30 text-dark">
-                          <div>
-                            <label
-                              htmlFor="title"
-                              className="inline-flex items-center w-1/2 justify-star"
-                            >
-                              Title
-                            </label>
-                            <Field
-                              name="title"
-                              type="text"
-                              className="mt-3 w-[95%] rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
-                              required
-                            />
+                      {(formikProps) => (
+                        <Form>
+                          <div className="flex flex-row items-center justify-between w-full mt-5 font-bold font-inter text-16 leading-30 text-dark">
+                            <div className="w-[48%]">
+                              {" "}
+                              <label
+                                htmlFor="Name"
+                                className="flex items-center justify-between mt-10 font-bold font-inter text-16 leading-30 text-dark"
+                              >
+                                Name
+                              </label>
+                              <Field
+                                type="text"
+                                id="Name"
+                                className="flex items-center justify-center w-full px-5 py-2 mt-3 font-medium border rounded-lg border-line bg-background focus:outline-none text-md hover:outline-none"
+                                name="Name"
+                                required
+                              />
+                            </div>
+                            <div className="w-[48%]">
+                              {" "}
+                              <label
+                                htmlFor="RegionId"
+                                className="flex items-center justify-between mt-10 font-bold font-inter text-16 leading-30 text-dark"
+                              >
+                                Region
+                              </label>
+                              <Field
+                                as="select"
+                                name="RegionId"
+                                id="RegionId"
+                                className="mt-3 w-[95%] rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
+                                required
+                              >
+                                <option value="-1">Choose</option>
+                                {dataRegions?.data.map((item: any) => (
+                                  <option value={item.id}>{item.name}</option>
+                                ))}
+                              </Field>
+                            </div>
                           </div>
-                          <div>
-                            <label
-                              htmlFor="address"
-                              className="inline-flex items-center w-1/2 justify-star"
-                            >
-                              Adress
-                            </label>
-                            <Field
-                              name="address"
-                              type="text"
-                              className="mt-3 w-[95%]  rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none  font-medium text-md"
-                              required
-                            />
+
+                          <div className="flex flex-row items-center justify-between w-full mt-5 font-bold font-inter text-16 leading-30 text-dark">
+                            <div className="w-[48%]">
+                              <label
+                                htmlFor="Street"
+                                className="inline-flex items-center w-1/2 justify-star"
+                              >
+                                Street
+                              </label>
+                              <div className="relative flex items-center justify-between">
+                                <Field
+                                  type="text"
+                                  className="flex items-center justify-center w-full px-5 py-2 mt-3 font-medium border rounded-lg border-line bg-background focus:outline-none text-md"
+                                  name="Street"
+                                  id="Street"
+                                />
+                              </div>
+                            </div>
+                            <div className="w-[48%]">
+                              <label
+                                htmlFor="BuildingNo"
+                                className="inline-flex items-center w-1/2 justify-star"
+                              >
+                                Building No
+                              </label>
+                              <Field
+                                type="text"
+                                className="flex items-center justify-center w-full px-5 py-2 mt-3 font-medium border rounded-lg border-line bg-background focus:outline-none text-md"
+                                name="BuildingNo"
+                                id="BuildingNo"
+                              />
+                            </div>
                           </div>
-                        </div>
-                        <div className="flex flex-row items-center justify-between mt-10 font-bold font-inter text-16 leading-30 text-dark">
-                          <div className="w-1/2">
-                            <label
-                              htmlFor="regionId"
-                              className="inline-flex items-center w-1/2 justify-star"
-                            >
-                              Region
-                            </label>
-                            <Field
-                              as="select"
-                              name="regionId"
-                              id="regionId"
-                              className="mt-3 w-[95%] rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
-                              required
-                            >
-                              <option value="-1">Choose</option>
-                              {dataRegions?.data.map((item: any) => (
-                                <option value={item.id}>{item.name}</option>
-                              ))}
-                            </Field>
+                          <div className="flex flex-row items-center justify-between w-full mt-5 font-bold font-inter text-16 leading-30 text-dark">
+                            <div className="w-[48%]">
+                              <label
+                                htmlFor="SecurityPhone"
+                                className="inline-flex items-center w-1/2 justify-star"
+                              >
+                                Security Phone
+                              </label>
+                              <div className="relative flex items-center justify-between">
+                                <Field
+                                  type="text"
+                                  className="flex items-center justify-center w-full px-5 py-2 mt-3 font-medium border rounded-lg border-line bg-background focus:outline-none text-md"
+                                  name="SecurityPhone"
+                                  id="SecurityPhone"
+                                />
+                              </div>
+                            </div>
+                            <div className="w-[48%]">
+                              <label
+                                htmlFor="Entrance"
+                                className="inline-flex items-center w-1/2 justify-star"
+                              >
+                                Entrance
+                              </label>
+                              <div className="relative flex items-center justify-between">
+                                <Field
+                                  type="number"
+                                  className="flex items-center justify-center w-full px-5 py-2 mt-3 font-medium border rounded-lg border-line bg-background focus:outline-none text-md"
+                                  name="Entrance"
+                                  id="Entrance"
+                                />
+                              </div>
+                            </div>
                           </div>
-                        </div>
-                        <div className="flex items-center justify-around w-full mt-10 font-bold font-inter text-16 leading-30 text-dark">
-                          <button
-                            type="submit"
-                            className="flex items-center justify-center w-1/4 px-2 py-4 text-sm font-medium text-white border border-transparent rounded-full bg-primary hover:bg-primary-200 focus:outline-none"
-                          >
-                            Əlavə et
-                          </button>
-                        </div>
-                      </Form>
+
+                          <div className="flex flex-row items-center justify-between w-full mt-5 font-bold font-inter text-16 leading-30 text-dark">
+                            <div className="w-[48%]">
+                              <label
+                                htmlFor="Floor"
+                                className="inline-flex items-center w-1/2 justify-star"
+                              >
+                                Floor
+                              </label>
+
+                              <Field
+                                type="number"
+                                className="flex items-center justify-center w-full px-5 py-2 mt-3 font-medium border rounded-lg border-line bg-background focus:outline-none text-md"
+                                name="Floor"
+                                id="Floor"
+                              />
+                            </div>
+                            <div className="w-[48%]">
+                              <label
+                                htmlFor="VendorObjectId"
+                                className="inline-flex items-center w-1/2 justify-star"
+                              >
+                                Object
+                              </label>
+                              <Field
+                                as="select"
+                                id="VendorObjectId"
+                                className="flex items-center justify-center w-full px-5 py-2 mt-3 font-medium border rounded-lg border-line bg-background focus:outline-none text-md hover:outline-none"
+                                name="VendorObjectId"
+                                required
+                              >
+                                <option value="-1">Choose</option>
+                                {dataObjects?.data.map((item: any) => (
+                                  <option value={item.id}>{item.title}</option>
+                                ))}
+                              </Field>
+                            </div>
+                          </div>
+                          <div className="flex flex-row items-center justify-between w-full mt-5 font-bold font-inter text-16 leading-30 text-dark">
+                            <div className="w-[48%]">
+                              <label
+                                htmlFor="Image"
+                                className="inline-flex items-center w-1/2 justify-star"
+                              >
+                                Image
+                              </label>
+
+                              <input
+                                type="file"
+                                id="Image"
+                                name="Image"
+                                accept="image/*"
+                                onChange={(event) => {
+                                  const file = (
+                                    event.currentTarget as HTMLInputElement
+                                  ).files?.[0];
+                                  formikProps.setFieldValue("Image", file);
+                                }}
+                                className="mt-3 w-[95%] rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
+                                required
+                              />
+                            </div>
+                          </div>
+
+                          <div className="flex items-center justify-around w-full mt-10 font-bold font-inter text-16 leading-30 text-dark">
+                            <button
+                              type="submit"
+                              className="flex items-center justify-center w-1/4 px-2 py-4 text-sm font-medium text-white border border-transparent rounded-full bg-primary hover:bg-primary-200 focus:outline-none"
+                            >
+                              Əlavə et
+                            </button>
+                          </div>
+                        </Form>
+                      )}
                     </Formik>
                   </Dialog.Panel>
                 ) : process === "Edit" ? (
-                  <Dialog.Panel className="w-full max-w-xl p-6 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl rounded-2xl">
+                  <Dialog.Panel className="w-full max-w-[40em] p-6 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl rounded-2xl">
                     <Dialog.Title
                       as="h3"
                       className="flex items-center justify-between font-bold font-inter text-16 leading-30 text-dark"
                     >
-                      Objects Edit
+                      Edit Buildings
                       <XCircleIcon
                         onClick={closeModal}
                         className="w-6 h-6 cursor-pointer fill-icon"
                       />
                     </Dialog.Title>
                     <Formik
-                      initialValues={{
-                        title: selectedRow?.title || "",
-                        address: selectedRow?.address || "",
-                        regionId:
-                          dataRegions?.data.find(
-                            (item: any) => item.name === selectedRow?.regionName
-                          )?.id || "",
-                      }}
-                      onSubmit={handleEdit}
+                    initialValues={{
+                      Image: null,
+                      Name: selectedRow.name || "",
+                      RegionId:
+                      dataRegions?.data.find(
+                        (item: any) => item.name === selectedRow?.regionName
+                      )?.id || "",
+                      Street:selectedRow.street || "",
+                      BuildingNo:selectedRow.buildingNo || "",
+                      SecurityPhone:selectedRow.securityPhone || "",
+                      Floor:selectedRow.floor || -1,
+                      Entrance:selectedRow.entrance || -1,
+                      VendorObjectId:
+                      dataObjects?.data.find(
+                        (item: any) => item.vendorObjectName === selectedRow?.vendorName
+                      )?.id || "",
+                    }}
+                    onSubmit={handleEdit}
                     >
-                      <Form action="">
-                        <div className="flex flex-row items-center justify-between mt-10 font-bold font-inter text-16 leading-30 text-dark">
-                          <div>
-                            <label
-                              htmlFor="title"
-                              className="inline-flex items-center w-1/2 justify-star"
-                            >
-                              Title
-                            </label>
-                            <Field
-                              name="title"
-                              type="text"
-                              className="mt-3 w-[95%] rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
-                              required
-                            />
-                          </div>
-                          <div>
-                            <label
-                              htmlFor="address"
-                              className="inline-flex items-center w-1/2 justify-star"
-                            >
-                              Adress
-                            </label>
-                            <Field
-                              name="address"
-                              type="text"
-                              className="mt-3 w-[95%]  rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none  font-medium text-md"
-                              required
-                            />
-                          </div>
-                        </div>
-                        <div className="flex flex-row items-center justify-between mt-10 font-bold font-inter text-16 leading-30 text-dark">
-                          <div className="w-1/2">
-                            <label
-                              htmlFor="regionId"
-                              className="inline-flex items-center w-1/2 justify-star"
-                            >
-                              Region
-                            </label>
-                            <Field
-                              as="select"
-                              name="regionId"
-                              id="regionId"
-                              className="mt-3 w-[95%] rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
-                              required
-                            >
-                              <option value="-1">Choose</option>
-                              {dataRegions?.data.map((item: any) => (
-                                <option value={item.id}>{item.name}</option>
-                              ))}
-                            </Field>
-                          </div>
-                        </div>
-                        <div className="flex items-center justify-around w-full mt-10 font-bold font-inter text-16 leading-30 text-dark">
-                          <button
+               {(formikProps) => (
+                     <Form>
+                     <div className="flex flex-row items-center justify-between w-full mt-5 font-bold font-inter text-16 leading-30 text-dark">
+                       <div className="w-[48%]">
+                         {" "}
+                         <label
+                           htmlFor="Name"
+                           className="flex items-center justify-between mt-10 font-bold font-inter text-16 leading-30 text-dark"
+                         >
+                           Name
+                         </label>
+                         <Field
+                           type="text"
+                           id="Name"
+                           className="flex items-center justify-center w-full px-5 py-2 mt-3 font-medium border rounded-lg border-line bg-background focus:outline-none text-md hover:outline-none"
+                           name="Name"
+                           required
+                         />
+                       </div>
+                       <div className="w-[48%]">
+                         {" "}
+                         <label
+                           htmlFor="RegionId"
+                           className="flex items-center justify-between mt-10 font-bold font-inter text-16 leading-30 text-dark"
+                         >
+                           Region
+                         </label>
+                         <Field
+                           as="select"
+                           name="RegionId"
+                           id="RegionId"
+                           className="mt-3 w-[95%] rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
+                           required
+                         >
+                           <option value="-1">Choose</option>
+                           {dataRegions?.data.map((item: any) => (
+                             <option value={item.id}>{item.name}</option>
+                           ))}
+                         </Field>
+                       </div>
+                     </div>
+
+                     <div className="flex flex-row items-center justify-between w-full mt-5 font-bold font-inter text-16 leading-30 text-dark">
+                       <div className="w-[48%]">
+                         <label
+                           htmlFor="Street"
+                           className="inline-flex items-center w-1/2 justify-star"
+                         >
+                           Street
+                         </label>
+                         <div className="relative flex items-center justify-between">
+                           <Field
+                             type="text"
+                             className="flex items-center justify-center w-full px-5 py-2 mt-3 font-medium border rounded-lg border-line bg-background focus:outline-none text-md"
+                             name="Street"
+                             id="Street"
+                           />
+                         </div>
+                       </div>
+                       <div className="w-[48%]">
+                         <label
+                           htmlFor="BuildingNo"
+                           className="inline-flex items-center w-1/2 justify-star"
+                         >
+                           Building No
+                         </label>
+                         <Field
+                           type="text"
+                           className="flex items-center justify-center w-full px-5 py-2 mt-3 font-medium border rounded-lg border-line bg-background focus:outline-none text-md"
+                           name="BuildingNo"
+                           id="BuildingNo"
+                         />
+                       </div>
+                     </div>
+                     <div className="flex flex-row items-center justify-between w-full mt-5 font-bold font-inter text-16 leading-30 text-dark">
+                       <div className="w-[48%]">
+                         <label
+                           htmlFor="SecurityPhone"
+                           className="inline-flex items-center w-1/2 justify-star"
+                         >
+                           Security Phone
+                         </label>
+                         <div className="relative flex items-center justify-between">
+                           <Field
+                             type="text"
+                             className="flex items-center justify-center w-full px-5 py-2 mt-3 font-medium border rounded-lg border-line bg-background focus:outline-none text-md"
+                             name="SecurityPhone"
+                             id="SecurityPhone"
+                           />
+                         </div>
+                       </div>
+                       <div className="w-[48%]">
+                         <label
+                           htmlFor="Entrance"
+                           className="inline-flex items-center w-1/2 justify-star"
+                         >
+                           Entrance
+                         </label>
+                         <div className="relative flex items-center justify-between">
+                           <Field
+                             type="number"
+                             className="flex items-center justify-center w-full px-5 py-2 mt-3 font-medium border rounded-lg border-line bg-background focus:outline-none text-md"
+                             name="Entrance"
+                             id="Entrance"
+                           />
+                         </div>
+                       </div>
+                     </div>
+
+                     <div className="flex flex-row items-center justify-between w-full mt-5 font-bold font-inter text-16 leading-30 text-dark">
+                       <div className="w-[48%]">
+                         <label
+                           htmlFor="Floor"
+                           className="inline-flex items-center w-1/2 justify-star"
+                         >
+                           Floor
+                         </label>
+
+                         <Field
+                           type="number"
+                           className="flex items-center justify-center w-full px-5 py-2 mt-3 font-medium border rounded-lg border-line bg-background focus:outline-none text-md"
+                           name="Floor"
+                           id="Floor"
+                         />
+                       </div>
+                       <div className="w-[48%]">
+                         <label
+                           htmlFor="VendorObjectId"
+                           className="inline-flex items-center w-1/2 justify-star"
+                         >
+                           Object
+                         </label>
+                         <Field
+                           as="select"
+                           id="VendorObjectId"
+                           className="flex items-center justify-center w-full px-5 py-2 mt-3 font-medium border rounded-lg border-line bg-background focus:outline-none text-md hover:outline-none"
+                           name="VendorObjectId"
+                           required
+                         >
+                           <option value="-1">Choose</option>
+                           {dataObjects?.data.map((item: any) => (
+                             <option value={item.id}>{item.title}</option>
+                           ))}
+                         </Field>
+                       </div>
+                     </div>
+                     <div className="flex flex-row items-center justify-between w-full mt-5 font-bold font-inter text-16 leading-30 text-dark">
+                       <div className="w-[48%]">
+                         <label
+                           htmlFor="Image"
+                           className="inline-flex items-center w-1/2 justify-star"
+                         >
+                           Image
+                         </label>
+
+                         <input
+                           type="file"
+                           id="Image"
+                           name="Image"
+                           accept="image/*"
+                           onChange={(event) => {
+                             const file = (
+                               event.currentTarget as HTMLInputElement
+                             ).files?.[0];
+                             formikProps.setFieldValue("Image", file);
+                           }}
+                           className="mt-3 w-[95%] rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
+                           required
+                         />
+                       </div>
+                     </div>
+
+                     <div className="flex items-center justify-around w-full mt-10 font-bold font-inter text-16 leading-30 text-dark">
+                     <button
                             type="button"
                             className="inline-flex items-center justify-center w-1/4 px-2 py-4 text-sm font-medium text-red-400 rounded-full outline font-inter"
                             onClick={handleDelete}
                           >
                             Delete
                           </button>
-                          <button
-                            type="submit"
-                            className="flex items-center justify-center w-1/4 px-2 py-4 text-sm font-medium text-white border border-transparent rounded-full bg-primary hover:bg-primary-200 focus:outline-none"
-                          >
-                            Edit
-                          </button>
-                        </div>
-                      </Form>
+                       <button
+                         type="submit"
+                         className="flex items-center justify-center w-1/4 px-2 py-4 text-sm font-medium text-white border border-transparent rounded-full bg-primary hover:bg-primary-200 focus:outline-none"
+                       >
+                         Əlavə et
+                       </button>
+                     </div>
+                   </Form>
+               )}
                     </Formik>
                   </Dialog.Panel>
                 ) : null}

@@ -45,6 +45,7 @@ const UserModal: React.FC<Props> = ({
     error: errorStatus,
     isLoading: isLoadingStatus,
   } = useSWR("/api/CustomerStatus/GetAll", (key) => GetAll.user(key));
+  console.log(process,"process");
   const handleSubmit = async (values: Values) => {
     const parsedValues = {
       ...values,
