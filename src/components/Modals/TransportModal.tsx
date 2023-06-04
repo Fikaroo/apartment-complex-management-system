@@ -64,7 +64,7 @@ const TransportModal = ({
       brand: values.brand,
       serialNumber: values.serialNumber,
       color: values.color,
-      employeeOrUserId: values.id,
+      employeeOrUserId: values.employeeOrUserId,
     };
 
     const res = await useGetResponse(
