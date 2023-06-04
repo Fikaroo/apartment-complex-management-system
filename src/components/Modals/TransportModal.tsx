@@ -94,7 +94,7 @@ const TransportModal = ({
   if (isLoading) <div>Loading...</div>;
   if (error) <div>error...</div>;
 
-  const employeeIds = data?.data?.map(({ id }: { id: number }) => id);
+  const employeeIds = data?.data?.map(({ id }: { id: string }) => id);
 
   return (
     <div>
@@ -207,7 +207,7 @@ const TransportModal = ({
                                 required
                               >
                                 <option value="">Select</option>
-                                {employeeIds?.map((d: number) => (
+                                {employeeIds?.map((d: string) => (
                                   <option key={d} value={d}>
                                     {d}
                                   </option>
