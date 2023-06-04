@@ -165,7 +165,6 @@ const EmployeesModal = ({
     })
   );
 
-  console.log(vendorCompanyIds, vendorObjectsIds, selectedRow);
   return (
     <div>
       <Transition appear show={isOpen} as={Fragment}>

@@ -35,6 +35,11 @@ const TransportModal = ({
   selectedRow,
   mutate,
 }: Props) => {
+  const { data, isLoading, error } = useSWR(
+    "/api/Employees/GetAll",
+    GetAll.user
+  );
+
   const handleSubmit = async (values: TransportValues) => {
     const parsedValues = {
       ...values,
@@ -85,6 +90,11 @@ const TransportModal = ({
   const handleDelete = () => {
     deleteObject(deleteId);
   };
+
+  if (isLoading) <div>Loading...</div>;
+  if (error) <div>error...</div>;
+
+  const employeeIds = data?.data?.map(({ id }: { id: number }) => id);
 
   return (
     <div>
@@ -180,6 +190,29 @@ const TransportModal = ({
                                 className="mt-3 w-[95%] rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
                                 required
                               />
+                            </div>
+
+                            <div>
+                              <label
+                                htmlFor="employeeId"
+                                className="inline-flex items-center w-1/2 justify-star"
+                              >
+                                EmployeeId
+                              </label>
+                              <Field
+                                as="select"
+                                name="employeeId"
+                                type="text"
+                                className="mt-3 w-[95%] rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
+                                required
+                              >
+                                <option value="">Select</option>
+                                {employeeIds?.map((d: number) => (
+                                  <option key={d} value={d}>
+                                    {d}
+                                  </option>
+                                ))}
+                              </Field>
                             </div>
                           </div>
 
