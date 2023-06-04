@@ -429,7 +429,7 @@ export const CreateTransport = {
       arg: TransportValues;
     }
   ) => {
-    const { data } = await company.post(path, arg, {
+    const { data } = await admin.post(path, arg, {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("user-token")}`,
       },
@@ -455,6 +455,7 @@ export const EditResidents = {
     return data;
   },
 };
+
 export const EditBuilding = {
   user: async (
     path: string,

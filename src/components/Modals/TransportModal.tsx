@@ -24,7 +24,7 @@ export type TransportValues = {
   brand: string;
   serialNumber: string;
   color: string;
-  employeeId: string;
+  employeeOrUserId: string;
 };
 
 const TransportModal = ({
@@ -59,9 +59,12 @@ const TransportModal = ({
   };
 
   const handleEdit = async (values: TransportValues) => {
+    console.log(values);
     const parsedValues = {
-      ...values,
-      id: selectedRow.id,
+      brand: values.brand,
+      serialNumber: values.serialNumber,
+      color: values.color,
+      employeeOrUserId: values.id,
     };
 
     const res = await useGetResponse(
@@ -140,7 +143,7 @@ const TransportModal = ({
                         brand: "",
                         serialNumber: "",
                         color: "",
-                        employeeId: "",
+                        employeeOrUserId: "",
                       }}
                       onSubmit={handleSubmit}
                     >
@@ -194,14 +197,14 @@ const TransportModal = ({
 
                             <div>
                               <label
-                                htmlFor="employeeId"
+                                htmlFor="employeeOrUserId"
                                 className="inline-flex items-center w-1/2 justify-star"
                               >
-                                EmployeeId
+                                Employee Or UserId
                               </label>
                               <Field
                                 as="select"
-                                name="employeeId"
+                                name="employeeOrUserId"
                                 type="text"
                                 className="mt-3 w-[95%] rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
                                 required
@@ -246,7 +249,7 @@ const TransportModal = ({
                           brand: "",
                           serialNumber: "",
                           color: "",
-                          employeeId: "",
+                          employeeOrUserId: "",
                         }
                       }
                       onSubmit={handleEdit}
