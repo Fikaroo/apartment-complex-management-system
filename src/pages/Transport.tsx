@@ -1,17 +1,17 @@
-import { Fragment, useState } from "react";
-import AddBtn from "../../components/AddBtn";
+import React, { Fragment, useState } from "react";
 import useSWR from "swr";
-import { GetAll } from "../../api";
-import OrderDate from "../../components/OrderDate";
-import Filter from "../../components/Filter";
-import Tables, { IHeaders } from "../../components/Table/EmployeesTable";
-import EmployeesModal from "../../components/Modals/EmployeesModal";
+import { GetAll } from "../api";
+import AddBtn from "../components/AddBtn";
+import OrderDate from "../components/OrderDate";
+import Filter from "../components/Filter";
+import Tables, { IHeaders } from "../components/Table/TransportTable";
+import TransportModal from "../components/Modals/TransportModal";
 
-const Employees = () => {
+const Transport = () => {
   let [isOpen, setIsOpen] = useState<boolean>(false);
   let [isOpenAdd, setIsOpenAdd] = useState<boolean>(false);
   const [process, setProcess] = useState("");
-  const [employeeId, setEmployeeId] = useState<number>(0);
+  const [orderId, setOrderId] = useState<number>(0);
   const [selectedRow, setSelectedRow] = useState(null);
 
   const closeModal = (): void => {
@@ -31,7 +31,7 @@ const Employees = () => {
   };
 
   const { data, error, isLoading, mutate } = useSWR(
-    "/api/Employees/GetAll",
+    "api/Transport/GetAllWithPagination",
     (key) => GetAll.user(key)
   );
 
@@ -56,44 +56,48 @@ const Employees = () => {
     },
     {
       id: 2,
-      title: "Full Name",
+      title: "Brand",
     },
     {
       id: 3,
-      title: "Job Position",
+      title: "Serial Number",
     },
 
     {
       id: 4,
-      title: "Phone Number",
+      title: "Color",
     },
 
     {
       id: 5,
-      title: "Company Name",
+      title: "Owner",
     },
     {
       id: 6,
-      title: "Role Name",
+      title: "Phone Number",
     },
   ];
 
+  if (isLoading) <div>Loading...</div>;
+  if (error) <div>error</div>;
+
+  const transportData = data?.data?.items;
   return (
     <Fragment>
       <div className="flex items-center justify-between">
         <p className="font-bold font-inter text-16 leading-30 text-dark">
-          Employees 
-        </p>{" "}
+          Ümumi: 178 Sakin
+        </p>
         <div className="flex items-center gap-4">
           <AddBtn
             openModal={openModalAdd}
             modal={
-              <EmployeesModal
+              <TransportModal
                 mutate={mutate}
                 isOpen={isOpenAdd}
                 closeModal={closeModalAdd}
                 process={process}
-                deleteId={employeeId}
+                deleteId={orderId}
                 selectedRow={selectedRow}
               />
             }
@@ -106,23 +110,23 @@ const Employees = () => {
       <Tables
         openModal={openModal}
         modal={
-          <EmployeesModal
+          <TransportModal
             mutate={mutate}
             isOpen={isOpen}
             closeModal={closeModal}
             process={process}
-            deleteId={employeeId}
+            deleteId={orderId}
             selectedRow={selectedRow}
           />
         }
         headers={headers}
-        data={data}
+        data={transportData}
         setProcess={setProcess}
-        setEmployeeId={setEmployeeId}
+        setOrderId={setOrderId}
         setSelectedRow={setSelectedRow}
       />
     </Fragment>
   );
 };
 
-export default Employees;
+export default Transport;

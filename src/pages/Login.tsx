@@ -48,7 +48,7 @@ const Login = () => {
 
   return (
     <div className="relative flex min-h-screen">
-      <div className="relative flex items-center justify-center w-full max-w-4xl">
+      <div className="relative items-center justify-center hidden w-full max-w-4xl xl:flex ">
         <div className="relative z-10 flex items-center justify-center ">
           <svg
             width="224"
@@ -158,7 +158,7 @@ const Login = () => {
           />
           <circle cx="196.5" cy="196.5" r="196" stroke="#514EF3" />
         </svg>
-        <div className="pl-20">
+        <div className="relative pl-20">
           <h2 className=" font-bold text-center text-[#1e1e1e] text-[52px]">
             Xoş gəlmisiniz
           </h2>

@@ -23,6 +23,7 @@ import BuildingDetail from "./pages/Buildings/BuildingDetail";
 import ResidentDetail from "./pages/Residents/ResidentDetail";
 import VendorRooms from "./pages/VendorRooms/VendorRooms";
 import VendorRoomDetail from "./pages/VendorRooms/VendorRoomDetail";
+import Transport from "./pages/Transport";
 const App = () => {
   return (
     <div className="w-full min-h-screen overflow-hidden bg-background/90 text-dark">
@@ -188,6 +189,15 @@ const App = () => {
           element={
             <Layout>
               <EmployeesDetail />
+            </Layout>
+          }
+        />
+
+        <Route
+          path="/references/transport"
+          element={
+            <Layout>
+              <Transport />
             </Layout>
           }
         />
