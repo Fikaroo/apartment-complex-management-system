@@ -6,7 +6,6 @@ type Props = {};
 
 const DealsDetail = (props: Props) => {
   const { dealId } = useParams()
-  console.log(dealId,"idddd")
   const { data, error, isLoading } = useSWR(`/api/OrderAdmin/GetById?Id=${dealId}`,GetbyId.user)
   console.log(data,"data")
   const handleDetail = async () => {

@@ -24,6 +24,10 @@ import ResidentDetail from "./pages/Residents/ResidentDetail";
 import VendorRooms from "./pages/VendorRooms/VendorRooms";
 import VendorRoomDetail from "./pages/VendorRooms/VendorRoomDetail";
 import Transport from "./pages/Transport";
+import Settings from "./pages/Settings/Settings";
+import OrderType from "./pages/OrderType/OrderType";
+import Parking from "./pages/Parking/Parking";
+import ParkingDetail from "./pages/Parking/ParkingDetail";
 const App = () => {
   return (
     <div className="w-full min-h-screen overflow-hidden bg-background/90 text-dark">
@@ -214,6 +218,38 @@ const App = () => {
           element={
             <Layout>
               <Notification />
+            </Layout>
+          }
+        />
+        <Route
+          path="/settings"
+          element={
+            <Layout>
+              <Settings />
+            </Layout>
+          }
+        />
+        <Route
+          path="/settings/ordertype"
+          element={
+            <Layout>
+              <OrderType />
+            </Layout>
+          }
+        />
+        <Route
+          path="/settings/parking"
+          element={
+            <Layout>
+              <Parking />
+            </Layout>
+          }
+        />
+          <Route
+          path="/settings/parking/:parkingId"
+          element={
+            <Layout>
+              <ParkingDetail />
             </Layout>
           }
         />

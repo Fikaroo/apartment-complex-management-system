@@ -164,12 +164,19 @@ const Navbar = () => {
       path: "/notification",
       icon: <BellIcon className="w-5 h-5" />,
       iconSolid: <BellIconSolid className="w-5 h-5 fill-white" />,
+      
     },
     {
       name: "Settings",
-      path: "/settings",
+      path: "",
       icon: <Cog6ToothIcon className="w-5 h-5" />,
       iconSolid: <Cog6ToothIconSolid className="w-5 h-5 fill-white" />,
+      children: [
+        { name: "OrderType", path: "/settings/ordertype" },
+        { name: "Parking", path: "/settings/parking" }
+      
+      ]
+      
     },
   ];
 

@@ -1,4 +1,6 @@
-
+import { Dialog, Transition } from "@headlessui/react";
+import { Fragment, useState } from "react";
+import SosModal from "../Modals/SosModal";
 import { Link, useNavigate } from "react-router-dom";
 export interface IHeaders {
   isStatus?: boolean;
@@ -15,8 +17,8 @@ type PropsType = {
   openModal: () => void;
   data: any;
   setProcess: React.Dispatch<React.SetStateAction<string>>;
+  setVendorId: React.Dispatch<React.SetStateAction<number>>;
   setSelectedRow: React.Dispatch<React.SetStateAction<any>>;
-  setRoomId: React.Dispatch<React.SetStateAction<number>>;
 };
 
 const Tables = ({
@@ -25,13 +27,13 @@ const Tables = ({
   openModal,
   data,
   setProcess,
+  setVendorId,
   setSelectedRow,
-  setRoomId
 }: PropsType) => {
   const nav = useNavigate();
 
-   const handleTableRow = ({id}:any) => nav(`/references/vendorRooms/${id}`);
-console.log(data, "data")
+   const handleTableRow = ({id}:any) => nav(`/references/objects/${id}`);
+
   return (
     <div className="w-full mt-8 overflow-x-auto">
       <table className="table w-full table-auto">
@@ -71,21 +73,15 @@ console.log(data, "data")
                 </div>
               </td>
               <td className="px-6 py-4 text-sm leading-5 text-gray-500 whitespace-no-wrap border-b border-gray-200">
-                {item.companyName}
+                {item.paymentType ? "Ödənişli" :"Ödənişsiz"}
               </td>
               <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
                 <div className="text-sm leading-5 text-gray-900">
-                  {item.regionName}
+                  {item.prepaymentType}
                 </div>
               </td>
               <td className="px-6 py-4 text-sm leading-5 text-gray-500 whitespace-no-wrap border-b border-gray-200">
-                {item.roomTypeName}
-              </td>
-              <td className="px-6 py-4 text-sm leading-5 text-gray-500 whitespace-no-wrap border-b border-gray-200">
-                {item.isRentAviable ? "Yes" : "No"}
-              </td>
-              <td className="px-6 py-4 text-sm leading-5 text-gray-500 whitespace-no-wrap border-b border-gray-200">
-                {item.rentPrice}
+                {item.priceType}
               </td>
               <td
                 className="px-6 py-4 text-sm font-medium leading-5 text-right whitespace-no-wrap border-b border-gray-200"
@@ -95,10 +91,10 @@ console.log(data, "data")
                   onClick={() => {
                     openModal();
                     setProcess("Edit");
+                    setVendorId(item.id);
                     setSelectedRow(
                       item
                     );
-                    setRoomId(item.id);
                   }}
                   className="absolute z-50 ml-4 cursor-pointer"
                   src="/icons/edit.svg"

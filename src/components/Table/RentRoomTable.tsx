@@ -17,7 +17,7 @@ type PropsType = {
   openModal: () => void;
   data: any;
   setProcess: React.Dispatch<React.SetStateAction<string>>;
-  setOrderId: React.Dispatch<React.SetStateAction<number>>;
+  setRentRoomId: React.Dispatch<React.SetStateAction<number>>;
   setSelectedRow: React.Dispatch<React.SetStateAction<any>>;
 };
 
@@ -27,31 +27,13 @@ const Tables = ({
   openModal,
   data,
   setProcess,
-  setOrderId,
+  setRentRoomId,
   setSelectedRow,
 }: PropsType) => {
   const nav = useNavigate();
 
-  const optionsStatus = [
-    { id: 0, name: "NewOrder+" },
-    { id: 1, name: "Appointed" },
-    { id: 2, name: "Inprogress" },
-    { id: 3, name: "OnPause" },
-    { id: 4, name: "OnConfirmation" },
-    { id: 5, name: "Completed" },
-    { id: 6, name: "Rejected" },
-    { id: 7, name: "Returned" },
-    { id: 8, name: "Cancelled" },
-    { id: 9, name: "Closed" },
-    { id: 10, name: "EnteredIncorrectly" },
-  ];
-
-  function isValidDate(dateString: any) {
-    const date = new Date(dateString);
-    return !isNaN(date.getTime());
-  }
-const [tableId,setTableId]=useState<number>(0);
-  const handleTableRow = ({id}:any) => nav(`/control-panel/deals/${id}`);
+// const [tableId,setTableId]=useState<number>(0);
+//   const handleTableRow = ({id}:any) => nav(`/control-panel/deals/${id}`);
 
   return (
     <div className="w-full mt-8 overflow-x-auto">
@@ -73,7 +55,7 @@ const [tableId,setTableId]=useState<number>(0);
             <tr
               key={item.id}
               className="cursor-pointer  hover:bg-gray-200"
-              onClick={() => handleTableRow({ id: item.id })}
+              // onClick={() => handleTableRow({ id: item.id })}
             >
               <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
                 <div className="flex-shrink-0 w-10 h-10">
@@ -87,7 +69,7 @@ const [tableId,setTableId]=useState<number>(0);
               <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
                 <div className="ml-4">
                   <div className="text-sm font-medium leading-5 text-gray-900">
-                    {new Date(item.actualDeadline)
+                    {new Date(item.startDate)
                       .toLocaleDateString("en-GB", {
                         day: "2-digit",
                         month: "2-digit",
@@ -100,7 +82,7 @@ const [tableId,setTableId]=useState<number>(0);
                 </div>
               </td>
               <td className="px-6 py-4 text-sm leading-5 text-gray-500 whitespace-no-wrap border-b border-gray-200">
-                {new Date(item.normativeDeadline)
+                {new Date(item.endDate)
                   .toLocaleDateString("en-GB", {
                     day: "2-digit",
                     month: "2-digit",
@@ -112,28 +94,20 @@ const [tableId,setTableId]=useState<number>(0);
               </td>
               <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
                 <div className="text-sm leading-5 text-gray-900">
-                  {item.description}
+                  {item.name}
                 </div>
               </td>
               <td className="px-6 py-4 text-sm leading-5 text-gray-500 whitespace-no-wrap border-b border-gray-200">
-                {item.orderClass?.name}
+                {item.companyName}
               </td>
               <td className="px-6 py-4 text-sm leading-5 text-gray-500 whitespace-no-wrap border-b border-gray-200">
-                {item.orderSource?.name}
+                {item.roomName}
               </td>
               <td className="px-6 py-4 text-sm leading-5 text-gray-500 whitespace-no-wrap border-b border-gray-200">
-                {item.orderType?.name}
+                {item.description
+              }
               </td>
-              <td className="px-6 py-4 text-sm leading-5 text-gray-500 whitespace-no-wrap border-b border-gray-200">
-                {item?.phoneNumber}
-              </td>
-              <td className="px-6 py-4 text-sm leading-5 text-gray-500 whitespace-no-wrap border-b border-gray-200">
-                {
-                  optionsStatus.find((option) => option.id === item.statusId)
-                    ?.name
-                }
-              </td>
-              <td className="px-6 py-4 text-sm leading-5 text-gray-500 whitespace-no-wrap border-b border-gray-200"></td>
+          
               <td
                 className="px-6 py-4 text-sm font-medium leading-5 text-right whitespace-no-wrap border-b border-gray-200"
                 onClick={(e) => e.stopPropagation()}
@@ -142,10 +116,11 @@ const [tableId,setTableId]=useState<number>(0);
                   onClick={() => {
                     openModal();
                     setProcess("Edit");
-                    setOrderId(item.id);
+                    setRentRoomId(item.id);
                     setSelectedRow({
                       ...item,
-                      actualDeadline: new Date(item.actualDeadline)
+                      startDate
+: new Date(item.startDate)
                         .toLocaleDateString("en-GB", {
                           day: "2-digit",
                           month: "2-digit",
@@ -154,7 +129,7 @@ const [tableId,setTableId]=useState<number>(0);
                         .split("/")
                         .reverse()
                         .join("-"),
-                      normativeDeadline: new Date(item.normativeDeadline)
+                        endDate: new Date(item.endDate)
                         .toLocaleDateString("en-GB", {
                           day: "2-digit",
                           month: "2-digit",

@@ -26,7 +26,7 @@ type Values = {
   name: string;
   vendorCompanyId: string;
   regionId: string;
-  roomTypeId: number;
+  vendorRoomTypeId: string;
   isRentAviable: string;
   rentPrice: number;
 };
@@ -50,11 +50,16 @@ const VendorRoomsModal = ({
     isLoading: isLoadingCompany,
   } = useSWR("/api/VendorCompany/GetAllByVendorId", (key) => GetAll.user(key));
   console.log(selectedRow, "selectedRow");
+  const roomType=[
+    {vendorRoomTypeId:"1",roomTypeName:"Ofis"},
+    {vendorRoomTypeId:"2",roomTypeName:"Kladofka"},
+  ]
   const handleSubmit = async (values: Values) => {
     const parsedValues = {
       ...values,
       vendorCompanyId: parseInt(values.vendorCompanyId),
       regionId: parseInt(values.regionId),
+      vendorRoomTypeId: parseInt(values.vendorRoomTypeId),
       isRentAviable: values.isRentAviable === "true",
     };
     console.log(values, "values");
@@ -71,10 +76,12 @@ const VendorRoomsModal = ({
   };
 
     const handleEdit = async (values: Values) => {
+      console.log(values, "values");
       const parsedValues = {
         ...values,
         vendorCompanyId: parseInt(values.vendorCompanyId),
         regionId: parseInt(values.regionId),
+        vendorRoomTypeId: parseInt(values.vendorRoomTypeId),
         isRentAviable: values.isRentAviable === "true",
         id: selectedRow.id,
       };
@@ -150,7 +157,7 @@ const VendorRoomsModal = ({
                         name: "",
                         vendorCompanyId: "",
                         regionId: "",
-                        roomTypeId: 0,
+                        vendorRoomTypeId: "",
                         isRentAviable: "",
                         rentPrice: 0,
                       }}
@@ -232,17 +239,23 @@ const VendorRoomsModal = ({
                         <div className="flex flex-row items-center justify-between mt-10 font-bold font-inter text-16 leading-30 text-dark">
                         <div className="w-1/2">
                             <label
-                              htmlFor="roomTypeId"
+                              htmlFor="vendorRoomTypeId"
                               className="inline-flex items-center w-1/2 justify-star"
                             >
                               Room Type
                             </label>
                             <Field
-                              name="roomTypeId"
-                              type="number"
+                              as="select"
+                              name="vendorRoomTypeId"
+                              id="vendorRoomTypeId"
                               className="mt-3 w-[95%] rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
                               required
-                            />
+                            >
+                              <option value="-1">Choose</option>
+                              {roomType.map((item: any) => (
+                                <option value={item.vendorRoomTypeId}>{item.roomTypeName}</option>
+                              ))}
+                            </Field>
                           </div>
                           <div className="w-1/2">
                             <label
@@ -299,7 +312,9 @@ const VendorRoomsModal = ({
                         regionId: dataRegions?.data.find(
                           (item: any) => item.name === selectedRow?.regionName
                         )?.id ||  "",
-                        roomTypeId: selectedRow.roomTypeId || 0,
+                        vendorRoomTypeId:  roomType.find(
+                          (item: any) => item.roomTypeName === selectedRow?.roomTypeName
+                        )?.vendorRoomTypeId || "",
                         isRentAviable:selectedRow.isRentAviable ? "true" : "false",
                         rentPrice: selectedRow.rentPrice || 0,
                       }}
@@ -380,18 +395,24 @@ const VendorRoomsModal = ({
                         </div>
                         <div className="flex flex-row items-center justify-between mt-10 font-bold font-inter text-16 leading-30 text-dark">
                         <div className="w-1/2">
-                            <label
-                              htmlFor="roomTypeId"
+                        <label
+                              htmlFor="vendorRoomTypeId"
                               className="inline-flex items-center w-1/2 justify-star"
                             >
                               Room Type
                             </label>
-                            <Field
-                              name="roomTypeId"
-                              type="number"
+                        <Field
+                              as="select"
+                              name="vendorRoomTypeId"
+                              id="vendorRoomTypeId"
                               className="mt-3 w-[95%] rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
                               required
-                            />
+                            >
+                              <option value="-1">Choose</option>
+                              {roomType.map((item: any) => (
+                                <option value={item.vendorRoomTypeId}>{item.roomTypeName}</option>
+                              ))}
+                            </Field>
                           </div>
                           <div className="w-1/2">
                             <label

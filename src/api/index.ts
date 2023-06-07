@@ -483,10 +483,10 @@ export const AddVendorRooms = {
       arg: {
         name: string;
         vendorCompanyId: number;
-      regionId: number;
-      roomTypeId: number;
-      isRentAviable: boolean;
-      rentPrice: number;
+        regionId: number;
+        vendorRoomTypeId: number;
+        isRentAviable: boolean;
+        rentPrice: number;
       };
     }
   ) => {
@@ -509,9 +509,59 @@ export const EditVendorRoom = {
         name: string;
         vendorCompanyId: number;
         regionId: number;
-        roomTypeId: number;
+        vendorRoomTypeId: number;
         isRentAviable: boolean;
         rentPrice: number;
+      };
+    }
+  ) => {
+    const { data } = await admin.put(path, arg, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("user-token")}`,
+      },
+    });
+    return data;
+  },
+};
+
+export const AddRentRooms = {
+  user: async (
+    path: string,
+    {
+      arg,
+    }: {
+      arg: {
+        startDate: string;
+        endDate: string;
+        description: string;
+        companyTenantId: number;
+        name: string;
+        vendorRoomId:number;
+      };
+    }
+  ) => {
+    const { data } = await admin.post(path, arg, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("user-token")}`,
+      },
+    });
+    return data;
+  },
+};
+export const EditRentRoom = {
+  user: async (
+    path: string,
+    {
+      arg,
+    }: {
+      arg: {
+        id: number;
+        startDate: string;
+        endDate: string;
+        description: string;
+        companyTenantId: number;
+        name: string;
+        vendorRoomId:number;
       };
     }
   ) => {
