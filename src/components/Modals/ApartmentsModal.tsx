@@ -9,6 +9,7 @@ import { CreateApartment } from "../../api";
 import { Delete } from "../../api";
 import { GetAll } from "../../api";
 import { EditApartment } from "../../api";
+import { GetbyId } from "../../api";
 import useGetResponse from "../../hooks/useGetResponse";
 
 type Props = {
@@ -24,7 +25,7 @@ type Values = {
   apartmentNo: string;
   entranceNo: string;
   area: number;
-  floorNo: number;
+  floorNo: string;
 };
 
 const ApartmentsModal: React.FC<Props> = ({
@@ -35,16 +36,40 @@ const ApartmentsModal: React.FC<Props> = ({
   selectedRow,
   mutate,
 }) => {
+  const [buildingId, setBuildingId] = useState(-1);
+
+  console.log(buildingId, "buildingId");
+  const {
+    data: dataBuildingId,
+    error: errorBuildingId,
+    isLoading: isLoadingBuildingId,
+  } = useSWR(`/api/VendorBuildings/GetById?id=${buildingId}`, GetbyId.user);
+
   const {
     data: dataBuilding,
     error: errorBuilding,
     isLoading: isLoadingBuilding,
   } = useSWR("/api/VendorBuildings/GetAll", (key) => GetAll.user(key));
+const [editBuildingId, setEditBuildingId] = useState(-1);
+const [editData, setEditData] = useState(dataBuilding);
+useEffect(() => {
+  if(selectedRow){
+    setEditBuildingId(dataBuilding?.data.find(
+    (item: any) =>
+      item.name === selectedRow?.buildingName
+  )?.id);
 
+  }
+  else{
+    console.log("fff")
+  }
+},[selectedRow])
+console.log(editBuildingId, "value")
   const handleSubmit = async (values: Values) => {
     const parsedValues = {
       ...values,
-      vendorBuildingId: parseInt(values.vendorBuildingId),
+      vendorBuildingId: dataBuildingId?.data?.id,
+      floorNo: parseInt(values.floorNo),
     };
     const res = await useGetResponse(
       CreateApartment.user("/api/VendorApartment/Create", {
@@ -54,11 +79,13 @@ const ApartmentsModal: React.FC<Props> = ({
       closeModal
     );
     alert(res);
+    setBuildingId(-1);
   };
   const handleEdit = async (values: Values) => {
     const parsedValues = {
       ...values,
-      vendorBuildingId: parseInt(values.vendorBuildingId),
+      vendorBuildingId: dataBuildingId?.data?.id,
+      floorNo: parseInt(values.floorNo),
       id: selectedRow.id,
     };
 
@@ -134,7 +161,7 @@ const ApartmentsModal: React.FC<Props> = ({
                         apartmentNo: "",
                         entranceNo: "",
                         area: -1,
-                        floorNo: -1,
+                        floorNo: "",
                       }}
                       onSubmit={handleSubmit}
                     >
@@ -153,6 +180,10 @@ const ApartmentsModal: React.FC<Props> = ({
                               id="vendorBuildingId"
                               className="mt-3 w-full rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md hover:outline-none"
                               name="vendorBuildingId"
+                              onChange={(
+                                e: React.ChangeEvent<HTMLSelectElement>
+                              ) => setBuildingId(parseInt(e.target.value))}
+                              value={dataBuildingId?.data?.id}
                               required
                             >
                               <option value="-1">Choose</option>
@@ -182,18 +213,32 @@ const ApartmentsModal: React.FC<Props> = ({
                           <div className="w-[48%]">
                             <label
                               htmlFor="entranceNo"
-                              className="inline-flex  justify-star items-center  w-1/2"
+                              className="inline-flex justify-start items-center w-1/2"
                             >
                               Entrance No
                             </label>
                             <div className="flex items-center justify-between relative">
                               <Field
-                                type="text"
-                                className="mt-3 w-full rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
+                                as="select"
+                                id="entranceNo"
+                                className="mt-3 w-full rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md hover:outline-none"
                                 name="entranceNo"
-                              />
+                                required
+                              >
+                                <option value="-1">Choose</option>
+                                {dataBuildingId?.data?.entrance &&
+                                  Array.from(
+                                    { length: dataBuildingId.data.entrance },
+                                    (_, index) => (
+                                      <option key={index + 1} value={index + 1}>
+                                        {index + 1}
+                                      </option>
+                                    )
+                                  )}
+                              </Field>
                             </div>
                           </div>
+
                           <div className="w-[48%]">
                             <label
                               htmlFor="area"
@@ -217,11 +262,24 @@ const ApartmentsModal: React.FC<Props> = ({
                               Floor No
                             </label>
                             <div className="flex items-center justify-between relative">
-                              <Field
-                                type="number"
-                                className="mt-3 w-full rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
+                            <Field
+                                as="select"
+                                id="floorNo"
+                                className="mt-3 w-full rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md hover:outline-none"
                                 name="floorNo"
-                              />
+                                required
+                              >
+                                <option value="-1">Choose</option>
+                                {dataBuildingId?.data?.floor &&
+                                  Array.from(
+                                    { length: dataBuildingId.data.floor },
+                                    (_, index) => (
+                                      <option key={index + 1} value={index + 1}>
+                                        {index + 1}
+                                      </option>
+                                    )
+                                  )}
+                              </Field>
                             </div>
                           </div>
                         </div>
@@ -259,12 +317,12 @@ const ApartmentsModal: React.FC<Props> = ({
                         apartmentNo: selectedRow?.apartmentNo || "",
                         entranceNo: selectedRow?.entranceNo || "",
                         area: selectedRow?.area || -1,
-                        floorNo: selectedRow?.floorNo || -1,
+                        floorNo: selectedRow?.floorNo || "",
                       }}
                       onSubmit={handleEdit}
                     >
                       <Form>
-                        <div className=" w-full flex items-center flex-row justify-between mt-5 font-bold font-inter text-16 leading-30 text-dark">
+                      <div className=" w-full flex items-center flex-row justify-between mt-5 font-bold font-inter text-16 leading-30 text-dark">
                           <div className="w-[48%]">
                             {" "}
                             <label
@@ -278,6 +336,10 @@ const ApartmentsModal: React.FC<Props> = ({
                               id="vendorBuildingId"
                               className="mt-3 w-full rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md hover:outline-none"
                               name="vendorBuildingId"
+                              onChange={(
+                                e: React.ChangeEvent<HTMLSelectElement>
+                              ) => setBuildingId(parseInt(e.target.value))}
+                              // value={dataBuildingId?.data?.id}
                               required
                             >
                               <option value="-1">Choose</option>
@@ -307,18 +369,32 @@ const ApartmentsModal: React.FC<Props> = ({
                           <div className="w-[48%]">
                             <label
                               htmlFor="entranceNo"
-                              className="inline-flex  justify-star items-center  w-1/2"
+                              className="inline-flex justify-start items-center w-1/2"
                             >
                               Entrance No
                             </label>
                             <div className="flex items-center justify-between relative">
                               <Field
-                                type="text"
-                                className="mt-3 w-full rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
+                                as="select"
+                                id="entranceNo"
+                                className="mt-3 w-full rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md hover:outline-none"
                                 name="entranceNo"
-                              />
+                                required
+                              >
+                                <option value="-1">Choose</option>
+                                {dataBuildingId?.data?.entrance &&
+                                  Array.from(
+                                    { length: dataBuildingId.data.entrance },
+                                    (_, index) => (
+                                      <option key={index + 1} value={index + 1}>
+                                        {index + 1}
+                                      </option>
+                                    )
+                                  )}
+                              </Field>
                             </div>
                           </div>
+
                           <div className="w-[48%]">
                             <label
                               htmlFor="area"
@@ -342,11 +418,24 @@ const ApartmentsModal: React.FC<Props> = ({
                               Floor No
                             </label>
                             <div className="flex items-center justify-between relative">
-                              <Field
-                                type="number"
-                                className="mt-3 w-full rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
+                            <Field
+                                as="select"
+                                id="floorNo"
+                                className="mt-3 w-full rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md hover:outline-none"
                                 name="floorNo"
-                              />
+                                required
+                              >
+                                <option value="-1">Choose</option>
+                                {dataBuildingId?.data?.floor &&
+                                  Array.from(
+                                    { length: dataBuildingId.data.floor },
+                                    (_, index) => (
+                                      <option key={index + 1} value={index + 1}>
+                                        {index + 1}
+                                      </option>
+                                    )
+                                  )}
+                              </Field>
                             </div>
                           </div>
                         </div>

@@ -1,35 +1,40 @@
-import { Fragment, useRef, useState } from "react";
-import Tables, { IHeaders } from "../../components/Table/UsersTable";
+import React, { Fragment, useState } from "react";
+import Tables, { IHeaders } from "../../components/Table/VendorRoomsTable";
 import Filter from "../../components/Filter";
 import OrderDate from "../../components/OrderDate";
 import AddBtn from "../../components/AddBtn";
-import UserModal from "../../components/Modals/UserModal";
+import VendorRoomsModal from "../../components/Modals/VendorRoomsModal";
 import useSWR from "swr";
 import { GetAll } from "../../api";
-import SearchInput from "../../components/SearchInput";
-const Users = () => {
-  const ref = useRef();
-
+const VendorRooms = () => {
   let [isOpen, setIsOpen] = useState<boolean>(false);
+  let [isOpenAdd, setIsOpenAdd] = useState<boolean>(false);
+
   const [process, setProcess] = useState("");
-  const [orderId, setOrderId] = useState<number>(0);
+  const [roomId, setRoomId] = useState<number>(0);
   const [selectedRow, setSelectedRow] = useState(null);
-   const closeModal = (): void => {
+
+  const closeModal = (): void => {
     setIsOpen(false);
   };
 
-  console.log(selectedRow, "selectedRow");
+  const closeModalAdd = (): void => {
+    setIsOpenAdd(false);
+  };
 
   const openModal = (): void => {
     setIsOpen(true);
   };
 
+  const openModalAdd = (): void => {
+    setIsOpenAdd(true);
+  };
+
   const { data, error, isLoading, mutate } = useSWR(
-    "/api/Users/GetAllForAdmin",
-    (key) => GetAll.user(key),
-    { revalidateIfStale: true }
+    "/api/VendorRooms/GetAllByVendorId",
+    (key) => GetAll.user(key)
   );
-console.log(process,"procesadd");
+
   const headers: IHeaders[] = [
     {
       id: 1,
@@ -55,88 +60,83 @@ console.log(process,"procesadd");
     },
     {
       id: 3,
-      title: "Surname",
+      title: "Company Name",
     },
     {
       id: 4,
-      title: "Patrionimyc",
+      title: "Region Name",
     },
     {
       id: 5,
-      title: "Email",
+      title: "Room Type",
     },
     {
       id: 6,
-      title: "Phone Number",
+      title: "Available",
     },
     {
       id: 7,
-      title: "Create Date",
-    },
-    {
+      title: "Rent Price",
+    },  {
       id: 8,
-      title: "Customer  Status",
-    },
-    {
-      id: 9,
-      title: "Property Type",
-    },
-    {
-      id: 10,
-      title: "Proportion",
-    },
-    {
-      id: 11,
       title: "Edit",
     },
   ];
 
   return (
-    <Fragment>
+    <div>
       <div className="flex items-center justify-between">
         <p className="font-bold font-inter text-16 leading-30 text-dark">
-          Ümumi: 178 Sakin
+          Ümumi:
         </p>{" "}
         <div className="flex items-center gap-4">
           <AddBtn
-            openModal={openModal}
+            openModal={openModalAdd}
             modal={
-              <UserModal
+              <VendorRoomsModal
                 mutate={mutate}
-                isOpen={isOpen}
-                closeModal={closeModal}
+                isOpen={isOpenAdd}
+                closeModal={closeModalAdd}
                 process={process}
-                deleteId={orderId}
+                deleteId={roomId}
                 selectedRow={selectedRow}
               />
             }
             setProcess={setProcess}
           />
+
           <OrderDate />
 
           <Filter />
         </div>
       </div>
-      <Tables
-        openModal={openModal}
-        modal={
-          <UserModal
-            mutate={mutate}
-            isOpen={isOpen}
-            closeModal={closeModal}
-            process={process}
-            deleteId={orderId}
-            selectedRow={selectedRow}
-          />
-        }
-        headers={headers}
-        data={data}
-        setProcess={setProcess}
-        setOrderId={setOrderId}
-        setSelectedRow={setSelectedRow}
-      />
-    </Fragment>
+
+      {isLoading ? (
+        <div>Loading...</div>
+      ) : error ? (
+        <div>error</div>
+      ) : (
+        <Tables
+          openModal={openModal}
+          modal={
+            <VendorRoomsModal
+              mutate={mutate}
+              isOpen={isOpen}
+              closeModal={closeModal}
+              process={process}
+              deleteId={roomId}
+              selectedRow={selectedRow}
+            />
+          }
+          headers={headers}
+          data={data}
+          setProcess={setProcess}
+          setSelectedRow={setSelectedRow}
+          setRoomId={setRoomId}
+        />
+      )}
+    </div>
   );
 };
 
-export default Users;
+export default VendorRooms;

@@ -75,6 +75,13 @@ const Transport = () => {
     {
       id: 6,
       title: "Phone Number",
+    }, 
+    {
+      id: 7,
+      title: "Status",
+    },{
+      id: 8,
+      title: "Edit",
     },
   ];
 

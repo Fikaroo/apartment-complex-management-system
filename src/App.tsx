@@ -19,7 +19,15 @@ import CompanyDetail from "./pages/Companies/CompanyDetail";
 import Residents from "./pages/Residents/Residents";
 import Employees from "./pages/Employees/Employees";
 import EmployeesDetail from "./pages/Employees/EmployeesDetail";
+import BuildingDetail from "./pages/Buildings/BuildingDetail";
+import ResidentDetail from "./pages/Residents/ResidentDetail";
+import VendorRooms from "./pages/VendorRooms/VendorRooms";
+import VendorRoomDetail from "./pages/VendorRooms/VendorRoomDetail";
 import Transport from "./pages/Transport";
+import Settings from "./pages/Settings/Settings";
+import OrderType from "./pages/OrderType/OrderType";
+import Parking from "./pages/Parking/Parking";
+import ParkingDetail from "./pages/Parking/ParkingDetail";
 const App = () => {
   return (
     <div className="w-full min-h-screen overflow-hidden bg-background/90 text-dark">
@@ -103,7 +111,7 @@ const App = () => {
           path="/references/buildings/:buildingId"
           element={
             <Layout>
-              <ObjectDetail />
+              <BuildingDetail />
             </Layout>
           }
         />
@@ -147,6 +155,30 @@ const App = () => {
             </Layout>
           }
         />
+        <Route
+          path="/references/residents/:residentId"
+          element={
+            <Layout>
+              <ResidentDetail />
+            </Layout>
+          }
+        />
+         <Route
+          path="/references/vendorRooms"
+          element={
+            <Layout>
+              <VendorRooms />
+            </Layout>
+          }
+        />
+        <Route
+          path="/references/vendorRooms/:vendorRoomId"
+          element={
+            <Layout>
+              <VendorRoomDetail />
+            </Layout>
+          }
+        />
 
         <Route
           path="/references/employees"
@@ -186,6 +218,38 @@ const App = () => {
           element={
             <Layout>
               <Notification />
+            </Layout>
+          }
+        />
+        <Route
+          path="/settings"
+          element={
+            <Layout>
+              <Settings />
+            </Layout>
+          }
+        />
+        <Route
+          path="/settings/ordertype"
+          element={
+            <Layout>
+              <OrderType />
+            </Layout>
+          }
+        />
+        <Route
+          path="/settings/parking"
+          element={
+            <Layout>
+              <Parking />
+            </Layout>
+          }
+        />
+          <Route
+          path="/settings/parking/:parkingId"
+          element={
+            <Layout>
+              <ParkingDetail />
             </Layout>
           }
         />

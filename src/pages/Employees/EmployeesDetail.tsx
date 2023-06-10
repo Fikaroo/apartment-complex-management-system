@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { GetAll, OrderGetbyId } from "../../api";
+import { GetAll, GetbyId } from "../../api";
 import useSWR from "swr";
 import { useParams } from "react-router-dom";
 import ObjectsModal from "../../components/Modals/ObjectsModal";

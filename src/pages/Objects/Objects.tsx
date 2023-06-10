@@ -57,7 +57,7 @@ const Objects = () => {
     },
     {
       id: 2,
-      title: "Vendor Name",
+      title: "Title",
     },
     {
       id: 3,
@@ -69,7 +69,11 @@ const Objects = () => {
     },
     {
       id: 5,
-      title: "Title",
+      title: "Vendor Name",
+    },
+    {
+      id: 6,
+      title: "Edit",
     },
   ];
 
@@ -77,7 +81,7 @@ const Objects = () => {
     <Fragment>
       <div className="flex items-center justify-between">
         <p className="font-bold font-inter text-16 leading-30 text-dark">
-          Ümumi: 2 Vendor
+      
         </p>{" "}
         <div className="flex items-center gap-4">
           <AddBtn

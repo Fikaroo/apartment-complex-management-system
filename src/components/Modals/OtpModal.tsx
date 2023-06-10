@@ -7,13 +7,17 @@ import { LoginApprove } from "../../api";
 import useSWR from "swr";
 import { useRef } from "react";
 import useSWRMutation from "swr/mutation";
+import jwt_decode from "jwt-decode";
 
 type Props = {
   isOpen: boolean;
   username: string;
   closeModal: () => void;
 };
-
+interface DecodedToken {
+  [key: string]: string;
+  // Add any other properties you expect in the decoded token
+}
 const OtpModal: React.FC<Props> = ({ isOpen, closeModal, username }) => {
   const [smsCode, setSmscode] = useState<string>("");
   // const { data, error, isLoading } = useSWR(
@@ -79,7 +83,12 @@ const OtpModal: React.FC<Props> = ({ isOpen, closeModal, username }) => {
   };
   useEffect(() => {
     if (data?.statusCode === 201) {
+      const token = data.data.token;
+      const decoded = jwt_decode(token) as DecodedToken;
+      const role = decoded[Object.keys(decoded)[3]];
+      console.log(role, "role");
       localStorage.setItem("user-token", data?.data?.token);
+      localStorage.setItem("role", role);
       nav("/dashboard");
     } else if (error) {
       console.log(error, "eroor");

@@ -17,7 +17,7 @@ type PropsType = {
   openModal: () => void;
   data: any;
   setProcess: React.Dispatch<React.SetStateAction<string>>;
-  setEmployeeId: React.Dispatch<React.SetStateAction<number>>;
+  setRentRoomId: React.Dispatch<React.SetStateAction<number>>;
   setSelectedRow: React.Dispatch<React.SetStateAction<any>>;
 };
 
@@ -27,12 +27,13 @@ const Tables = ({
   openModal,
   data,
   setProcess,
-  setEmployeeId,
+  setRentRoomId,
   setSelectedRow,
 }: PropsType) => {
   const nav = useNavigate();
 
-  const handleTableRow = ({ id }: any) => nav(`${id}`);
+// const [tableId,setTableId]=useState<number>(0);
+//   const handleTableRow = ({id}:any) => nav(`/control-panel/deals/${id}`);
 
   return (
     <div className="w-full mt-8 overflow-x-auto">
@@ -53,11 +54,11 @@ const Tables = ({
           {data?.data?.map((item: any) => (
             <tr
               key={item.id}
-              className="cursor-pointer hover:bg-gray-200"
-              onClick={() => handleTableRow({ id: item.id })}
+              className="cursor-pointer  hover:bg-gray-200"
+              // onClick={() => handleTableRow({ id: item.id })}
             >
               <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-                <div className="flex items-center flex-shrink-0 w-10 h-10">
+                <div className="flex-shrink-0 w-10 h-10">
                   <img
                     className="rounded-full"
                     src="/icons/exclamation.svg"
@@ -68,32 +69,45 @@ const Tables = ({
               <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
                 <div className="ml-4">
                   <div className="text-sm font-medium leading-5 text-gray-900">
-                    {item.fullName}
+                    {new Date(item.startDate)
+                      .toLocaleDateString("en-GB", {
+                        day: "2-digit",
+                        month: "2-digit",
+                        year: "numeric",
+                      })
+                      .split("/")
+                      .reverse()
+                      .join("-")}
                   </div>
                 </div>
               </td>
               <td className="px-6 py-4 text-sm leading-5 text-gray-500 whitespace-no-wrap border-b border-gray-200">
-                {item.jobPosition}
+                {new Date(item.endDate)
+                  .toLocaleDateString("en-GB", {
+                    day: "2-digit",
+                    month: "2-digit",
+                    year: "numeric",
+                  })
+                  .split("/")
+                  .reverse()
+                  .join("-")}
               </td>
               <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
                 <div className="text-sm leading-5 text-gray-900">
-                  {item.phoneNumber}
+                  {item.name}
                 </div>
               </td>
               <td className="px-6 py-4 text-sm leading-5 text-gray-500 whitespace-no-wrap border-b border-gray-200">
                 {item.companyName}
               </td>
               <td className="px-6 py-4 text-sm leading-5 text-gray-500 whitespace-no-wrap border-b border-gray-200">
-                {item.roleName}
+                {item.roomName}
               </td>
-
-              {/* <td className="px-6 py-4 text-sm leading-5 text-gray-500 whitespace-no-wrap border-b border-gray-200">
-                {
-                  optionsStatus.find((option) => option.id === item.statusId)
-                    ?.name
-                }
-              </td> */}
-
+              <td className="px-6 py-4 text-sm leading-5 text-gray-500 whitespace-no-wrap border-b border-gray-200">
+                {item.description
+              }
+              </td>
+          
               <td
                 className="px-6 py-4 text-sm font-medium leading-5 text-right whitespace-no-wrap border-b border-gray-200"
                 onClick={(e) => e.stopPropagation()}
@@ -102,8 +116,29 @@ const Tables = ({
                   onClick={() => {
                     openModal();
                     setProcess("Edit");
-                    setEmployeeId(item.id);
-                    setSelectedRow(item);
+                    setRentRoomId(item.id);
+                    setSelectedRow({
+                      ...item,
+                      startDate
+: new Date(item.startDate)
+                        .toLocaleDateString("en-GB", {
+                          day: "2-digit",
+                          month: "2-digit",
+                          year: "numeric",
+                        })
+                        .split("/")
+                        .reverse()
+                        .join("-"),
+                        endDate: new Date(item.endDate)
+                        .toLocaleDateString("en-GB", {
+                          day: "2-digit",
+                          month: "2-digit",
+                          year: "numeric",
+                        })
+                        .split("/")
+                        .reverse()
+                        .join("-"),
+                    });
                   }}
                   className="cursor-pointer"
                   src="/icons/edit.svg"

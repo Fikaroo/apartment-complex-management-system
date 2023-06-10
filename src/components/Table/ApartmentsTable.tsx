@@ -110,7 +110,7 @@ const Tables = ({
                     setApartmentId(item.id);
                     setSelectedRow(item);
                   }}
-                  className="absolute z-50 ml-4 cursor-pointer"
+                  className="cursor-pointer"
                   src="/icons/edit.svg"
                 />
               </td>
