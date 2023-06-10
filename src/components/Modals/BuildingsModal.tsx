@@ -135,10 +135,14 @@ const BuildingsModal: React.FC<Props> = ({
     // Check if a new image is selected, otherwise use the previous value as the default
     if (parsedValues.Image) {
       formData.append("Image", parsedValues.Image);
+      console.log(parsedValues.Image, "parsedValues.Image");
     } else if (selectedRow.image) {
+      console.log("else if")
       const response = await fetch(selectedRow.image);
+      console.log(response, "response");
       const imageBlob = await response.blob();
-      formData.append("Image", imageBlob, "image.png");
+      console.log(imageBlob, "imageBlob");
+      formData.append("Image", imageBlob,"image.png");
     }
   
     formData.append("VendorObjectId", String(parsedValues.VendorObjectId));

@@ -39,6 +39,7 @@ const ApartmentsModal: React.FC<Props> = ({
   const [buildingId, setBuildingId] = useState(-1);
 
   console.log(buildingId, "buildingId");
+
   const {
     data: dataBuildingId,
     error: errorBuildingId,
@@ -50,21 +51,34 @@ const ApartmentsModal: React.FC<Props> = ({
     error: errorBuilding,
     isLoading: isLoadingBuilding,
   } = useSWR("/api/VendorBuildings/GetAll", (key) => GetAll.user(key));
-const [editBuildingId, setEditBuildingId] = useState(-1);
-const [editData, setEditData] = useState(dataBuilding);
-useEffect(() => {
-  if(selectedRow){
-    setEditBuildingId(dataBuilding?.data.find(
-    (item: any) =>
-      item.name === selectedRow?.buildingName
-  )?.id);
 
-  }
-  else{
-    console.log("fff")
-  }
-},[selectedRow])
-console.log(editBuildingId, "value")
+  const [editBuildingId, setEditBuildingId] = useState(-1);
+  const [editData, setEditData] = useState(dataBuilding);
+
+  const fetchData = async () => {
+    if (selectedRow) {
+      try {
+        const resp = await GetbyId.user(
+          `/api/VendorBuildings/GetById?id=${
+            dataBuilding?.data.find(
+              (item: any) => item.name === selectedRow?.buildingName
+            )?.id
+          }`
+        );
+        setEditData(resp);
+        console.log("resp!!!", resp);
+      } catch (error) {
+        console.log("error", error);
+      }
+    } else {
+      console.log("fff");
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, [selectedRow]);
+  console.log(editData, "value");
   const handleSubmit = async (values: Values) => {
     const parsedValues = {
       ...values,
@@ -81,6 +95,7 @@ console.log(editBuildingId, "value")
     alert(res);
     setBuildingId(-1);
   };
+
   const handleEdit = async (values: Values) => {
     const parsedValues = {
       ...values,
@@ -166,7 +181,7 @@ console.log(editBuildingId, "value")
                       onSubmit={handleSubmit}
                     >
                       <Form>
-                        <div className=" w-full flex items-center flex-row justify-between mt-5 font-bold font-inter text-16 leading-30 text-dark">
+                        <div className="flex flex-row items-center justify-between w-full mt-5 font-bold font-inter text-16 leading-30 text-dark">
                           <div className="w-[48%]">
                             {" "}
                             <label
@@ -178,7 +193,7 @@ console.log(editBuildingId, "value")
                             <Field
                               as="select"
                               id="vendorBuildingId"
-                              className="mt-3 w-full rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md hover:outline-none"
+                              className="flex items-center justify-center w-full px-5 py-2 mt-3 font-medium border rounded-lg border-line bg-background focus:outline-none text-md hover:outline-none"
                               name="vendorBuildingId"
                               onChange={(
                                 e: React.ChangeEvent<HTMLSelectElement>
@@ -202,26 +217,26 @@ console.log(editBuildingId, "value")
                             </label>
                             <Field
                               type="text"
-                              className="mt-3 w-full  rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none  font-medium text-md"
+                              className="flex items-center justify-center w-full px-5 py-2 mt-3 font-medium border rounded-lg border-line bg-background focus:outline-none text-md"
                               name="apartmentNo"
                               required
                             />
                           </div>
                         </div>
 
-                        <div className=" w-full flex items-center flex-row justify-between mt-5 font-bold font-inter text-16 leading-30 text-dark">
+                        <div className="flex flex-row items-center justify-between w-full mt-5 font-bold font-inter text-16 leading-30 text-dark">
                           <div className="w-[48%]">
                             <label
                               htmlFor="entranceNo"
-                              className="inline-flex justify-start items-center w-1/2"
+                              className="inline-flex items-center justify-start w-1/2"
                             >
                               Entrance No
                             </label>
-                            <div className="flex items-center justify-between relative">
+                            <div className="relative flex items-center justify-between">
                               <Field
                                 as="select"
                                 id="entranceNo"
-                                className="mt-3 w-full rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md hover:outline-none"
+                                className="flex items-center justify-center w-full px-5 py-2 mt-3 font-medium border rounded-lg border-line bg-background focus:outline-none text-md hover:outline-none"
                                 name="entranceNo"
                                 required
                               >
@@ -242,30 +257,30 @@ console.log(editBuildingId, "value")
                           <div className="w-[48%]">
                             <label
                               htmlFor="area"
-                              className="inline-flex  justify-star items-center  w-1/2"
+                              className="inline-flex items-center w-1/2 justify-star"
                             >
                               Area
                             </label>
                             <Field
                               type="number"
-                              className="mt-3 w-full rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
+                              className="flex items-center justify-center w-full px-5 py-2 mt-3 font-medium border rounded-lg border-line bg-background focus:outline-none text-md"
                               name="area"
                             />
                           </div>
                         </div>
-                        <div className=" w-full flex items-center flex-row justify-between mt-5 font-bold font-inter text-16 leading-30 text-dark">
+                        <div className="flex flex-row items-center justify-between w-full mt-5 font-bold font-inter text-16 leading-30 text-dark">
                           <div className="w-[48%]">
                             <label
                               htmlFor="floorNo"
-                              className="inline-flex  justify-star items-center  w-1/2"
+                              className="inline-flex items-center w-1/2 justify-star"
                             >
                               Floor No
                             </label>
-                            <div className="flex items-center justify-between relative">
-                            <Field
+                            <div className="relative flex items-center justify-between">
+                              <Field
                                 as="select"
                                 id="floorNo"
-                                className="mt-3 w-full rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md hover:outline-none"
+                                className="flex items-center justify-center w-full px-5 py-2 mt-3 font-medium border rounded-lg border-line bg-background focus:outline-none text-md hover:outline-none"
                                 name="floorNo"
                                 required
                               >
@@ -284,7 +299,7 @@ console.log(editBuildingId, "value")
                           </div>
                         </div>
 
-                        <div className="flex w-full items-center justify-around mt-10 font-bold font-inter text-16 leading-30 text-dark">
+                        <div className="flex items-center justify-around w-full mt-10 font-bold font-inter text-16 leading-30 text-dark">
                           <button
                             type="submit"
                             className="flex items-center justify-center w-1/4 px-2 py-4 text-sm font-medium text-white border border-transparent rounded-full bg-primary hover:bg-primary-200 focus:outline-none"
@@ -321,141 +336,154 @@ console.log(editBuildingId, "value")
                       }}
                       onSubmit={handleEdit}
                     >
-                      <Form>
-                      <div className=" w-full flex items-center flex-row justify-between mt-5 font-bold font-inter text-16 leading-30 text-dark">
-                          <div className="w-[48%]">
-                            {" "}
-                            <label
-                              htmlFor="vendorBuildingId"
-                              className="flex items-center justify-between mt-10 font-bold font-inter text-16 leading-30 text-dark"
-                            >
-                              Building Name
-                            </label>
-                            <Field
-                              as="select"
-                              id="vendorBuildingId"
-                              className="mt-3 w-full rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md hover:outline-none"
-                              name="vendorBuildingId"
-                              onChange={(
-                                e: React.ChangeEvent<HTMLSelectElement>
-                              ) => setBuildingId(parseInt(e.target.value))}
-                              // value={dataBuildingId?.data?.id}
-                              required
-                            >
-                              <option value="-1">Choose</option>
-                              {dataBuilding?.data.map((item: any) => (
-                                <option value={item.id}>{item.name}</option>
-                              ))}
-                            </Field>
-                          </div>
-                          <div className="w-[48%]">
-                            {" "}
-                            <label
-                              htmlFor="apartmentNo"
-                              className="flex items-center justify-between mt-10 font-bold font-inter text-16 leading-30 text-dark"
-                            >
-                              Apartment No
-                            </label>
-                            <Field
-                              type="text"
-                              className="mt-3 w-full  rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none  font-medium text-md"
-                              name="apartmentNo"
-                              required
-                            />
-                          </div>
-                        </div>
-
-                        <div className=" w-full flex items-center flex-row justify-between mt-5 font-bold font-inter text-16 leading-30 text-dark">
-                          <div className="w-[48%]">
-                            <label
-                              htmlFor="entranceNo"
-                              className="inline-flex justify-start items-center w-1/2"
-                            >
-                              Entrance No
-                            </label>
-                            <div className="flex items-center justify-between relative">
+                      {(props) => (
+                        <Form>
+                          <div className="flex flex-row items-center justify-between w-full mt-5 font-bold font-inter text-16 leading-30 text-dark">
+                            <div className="w-[48%]">
+                              {" "}
+                              <label
+                                htmlFor="vendorBuildingId"
+                                className="flex items-center justify-between mt-10 font-bold font-inter text-16 leading-30 text-dark"
+                              >
+                                Building Name
+                              </label>
                               <Field
                                 as="select"
-                                id="entranceNo"
-                                className="mt-3 w-full rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md hover:outline-none"
-                                name="entranceNo"
+                                id="vendorBuildingId"
+                                className="flex items-center justify-center w-full px-5 py-2 mt-3 font-medium border rounded-lg border-line bg-background focus:outline-none text-md hover:outline-none"
+                                name="vendorBuildingId"
+                                onChange={(
+                                  e: React.ChangeEvent<HTMLSelectElement>
+                                ) => {
+                                  setBuildingId(parseInt(e.target.value));
+                                  props.setFieldValue(
+                                    "vendorBuildingId",
+                                    e.target.value
+                                  );
+                                }}
                                 required
                               >
                                 <option value="-1">Choose</option>
-                                {dataBuildingId?.data?.entrance &&
-                                  Array.from(
-                                    { length: dataBuildingId.data.entrance },
-                                    (_, index) => (
-                                      <option key={index + 1} value={index + 1}>
-                                        {index + 1}
-                                      </option>
-                                    )
-                                  )}
+                                {dataBuilding?.data.map((item: any) => (
+                                  <option value={item.id}>{item.name}</option>
+                                ))}
                               </Field>
                             </div>
-                          </div>
-
-                          <div className="w-[48%]">
-                            <label
-                              htmlFor="area"
-                              className="inline-flex  justify-star items-center  w-1/2"
-                            >
-                              Area
-                            </label>
-                            <Field
-                              type="number"
-                              className="mt-3 w-full rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
-                              name="area"
-                            />
-                          </div>
-                        </div>
-                        <div className=" w-full flex items-center flex-row justify-between mt-5 font-bold font-inter text-16 leading-30 text-dark">
-                          <div className="w-[48%]">
-                            <label
-                              htmlFor="floorNo"
-                              className="inline-flex  justify-star items-center  w-1/2"
-                            >
-                              Floor No
-                            </label>
-                            <div className="flex items-center justify-between relative">
-                            <Field
-                                as="select"
-                                id="floorNo"
-                                className="mt-3 w-full rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md hover:outline-none"
-                                name="floorNo"
-                                required
+                            <div className="w-[48%]">
+                              {" "}
+                              <label
+                                htmlFor="apartmentNo"
+                                className="flex items-center justify-between mt-10 font-bold font-inter text-16 leading-30 text-dark"
                               >
-                                <option value="-1">Choose</option>
-                                {dataBuildingId?.data?.floor &&
-                                  Array.from(
-                                    { length: dataBuildingId.data.floor },
-                                    (_, index) => (
-                                      <option key={index + 1} value={index + 1}>
-                                        {index + 1}
-                                      </option>
-                                    )
-                                  )}
-                              </Field>
+                                Apartment No
+                              </label>
+                              <Field
+                                type="text"
+                                className="flex items-center justify-center w-full px-5 py-2 mt-3 font-medium border rounded-lg border-line bg-background focus:outline-none text-md"
+                                name="apartmentNo"
+                                required
+                              />
                             </div>
                           </div>
-                        </div>
 
-                        <div className="flex w-full items-center justify-around mt-10 font-bold font-inter text-16 leading-30 text-dark">
-                          <button
-                            type="button"
-                            className="inline-flex items-center justify-center w-1/4 px-2 py-4 text-sm font-medium text-red-400 rounded-full outline font-inter"
-                            onClick={handleDelete}
-                          >
-                            Delete
-                          </button>
-                          <button
-                            type="submit"
-                            className="flex items-center justify-center w-1/4 px-2 py-4 text-sm font-medium text-white border border-transparent rounded-full bg-primary hover:bg-primary-200 focus:outline-none"
-                          >
-                            Edit
-                          </button>
-                        </div>
-                      </Form>
+                          <div className="flex flex-row items-center justify-between w-full mt-5 font-bold font-inter text-16 leading-30 text-dark">
+                            <div className="w-[48%]">
+                              <label
+                                htmlFor="entranceNo"
+                                className="inline-flex items-center justify-start w-1/2"
+                              >
+                                Entrance No
+                              </label>
+                              <div className="relative flex items-center justify-between">
+                                <Field
+                                  as="select"
+                                  id="entranceNo"
+                                  className="flex items-center justify-center w-full px-5 py-2 mt-3 font-medium border rounded-lg border-line bg-background focus:outline-none text-md hover:outline-none"
+                                  name="entranceNo"
+                                  required
+                                >
+                                  <option value="-1">Choose</option>
+                                  {editData?.data?.entrance &&
+                                    Array.from(
+                                      { length: editData.data.entrance },
+                                      (_, index) => (
+                                        <option
+                                          key={index + 1}
+                                          value={index + 1}
+                                        >
+                                          {index + 1}
+                                        </option>
+                                      )
+                                    )}
+                                </Field>
+                              </div>
+                            </div>
+
+                            <div className="w-[48%]">
+                              <label
+                                htmlFor="area"
+                                className="inline-flex items-center w-1/2 justify-star"
+                              >
+                                Area
+                              </label>
+                              <Field
+                                type="number"
+                                className="flex items-center justify-center w-full px-5 py-2 mt-3 font-medium border rounded-lg border-line bg-background focus:outline-none text-md"
+                                name="area"
+                              />
+                            </div>
+                          </div>
+                          <div className="flex flex-row items-center justify-between w-full mt-5 font-bold font-inter text-16 leading-30 text-dark">
+                            <div className="w-[48%]">
+                              <label
+                                htmlFor="floorNo"
+                                className="inline-flex items-center w-1/2 justify-star"
+                              >
+                                Floor No
+                              </label>
+                              <div className="relative flex items-center justify-between">
+                                <Field
+                                  as="select"
+                                  id="floorNo"
+                                  className="flex items-center justify-center w-full px-5 py-2 mt-3 font-medium border rounded-lg border-line bg-background focus:outline-none text-md hover:outline-none"
+                                  name="floorNo"
+                                  required
+                                >
+                                  <option value="-1">Choose</option>
+                                  {editData?.data?.floor &&
+                                    Array.from(
+                                      { length: editData.data.floor },
+                                      (_, index) => (
+                                        <option
+                                          key={index + 1}
+                                          value={index + 1}
+                                        >
+                                          {index + 1}
+                                        </option>
+                                      )
+                                    )}
+                                </Field>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div className="flex items-center justify-around w-full mt-10 font-bold font-inter text-16 leading-30 text-dark">
+                            <button
+                              type="button"
+                              className="inline-flex items-center justify-center w-1/4 px-2 py-4 text-sm font-medium text-red-400 rounded-full outline font-inter"
+                              onClick={handleDelete}
+                            >
+                              Delete
+                            </button>
+                            <button
+                              type="submit"
+                              className="flex items-center justify-center w-1/4 px-2 py-4 text-sm font-medium text-white border border-transparent rounded-full bg-primary hover:bg-primary-200 focus:outline-none"
+                            >
+                              Edit
+                            </button>
+                          </div>
+                        </Form>
+                      )}
                     </Formik>
                   </Dialog.Panel>
                 ) : null}
