@@ -8,7 +8,12 @@ import useSWR from "swr";
 
 import useGetResponse from "../../hooks/useGetResponse";
 
-import { CreateEmployees, Delete } from "../../api";
+import {
+  CreateEmployees,
+  Delete,
+  DeleteEmployees,
+  EditEmployees,
+} from "../../api";
 import { AddObjects } from "../../api";
 import { EditObjects } from "../../api";
 import { GetAll } from "../../api";
@@ -17,13 +22,13 @@ type Props = {
   isOpen: boolean;
   closeModal: () => void;
   process: string;
-  deleteId: number;
+  deleteId: string;
   selectedRow: any;
   mutate: any;
 };
 
 export type EmployeeValues = {
-  image: string;
+  ProfileImage: string;
   name: string;
   surname: string;
   patrionimyc: string;
@@ -59,9 +64,9 @@ const EmployeesModal = ({
   } = useSWR("/api/VendorObjects/GetAll", (key) => GetAll.user(key));
 
   const {
-    data: dataVendorBuildings,
-    error: errVendorBuildings,
-    isLoading: isLoadingVendorBuildings,
+    data: dataVendorBuildingsId,
+    error: errVendorBuildingsId,
+    isLoading: isLoadingVendorBuildingsId,
   } = useSWR("/api/VendorBuildings/GetAll", (key) => GetAll.user(key));
 
   const {
@@ -73,7 +78,6 @@ const EmployeesModal = ({
   const handleSubmit = async (values: EmployeeValues) => {
     const parsedValues = {
       ...values,
-      Image: values.image,
     };
 
     console.log("dataRegions", values);
@@ -96,7 +100,7 @@ const EmployeesModal = ({
     };
 
     const res = await useGetResponse(
-      CreateEmployees.user("/api/Employees/Update", {
+      EditEmployees.user("/api/Employees/Update", {
         arg: parsedValues,
       }),
       mutate,
@@ -106,10 +110,12 @@ const EmployeesModal = ({
     alert(res);
   };
 
-  const deleteObject = async (deleteId: any) => {
+  const deleteObject = async (deleteId: string) => {
     const res = await useGetResponse(
-      Delete.user("/api/Employees/Delete", {
-        arg: { deleteId },
+      Delete.user(`/api/Employees/Delete?employeeId=`, {
+        arg: {
+          deleteId,
+        },
       }),
       mutate,
       closeModal
@@ -125,7 +131,7 @@ const EmployeesModal = ({
   if (
     isLoadingVendorCompany &&
     isLoadingVendorObjects &&
-    isLoadingVendorBuildings &&
+    isLoadingVendorBuildingsId &&
     isLoadingRoleAdmin
   )
     <div>Loading...</div>;
@@ -133,7 +139,7 @@ const EmployeesModal = ({
   if (
     errVendorCompany &&
     errVendorObjects &&
-    errVendorBuildings &&
+    errVendorBuildingsId &&
     errRoleAdmin
   )
     <div>Err</div>;
@@ -152,7 +158,7 @@ const EmployeesModal = ({
     })
   );
 
-  const vendorBuildingsIds = dataVendorBuildings?.data?.map(
+  const vendorBuildingsIds = dataVendorBuildingsId?.data?.map(
     ({ id }: { id: number }) => ({
       id,
     })
@@ -206,7 +212,7 @@ const EmployeesModal = ({
                     </Dialog.Title>
                     <Formik
                       initialValues={{
-                        image: "",
+                        ProfileImage: "",
                         name: "",
                         surname: "",
                         patrionimyc: "",
@@ -383,22 +389,25 @@ const EmployeesModal = ({
 
                             <div>
                               <label
-                                htmlFor="image"
+                                htmlFor="ProfileImage"
                                 className="inline-flex items-center w-1/2 justify-star"
                               >
-                                image
+                                ProfileImage
                               </label>
 
                               <input
                                 type="file"
-                                id="image"
-                                name="image"
-                                accept="image/*"
+                                id="ProfileImage"
+                                name="ProfileImage"
+                                accept="ProfileImage/*"
                                 onChange={(event) => {
                                   const file = (
                                     event.currentTarget as HTMLInputElement
                                   ).files?.[0];
-                                  formikProps.setFieldValue("Image", file);
+                                  formikProps.setFieldValue(
+                                    "ProfileImage",
+                                    file
+                                  );
                                 }}
                                 className="mt-3 w-[95%] rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
                                 required
@@ -475,15 +484,15 @@ const EmployeesModal = ({
 
                             <div>
                               <label
-                                htmlFor="vendorBuldingsId"
+                                htmlFor="vendorBuildingsId"
                                 className="inline-flex items-center "
                               >
                                 Vendor Building
                               </label>
                               <Field
                                 as="select"
-                                name="vendorBuldingsId"
-                                id="vendorBuldingsId"
+                                name="vendorBuildingsId"
+                                id="vendorBuildingsId"
                                 className="flex items-center justify-center px-5 py-2 mt-3 font-medium border rounded-lg border-line bg-background focus:outline-none text-md"
                                 required
                               >
@@ -560,7 +569,7 @@ const EmployeesModal = ({
                     <Formik
                       initialValues={
                         selectedRow || {
-                          image: "",
+                          ProfileImage: "",
                           name: "",
                           surname: "",
                           patrionimyc: "",
@@ -738,22 +747,25 @@ const EmployeesModal = ({
 
                             <div>
                               <label
-                                htmlFor="image"
+                                htmlFor="ProfileImage"
                                 className="inline-flex items-center w-1/2 justify-star"
                               >
-                                image
+                                ProfileImage
                               </label>
 
                               <input
                                 type="file"
-                                id="image"
-                                name="image"
-                                accept="image/*"
+                                id="ProfileImage"
+                                name="ProfileImage"
+                                accept="ProfileImage/*"
                                 onChange={(event) => {
                                   const file = (
                                     event.currentTarget as HTMLInputElement
                                   ).files?.[0];
-                                  formikProps.setFieldValue("Image", file);
+                                  formikProps.setFieldValue(
+                                    "ProfileImage",
+                                    file
+                                  );
                                 }}
                                 className="mt-3 w-[95%] rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
                                 required
@@ -830,15 +842,15 @@ const EmployeesModal = ({
 
                             <div>
                               <label
-                                htmlFor="vendorBuldingsId"
+                                htmlFor="vendorBuildingsId"
                                 className="inline-flex items-center "
                               >
                                 Vendor Building
                               </label>
                               <Field
                                 as="select"
-                                name="vendorBuldingsId"
-                                id="vendorBuldingsId"
+                                name="vendorBuildingsId"
+                                id="vendorBuildingsId"
                                 className="flex items-center justify-center px-5 py-2 mt-3 font-medium border rounded-lg border-line bg-background focus:outline-none text-md"
                                 required
                               >

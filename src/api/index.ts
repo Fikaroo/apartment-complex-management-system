@@ -70,22 +70,26 @@ export const RegisterUser = {
       apartmentId: number;
     }
   ) => {
-    const { data } = await admin.post(path, {
-      name: name,
-      surname: surname,
-      patrionimyc: patrionimyc,
-      email: email,
-      phoneNumber: phoneNumber,
-      roleName: roleName,
-      customerStatusId: customerStatusId,
-      propertyTypeId: propertyTypeId,
-      proportion: proportion,
-      apartmentId: apartmentId,
-    },{
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("user-token")}`,
+    const { data } = await admin.post(
+      path,
+      {
+        name: name,
+        surname: surname,
+        patrionimyc: patrionimyc,
+        email: email,
+        phoneNumber: phoneNumber,
+        roleName: roleName,
+        customerStatusId: customerStatusId,
+        propertyTypeId: propertyTypeId,
+        proportion: proportion,
+        apartmentId: apartmentId,
       },
-    });
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("user-token")}`,
+        },
+      }
+    );
     return data;
   },
 };
@@ -136,12 +140,11 @@ export const Delete = {
       arg,
     }: {
       arg: {
-        deleteId: number;
+        deleteId: any;
       };
     }
   ) => {
-    console.log(arg, "argg");
-    const { data } = await admin.delete(`${path}?id=${arg.deleteId}`, {
+    const { data } = await admin.delete(`${path}${arg.deleteId}`, {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("user-token")}`,
       },
@@ -420,6 +423,42 @@ export const CreateEmployees = {
     return data;
   },
 };
+export const EditEmployees = {
+  user: async (
+    path: string,
+    {
+      arg,
+    }: {
+      arg: EmployeeValues;
+    }
+  ) => {
+    const { data } = await company.put(path, arg, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("user-token")}`,
+      },
+    });
+    return data;
+  },
+};
+
+export const DeleteEmployees = {
+  user: async (
+    path: string,
+    {
+      arg,
+    }: {
+      arg: string;
+    }
+  ) => {
+    const { data } = await admin.delete(`${path}?employeeId=${arg}`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("user-token")}`,
+      },
+    });
+    return data;
+  },
+};
+
 export const CreateTransport = {
   user: async (
     path: string,
@@ -429,11 +468,12 @@ export const CreateTransport = {
       arg: TransportValues;
     }
   ) => {
-    const { data } = await admin.post(path, arg, {
+    const { data } = await admin.put(path, arg, {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("user-token")}`,
       },
     });
+
     return data;
   },
 };
@@ -536,7 +576,7 @@ export const AddRentRooms = {
         description: string;
         companyTenantId: number;
         name: string;
-        vendorRoomId:number;
+        vendorRoomId: number;
       };
     }
   ) => {
@@ -561,7 +601,7 @@ export const EditRentRoom = {
         description: string;
         companyTenantId: number;
         name: string;
-        vendorRoomId:number;
+        vendorRoomId: number;
       };
     }
   ) => {
