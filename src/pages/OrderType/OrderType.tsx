@@ -71,6 +71,10 @@ const OrderType = () => {
       id: 5,
       title: "Price Type",
     },
+    {
+      id: 6,
+      title: "Edit",
+    },
   ];
 
   return (

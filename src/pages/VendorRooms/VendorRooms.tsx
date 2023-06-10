@@ -77,6 +77,9 @@ const VendorRooms = () => {
     {
       id: 7,
       title: "Rent Price",
+    },  {
+      id: 8,
+      title: "Edit",
     },
   ];
 

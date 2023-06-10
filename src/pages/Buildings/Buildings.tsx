@@ -16,15 +16,11 @@ const Users = () => {
   const closeModal = (): void => {
     setIsOpen(false);
   };
-  const closeModalAdd = (): void => {
-    setIsOpenAdd(false);
-  };
+ 
   const openModal = (): void => {
     setIsOpen(true);
   };
-  const openModalAdd = (): void => {
-    setIsOpenAdd(true);
-  };
+
   const { data, error, isLoading, mutate } = useSWR(
     "/api/VendorBuildings/GetAll",
     (key) => GetAll.user(key),
@@ -77,6 +73,10 @@ const Users = () => {
     {
       id: 8,
       title: "Entrance",
+    },
+    {
+      id: 9,
+      title: "Edit",
     },
   ];
 

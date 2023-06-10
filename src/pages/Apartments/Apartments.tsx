@@ -72,6 +72,10 @@ const Apartments = () => {
       id: 6,
       title: "FloorNo",
     },
+    {
+      id: 7,
+      title: "Edit",
+    },
    
   ];
 

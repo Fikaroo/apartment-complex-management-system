@@ -57,7 +57,7 @@ const BuildingsModal: React.FC<Props> = ({
       ...values,
       VendorObjectId: Number(values.VendorObjectId),
       RegionId: Number(values.RegionId),
-      id: selectedRow.id,
+     
     };
     console.log(parsedValues, "parsedValues");
     const formData = new FormData();
@@ -83,27 +83,67 @@ const BuildingsModal: React.FC<Props> = ({
 
     alert(res);
   };
+  // const handleEdit = async (values: Values) => {
+  //   const parsedValues = {
+  //     ...values,
+  //     VendorObjectId: Number(values.VendorObjectId),
+  //     RegionId: Number(values.RegionId),
+  //     Id:selectedRow.id
+  //   };
+  //   console.log(parsedValues, "parsedValues");
+  //   const formData = new FormData();
+  //   formData.append("Id",parsedValues.Id)
+  //   formData.append("Name", parsedValues.Name);
+  //   formData.append("Street", parsedValues.Street);
+  //   formData.append("BuildingNo", parsedValues.BuildingNo);
+  //   formData.append("SecurityPhone", parsedValues.SecurityPhone);
+  //   formData.append("Floor", String(parsedValues.Floor));
+  //   formData.append("Entrance", String(parsedValues.Entrance));
+  //   if (parsedValues.Image) {
+  //     formData.append("Image", parsedValues.Image);
+  //   }
+  //   formData.append("VendorObjectId", String(parsedValues.VendorObjectId));
+  //   formData.append("RegionId", String(parsedValues.RegionId));
+  //   const res = await useGetResponse(
+  //     EditBuilding.user("/api/VendorResident/Update", {
+  //       arg: formData,
+  //     }),
+  //     mutate,
+  //     closeModal
+  //   );
+
+  //   alert(res);
+  // };
+
   const handleEdit = async (values: Values) => {
     const parsedValues = {
       ...values,
       VendorObjectId: Number(values.VendorObjectId),
       RegionId: Number(values.RegionId),
-      Id:selectedRow.id
+      Id: selectedRow.id,
     };
-    console.log(parsedValues, "parsedValues");
+  
     const formData = new FormData();
-    formData.append("Id",parsedValues.Id)
+    formData.append("Id", parsedValues.Id);
     formData.append("Name", parsedValues.Name);
     formData.append("Street", parsedValues.Street);
     formData.append("BuildingNo", parsedValues.BuildingNo);
     formData.append("SecurityPhone", parsedValues.SecurityPhone);
     formData.append("Floor", String(parsedValues.Floor));
     formData.append("Entrance", String(parsedValues.Entrance));
+    
+    // Check if a new image is selected, otherwise use the previous value as the default
     if (parsedValues.Image) {
       formData.append("Image", parsedValues.Image);
+    } else if (selectedRow.image) {
+      const response = await fetch(selectedRow.image);
+      const imageBlob = await response.blob();
+      formData.append("Image", imageBlob, "image.png");
     }
+  
     formData.append("VendorObjectId", String(parsedValues.VendorObjectId));
     formData.append("RegionId", String(parsedValues.RegionId));
+  
     const res = await useGetResponse(
       EditBuilding.user("/api/VendorResident/Update", {
         arg: formData,
@@ -111,9 +151,10 @@ const BuildingsModal: React.FC<Props> = ({
       mutate,
       closeModal
     );
-
+  
     alert(res);
   };
+  
   const deleteObject = async (deleteId: any) => {
     const res = await useGetResponse(
       Delete.user("/api/VendorBuildings/Delete", {
@@ -382,7 +423,7 @@ const BuildingsModal: React.FC<Props> = ({
                     </Dialog.Title>
                     <Formik
                       initialValues={{
-                        Image: null,
+                        Image:null,
                         Name: selectedRow.name || "",
                         RegionId:
                           dataRegions?.data.find(
@@ -396,7 +437,7 @@ const BuildingsModal: React.FC<Props> = ({
                         VendorObjectId:
                           dataObjects?.data.find(
                             (item: any) =>
-                              item.vendorObjectName === selectedRow?.vendorName
+                              item.title === selectedRow?.vendorObjectName
                           )?.id || "",
                       }}
                       onSubmit={handleEdit}
@@ -568,8 +609,13 @@ const BuildingsModal: React.FC<Props> = ({
                                   formikProps.setFieldValue("Image", file);
                                 }}
                                 className="mt-3 w-[95%] rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
-                                required
+                           
                               />
+                            </div>
+                                 <div className="w-[48%] flex items-center justify-center">
+                            <div className="w-[140px] h-[100px] rounded-lg  object-cover object-center">
+                                <img className="w-full h-full" src={selectedRow.image} alt="" />
+                            </div>
                             </div>
                           </div>
 
@@ -585,7 +631,7 @@ const BuildingsModal: React.FC<Props> = ({
                               type="submit"
                               className="flex items-center justify-center w-1/4 px-2 py-4 text-sm font-medium text-white border border-transparent rounded-full bg-primary hover:bg-primary-200 focus:outline-none"
                             >
-                              Əlavə et
+                         Edit
                             </button>
                           </div>
                         </Form>

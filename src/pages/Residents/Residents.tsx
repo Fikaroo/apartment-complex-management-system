@@ -77,6 +77,11 @@ const Residents = () => {
     {
       id: 7,
       title: "Company Name",
+    
+    },
+    {
+      id: 8,
+      title: "Edit",
     },
   ];
 

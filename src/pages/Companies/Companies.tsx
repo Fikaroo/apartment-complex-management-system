@@ -88,6 +88,10 @@ const Companies = () => {
       id: 11,
       title: "Vin",
     },
+    {
+      id: 12,
+      title: "Edit",
+    },
    
   ];
 

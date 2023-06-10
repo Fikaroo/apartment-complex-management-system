@@ -100,7 +100,7 @@ console.log(data, "data")
                     );
                     setRoomId(item.id);
                   }}
-                  className="absolute z-50 ml-4 cursor-pointer"
+                  className="ml-4 cursor-pointer"
                   src="/icons/edit.svg"
                 />
               </td>

@@ -63,7 +63,7 @@ export const RegisterUser = {
       patrionimyc: string;
       email: string;
       phoneNumber: string;
-      roleName: string;
+      roleName: string | null;
       customerStatusId: number;
       propertyTypeId: number;
       proportion: string;
@@ -81,6 +81,10 @@ export const RegisterUser = {
       propertyTypeId: propertyTypeId,
       proportion: proportion,
       apartmentId: apartmentId,
+    },{
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("user-token")}`,
+      },
     });
     return data;
   },
@@ -145,7 +149,26 @@ export const Delete = {
     return data;
   },
 };
-
+export const DeleteUser = {
+  user: async (
+    path: string,
+    {
+      arg,
+    }: {
+      arg: {
+        deleteId: number;
+      };
+    }
+  ) => {
+    console.log(arg, "argg");
+    const { data } = await admin.delete(`${path}?userId=${arg.deleteId}`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("user-token")}`,
+      },
+    });
+    return data;
+  },
+};
 export const EditDeal = {
   user: async (
     path: string,
@@ -314,18 +337,7 @@ export const CreateCompany = {
     {
       arg,
     }: {
-      arg: {
-        directorName: string;
-        directorSurname: string;
-        directorFatherName: string;
-        phonenumber: string;
-        email: string;
-        logo: string;
-        objectId: number;
-        companyName: string;
-        voen: string;
-        vin: string;
-      };
+      arg: FormData;
     }
   ) => {
     const { data } = await company.post(path, arg, {
@@ -343,22 +355,10 @@ export const EditCompany = {
     {
       arg,
     }: {
-      arg: {
-        id: number;
-        directorName: string;
-        directorSurname: string;
-        directorFatherName: string;
-        phonenumber: string;
-        email: string;
-        logo: string;
-        objectId: number;
-        companyName: string;
-        voen: string;
-        vin: string;
-      };
+      arg: FormData;
     }
   ) => {
-    const { data } = await admin.put(path, arg, {
+    const { data } = await company.put(path, arg, {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("user-token")}`,
       },

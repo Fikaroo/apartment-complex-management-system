@@ -8,7 +8,7 @@ import useSWR from "swr";
 import useGetResponse from "../../hooks/useGetResponse";
 import { GetAll } from "../../api";
 import { EditUser } from "../../api";
-import { Delete } from "../../api";
+import { DeleteUser } from "../../api";
 type Props = {
   isOpen: boolean;
   closeModal: () => void;
@@ -26,6 +26,18 @@ type Values = {
   propertyTypeId: string;
   customerStatusId: string;
   proportion: string;
+  apartmentId: string;
+};
+type ValuesEdit = {
+  name: string;
+  surname: string;
+  patrionimyc: string;
+  email: string;
+  phoneNumber: string;
+  propertyTypeId: string;
+  customerStatusId: string;
+  proportion: string;
+
 };
 const UserModal: React.FC<Props> = ({
   isOpen,
@@ -45,28 +57,37 @@ const UserModal: React.FC<Props> = ({
     error: errorStatus,
     isLoading: isLoadingStatus,
   } = useSWR("/api/CustomerStatus/GetAll", (key) => GetAll.user(key));
-  console.log(process,"process");
-  const handleSubmit = async (values: Values) => {
-    const parsedValues = {
-      ...values,
-      propertyTypeId: parseInt(values.propertyTypeId),
-      customerStatusId: parseInt(values.customerStatusId),
-    };
-    //   const res = await useGetResponse(
-    //   RegisterUser.user("/api/AccountAdmin/RegisterUser", {
-    //     arg: parsedValues,
-    //   }),
-    //   mutate,
-    //   closeModal
-    // );
+  const {
+    data: dataApartment,
+    error: errorApartment,
+    isLoading: isLoadingApartment,
+  } = useSWR("/api/VendorApartment/GetAll", (key) => GetAll.user(key));
+  console.log(selectedRow,"selectedRow");
 
-    // alert(res);
-  };
-  const handleEdit = async (values: Values) => {
+  const handleSubmit = async (values: Values) => {
+    console.log(values,"values");
     const parsedValues = {
       ...values,
       propertyTypeId: parseInt(values.propertyTypeId),
       customerStatusId: parseInt(values.customerStatusId),
+      apartmentId: parseInt(values.apartmentId),
+      roleName:localStorage.getItem("role"),
+    };
+    console.log(parsedValues, "parsedValues");
+      const res = await useGetResponse(
+      RegisterUser.user("/api/AccountAdmin/RegisterUser", parsedValues),
+      mutate,
+      closeModal
+    );
+
+    alert(res);
+  };
+  const handleEdit = async (values: ValuesEdit) => {
+    const parsedValues = {
+      ...values,
+      propertyTypeId: parseInt(values.propertyTypeId),
+      customerStatusId: parseInt(values.customerStatusId),
+      // apartmentId: parseInt(values.apartmentId),
       id: selectedRow.id,
     };
 
@@ -82,7 +103,7 @@ const UserModal: React.FC<Props> = ({
   };
   const deleteObject = async (deleteId: any) => {
     const res = await useGetResponse(
-      Delete.user("/api/Users/DeleteUser", {
+      DeleteUser.user("/api/Users/DeleteUser", {
         arg: { deleteId },
       }),
       mutate,
@@ -145,6 +166,7 @@ const UserModal: React.FC<Props> = ({
                         propertyTypeId: "",
                         customerStatusId: "",
                         proportion: "",
+                        apartmentId: "",
                       }}
                       onSubmit={handleSubmit}
                     >
@@ -219,7 +241,7 @@ const UserModal: React.FC<Props> = ({
                             </label>
                             <Field
                               name="phoneNumber"
-                              type="email"
+                              type="text"
                               className="mt-3 w-[95%] rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
                               required
                             />
@@ -246,12 +268,12 @@ const UserModal: React.FC<Props> = ({
                           </div>
                         </div>
                         <div className="flex items-center flex-row justify-between mt-10 font-bold font-inter text-16 leading-30 text-dark">
-                          <div>
+                          <div className="w-1/2">
                             <label
                               htmlFor="customerStatusId"
                               className="inline-flex  justify-star items-center  w-1/2"
                             >
-                              Customer Status
+                               Status
                             </label>
                             <Field
                               as="select"
@@ -267,7 +289,7 @@ const UserModal: React.FC<Props> = ({
                               ))}
                             </Field>
                           </div>
-                          <div>
+                          <div className="w-1/2">
                             <label
                               htmlFor="proportion"
                               className="inline-flex  justify-star items-center  w-1/2"
@@ -276,13 +298,35 @@ const UserModal: React.FC<Props> = ({
                             </label>
                             <Field
                               name="proportion"
-                              type="number"
+                              type="text"
+                              placeholder="/"
                               className="mt-3 w-[95%]  rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none  font-medium text-md"
                               required
                             />
                           </div>
                         </div>
-
+                        <div className="flex items-center flex-row justify-between mt-10 font-bold font-inter text-16 leading-30 text-dark">
+                          <div className="w-1/2">
+                            <label
+                              htmlFor="apartmentId"
+                              className="inline-flex  justify-star items-center  w-1/2"
+                            >
+                             Apartment
+                            </label>
+                            <Field
+                              as="select"
+                              name="apartmentId"
+                              Id="apartmentId"
+                              className="mt-3 w-[95%]  rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none  font-medium text-md"
+                              required
+                            >
+                              <option value="-1">Choose</option>
+                              {dataApartment?.data.map((item:any) => (
+                                <option value={item.id}>{item.buildingName}</option>
+                              ))}
+                            </Field>
+                          </div>
+                        </div>
                         <div className="flex w-full items-center justify-end mt-10 font-bold font-inter text-16 leading-30 text-dark">
                           <button
                             type="button"
@@ -321,13 +365,17 @@ const UserModal: React.FC<Props> = ({
                         email: selectedRow?.email || "",
                         phoneNumber: selectedRow?.phoneNumber || "",
                         propertyTypeId:
-                        dataPropertyTypes?.data.find(
+                         dataPropertyTypes?.data.find(
                           (item: any) => item.name === selectedRow?.propertyTypeName
-                        )?.id || "",
-                        customerStatusId: dataStatus?.data.find(
+                         )?.id
+                        || "",
+                        customerStatusId: 
+                         dataStatus?.data.find(
                           (item: any) => item.name === selectedRow?.customerStatusName
-                        )?.id || "",
+                        )?.id ||
+                         "",
                         proportion: selectedRow?.proportion || "",
+                        
                       }}
                       onSubmit={handleEdit}
                     >
@@ -461,9 +509,32 @@ const UserModal: React.FC<Props> = ({
                               name="proportion"
                               type="text"
                               className="mt-3 w-[95%]  rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none  font-medium text-md"
+                              placeholder="/"
                             />
                           </div>
                         </div>
+                        {/* <div className="flex items-center flex-row justify-between mt-10 font-bold font-inter text-16 leading-30 text-dark">
+                          <div className="w-1/2">
+                            <label
+                              htmlFor="apartmentId"
+                              className="inline-flex  justify-star items-center  w-1/2"
+                            >
+                             Apartment
+                            </label>
+                            <Field
+                              as="select"
+                              name="apartmentId"
+                              Id="apartmentId"
+                              className="mt-3 w-[95%]  rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none  font-medium text-md"
+                              required
+                            >
+                              <option value="-1">Choose</option>
+                              {dataApartment?.data.map((item:any) => (
+                                <option value={item.id}>{item.buildingName}</option>
+                              ))}
+                            </Field>
+                          </div>
+                        </div> */}
                         <div className="flex w-full items-center justify-around mt-10 font-bold font-inter text-16 leading-30 text-dark">
                           <button
                             type="button"

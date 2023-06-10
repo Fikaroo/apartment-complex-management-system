@@ -8,28 +8,25 @@ import useSWR from "swr";
 import { GetAll } from "../../api";
 const Users = () => {
   let [isOpen, setIsOpen] = useState<boolean>(false);
-  let [isOpenAdd, setIsOpenAdd] = useState<boolean>(false);
   const [process, setProcess] = useState("");
   const [orderId, setOrderId] = useState<number>(0);
   const [selectedRow, setSelectedRow] = useState(null);
-  const closeModal = (): void => {
+   const closeModal = (): void => {
     setIsOpen(false);
   };
-  const closeModalAdd = (): void => {
-    setIsOpenAdd(false);
-  };
+
+  console.log(selectedRow, "selectedRow");
+
   const openModal = (): void => {
     setIsOpen(true);
   };
-  const openModalAdd = (): void => {
-    setIsOpenAdd(true);
-  };
+
   const { data, error, isLoading, mutate } = useSWR(
     "/api/Users/GetAllForAdmin",
     (key) => GetAll.user(key),
     { revalidateIfStale: true }
   );
-
+console.log(process,"procesadd");
   const headers: IHeaders[] = [
     {
       id: 1,
@@ -85,6 +82,10 @@ const Users = () => {
       id: 10,
       title: "Proportion",
     },
+    {
+      id: 11,
+      title: "Edit",
+    },
   ];
 
   return (
@@ -95,7 +96,7 @@ const Users = () => {
         </p>{" "}
         <div className="flex items-center gap-4">
           <AddBtn
-            openModal={openModalAdd}
+            openModal={openModal}
             modal={
               <UserModal
               mutate={mutate}

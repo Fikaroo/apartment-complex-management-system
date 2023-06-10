@@ -96,7 +96,7 @@ const Tables = ({
                       item
                     );
                   }}
-                  className="absolute z-50 ml-4 cursor-pointer"
+                  className="ursor-pointer"
                   src="/icons/edit.svg"
                 />
               </td>

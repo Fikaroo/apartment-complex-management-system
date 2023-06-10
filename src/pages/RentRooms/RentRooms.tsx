@@ -75,6 +75,10 @@ console.log(data, "data");
     {
       id: 7,
       title: "Description",
+    },
+    {
+      id: 8,
+      title: "Edit",
     }
   ];
 

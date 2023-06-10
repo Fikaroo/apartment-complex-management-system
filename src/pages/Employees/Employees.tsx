@@ -76,6 +76,10 @@ const Employees = () => {
       id: 6,
       title: "Role Name",
     },
+    {
+      id: 7,
+      title: "Edit",
+    },
   ];
 
   return (

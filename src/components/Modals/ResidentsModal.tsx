@@ -1,4 +1,4 @@
-import { Fragment } from "react";
+import { Fragment,useState} from "react";
 
 import { Dialog, Transition } from "@headlessui/react";
 import { XCircleIcon } from "@heroicons/react/24/solid";
@@ -40,6 +40,8 @@ const ResidentsModal = ({
   selectedRow,
   mutate,
 }: Props) => {
+
+  const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const {
     data: dataCompany,
     error: errorCompany,
@@ -48,6 +50,7 @@ const ResidentsModal = ({
 console.log(selectedRow,"selectedRow")
   const handleSubmit = async (values: Values) => {
     console.log(values, "values");
+    setIsButtonDisabled(true);
 
     const parsedValues = {
       ...values,
@@ -74,9 +77,11 @@ console.log(selectedRow,"selectedRow")
     );
 
     alert(res);
+    setIsButtonDisabled(false);
   };
 
     const handleEdit = async (values: Values) => {
+    
       const parsedValues = {
         ...values, 
          VendorCompanyId: Number(values.VendorCompanyId),
@@ -91,6 +96,13 @@ console.log(selectedRow,"selectedRow")
       formData.append("Email", parsedValues.Email);
       if (parsedValues.Image) {
         formData.append("Image", parsedValues.Image);
+      }
+      else if (selectedRow.image) {
+        const response = await fetch(selectedRow.image);
+        console.log(response, "response");
+        console.log(fetch(selectedRow.image), "fetchhh");
+        const imageBlob = await response.blob();
+        formData.append("Image", imageBlob);
       }
       formData.append("VendorCompanyId", String(parsedValues.VendorCompanyId));
       const res = await useGetResponse(
@@ -306,6 +318,7 @@ console.log(selectedRow,"selectedRow")
                           <div className="flex items-center justify-around w-full mt-10 font-bold font-inter text-16 leading-30 text-dark">
                             <button
                               type="submit"
+                              disabled={isButtonDisabled}
                               className="flex items-center justify-center w-1/4 px-2 py-4 text-sm font-medium text-white border border-transparent rounded-full bg-primary hover:bg-primary-200 focus:outline-none"
                             >
                               Əlavə et
@@ -341,6 +354,7 @@ console.log(selectedRow,"selectedRow")
                         )?.id || "",
                       }}
                       onSubmit={handleEdit}
+                      
                     >
                       {(formikProps) => (
                         <Form action="" encType="multipart/form-data">
@@ -470,7 +484,7 @@ console.log(selectedRow,"selectedRow")
                                   formikProps.setFieldValue("Image", file);
                                 }}
                                 className="mt-3 w-[95%] rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
-                                required
+                      
                               />
                               
                             </div>

@@ -190,7 +190,7 @@ const Navbar = () => {
         </div>
       </div>
 
-      <ul className="p-5 space-y-4 overflow-x-hidden overflow-y-auto h-[600px]">
+      <ul className="p-5 space-y-4 overflow-x-hidden overflow-y-auto h-[80vh]">
         {sidebarItems.map(
           ({ name, path, icon, iconSolid, children }: ISidebarItems) => (
             <NavItem
