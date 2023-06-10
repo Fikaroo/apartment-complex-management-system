@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from "react";
+import { Fragment, useRef, useState } from "react";
 import Tables, { IHeaders } from "../../components/Table/UsersTable";
 import Filter from "../../components/Filter";
 import OrderDate from "../../components/OrderDate";
@@ -6,12 +6,13 @@ import AddBtn from "../../components/AddBtn";
 import UserModal from "../../components/Modals/UserModal";
 import useSWR from "swr";
 import { GetAll } from "../../api";
+
 const Users = () => {
   let [isOpen, setIsOpen] = useState<boolean>(false);
   const [process, setProcess] = useState("");
   const [orderId, setOrderId] = useState<number>(0);
   const [selectedRow, setSelectedRow] = useState(null);
-   const closeModal = (): void => {
+  const closeModal = (): void => {
     setIsOpen(false);
   };
 
@@ -26,7 +27,6 @@ const Users = () => {
     (key) => GetAll.user(key),
     { revalidateIfStale: true }
   );
-console.log(process,"procesadd");
   const headers: IHeaders[] = [
     {
       id: 1,
@@ -99,12 +99,12 @@ console.log(process,"procesadd");
             openModal={openModal}
             modal={
               <UserModal
-              mutate={mutate}
-              isOpen={isOpen}
-              closeModal={closeModal}
-              process={process}
-              deleteId={orderId}
-              selectedRow={selectedRow}
+                mutate={mutate}
+                isOpen={isOpen}
+                closeModal={closeModal}
+                process={process}
+                deleteId={orderId}
+                selectedRow={selectedRow}
               />
             }
             setProcess={setProcess}

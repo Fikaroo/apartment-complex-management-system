@@ -1,38 +1,46 @@
-import { Fragment, useState } from "react";
+import { Fragment, useRef, useState } from "react";
+import Tables, { IHeaders } from "../../components/Table/UsersTable";
+import Filter from "../../components/Filter";
+import OrderDate from "../../components/OrderDate";
 import AddBtn from "../../components/AddBtn";
+import UserModal from "../../components/Modals/UserModal";
 import useSWR from "swr";
 import { GetAll } from "../../api";
-import OrderDate from "../../components/OrderDate";
-import Filter from "../../components/Filter";
-import Tables, { IHeaders } from "../../components/Table/EmployeesTable";
-import EmployeesModal from "../../components/Modals/EmployeesModal";
 
-const Employees = () => {
+export interface IAccidentArgs {
+  id: number;
+  description: string;
+  statusId: number;
+  orderTypeName: string;
+  orderSourceName: string;
+  priorityId: number;
+  orderClassName: string;
+  phoneNumber: null;
+  roleName: string;
+  actualDeadline: Date;
+  normativeDeadline: Date;
+}
+
+const Accident = () => {
   let [isOpen, setIsOpen] = useState<boolean>(false);
-  let [isOpenAdd, setIsOpenAdd] = useState<boolean>(false);
   const [process, setProcess] = useState("");
-  const [employeeId, setEmployeeId] = useState<string>("");
+  const [orderId, setOrderId] = useState<number>(0);
   const [selectedRow, setSelectedRow] = useState(null);
 
   const closeModal = (): void => {
     setIsOpen(false);
   };
 
-  const closeModalAdd = (): void => {
-    setIsOpenAdd(false);
-  };
+  console.log(selectedRow, "selectedRow");
 
   const openModal = (): void => {
     setIsOpen(true);
   };
 
-  const openModalAdd = (): void => {
-    setIsOpenAdd(true);
-  };
-
   const { data, error, isLoading, mutate } = useSWR(
-    "/api/Employees/GetAll",
-    (key) => GetAll.user(key)
+    "api/OrderAdmin/GetAccidentOrders",
+    (key) => GetAll.user(key),
+    { revalidateIfStale: true }
   );
 
   const headers: IHeaders[] = [
@@ -56,29 +64,31 @@ const Employees = () => {
     },
     {
       id: 2,
-      title: "Full Name",
+      title: "Description",
     },
     {
       id: 3,
-      title: "Job Position",
+      title: "Status",
     },
-
     {
       id: 4,
-      title: "Phone Number",
+      title: "Order Type Name",
     },
-
     {
       id: 5,
-      title: "Company Name",
+      title: "Order Source Name",
     },
     {
       id: 6,
-      title: "Role Name",
+      title: "Phone Number",
     },
     {
       id: 7,
-      title: "Edit",
+      title: "Actual Deadline",
+    },
+    {
+      id: 8,
+      title: "Normative Deadline",
     },
   ];
 
@@ -86,47 +96,39 @@ const Employees = () => {
     <Fragment>
       <div className="flex items-center justify-between">
         <p className="font-bold font-inter text-16 leading-30 text-dark">
-          Employees
-        </p>{" "}
+          Ümumi: {data?.data?.length} Qəza
+        </p>
         <div className="flex items-center gap-4">
-          <AddBtn
-            openModal={openModalAdd}
+          {/* <AddBtn
+            openModal={openModal}
             modal={
-              <EmployeesModal
+              <UserModal
                 mutate={mutate}
-                isOpen={isOpenAdd}
-                closeModal={closeModalAdd}
+                isOpen={isOpen}
+                closeModal={closeModal}
                 process={process}
-                deleteId={employeeId}
+                deleteId={orderId}
                 selectedRow={selectedRow}
               />
             }
             setProcess={setProcess}
-          />
+          /> */}
           <OrderDate />
+
           <Filter />
         </div>
       </div>
       <Tables
         openModal={openModal}
-        modal={
-          <EmployeesModal
-            mutate={mutate}
-            isOpen={isOpen}
-            closeModal={closeModal}
-            process={process}
-            deleteId={employeeId}
-            selectedRow={selectedRow}
-          />
-        }
+        modal={<></>}
         headers={headers}
         data={data}
         setProcess={setProcess}
-        setEmployeeId={setEmployeeId}
+        setOrderId={setOrderId}
         setSelectedRow={setSelectedRow}
       />
     </Fragment>
   );
 };
 
-export default Employees;
+export default Accident;

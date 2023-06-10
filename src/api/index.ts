@@ -1,6 +1,7 @@
 import axios from "axios";
 import { EmployeeValues } from "../components/Modals/EmployeesModal";
 import { TransportValues } from "../components/Modals/TransportModal";
+import { string } from "prop-types";
 
 const baseUrl = import.meta.env.VITE_BASE_URL;
 
@@ -140,12 +141,11 @@ export const Delete = {
       arg,
     }: {
       arg: {
-        deleteId: number;
+        deleteId: any;
       };
     }
   ) => {
-    console.log(arg, "argg");
-    const { data } = await admin.delete(`${path}?id=${arg.deleteId}`, {
+    const { data } = await admin.delete(`${path}${arg.deleteId}`, {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("user-token")}`,
       },
@@ -424,13 +424,49 @@ export const CreateEmployees = {
     return data;
   },
 };
+export const EditEmployees = {
+  user: async (
+    path: string,
+    {
+      arg,
+    }: {
+      arg: EmployeeValues;
+    }
+  ) => {
+    const { data } = await company.put(path, arg, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("user-token")}`,
+      },
+    });
+    return data;
+  },
+};
+
+export const DeleteEmployees = {
+  user: async (
+    path: string,
+    {
+      arg,
+    }: {
+      arg: string;
+    }
+  ) => {
+    const { data } = await admin.delete(`${path}?employeeId=${arg}`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("user-token")}`,
+      },
+    });
+    return data;
+  },
+};
+
 export const CreateTransport = {
   user: async (
     path: string,
     {
       arg,
     }: {
-      arg: TransportValues;
+      arg: TransportValues & { EmployeeOrUserId?: string };
     }
   ) => {
     const { data } = await admin.post(path, arg, {
@@ -438,6 +474,25 @@ export const CreateTransport = {
         Authorization: `Bearer ${localStorage.getItem("user-token")}`,
       },
     });
+
+    return data;
+  },
+};
+export const UpdateTransport = {
+  user: async (
+    path: string,
+    {
+      arg,
+    }: {
+      arg: TransportValues & { EmployeeOrUserId?: string };
+    }
+  ) => {
+    const { data } = await admin.put(path, arg, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("user-token")}`,
+      },
+    });
+
     return data;
   },
 };

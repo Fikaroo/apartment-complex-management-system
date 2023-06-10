@@ -24,7 +24,7 @@ export type TransportValues = {
   brand: string;
   serialNumber: string;
   color: string;
-  employeeOrUserId: string;
+  id?: string;
 };
 
 const TransportModal = ({
@@ -59,12 +59,11 @@ const TransportModal = ({
   };
 
   const handleEdit = async (values: TransportValues) => {
-    console.log(values);
     const parsedValues = {
       brand: values.brand,
       serialNumber: values.serialNumber,
       color: values.color,
-      employeeOrUserId: values.employeeOrUserId,
+      id: values.id,
     };
 
     const res = await useGetResponse(
@@ -80,7 +79,7 @@ const TransportModal = ({
 
   const deleteObject = async (deleteId: any) => {
     const res = await useGetResponse(
-      Delete.user("/api/Transport/Delete", {
+      Delete.user(`/api/Transport/Delete/${deleteId}`, {
         arg: { deleteId },
       }),
       mutate,
@@ -143,7 +142,7 @@ const TransportModal = ({
                         brand: "",
                         serialNumber: "",
                         color: "",
-                        employeeOrUserId: "",
+                        id: "",
                       }}
                       onSubmit={handleSubmit}
                     >
@@ -197,14 +196,14 @@ const TransportModal = ({
 
                             <div>
                               <label
-                                htmlFor="employeeOrUserId"
+                                htmlFor="id"
                                 className="inline-flex items-center w-1/2 justify-star"
                               >
-                                Employee Or UserId
+                                UserId
                               </label>
                               <Field
                                 as="select"
-                                name="employeeOrUserId"
+                                name="id"
                                 type="text"
                                 className="mt-3 w-[95%] rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
                                 required
@@ -249,7 +248,7 @@ const TransportModal = ({
                           brand: "",
                           serialNumber: "",
                           color: "",
-                          employeeOrUserId: "",
+                          id: "",
                         }
                       }
                       onSubmit={handleEdit}
