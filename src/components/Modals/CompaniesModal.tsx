@@ -95,6 +95,14 @@ const CompaniesModal: React.FC<Props> = ({
     if(parsedValues.Logo){
       formData.append("Logo", parsedValues.Logo);
     }
+     else if (selectedRow.logo) {
+      console.log("else if")
+      const response = await fetch(selectedRow.logo);
+      console.log(response, "response");
+      const imageBlob = await response.blob();
+      console.log(imageBlob, "imageBlob");
+      formData.append("Logo", imageBlob,"logo.png");
+    }
   formData.append("ObjectId", String(parsedValues.ObjectId));
   formData.append("CompanyName", parsedValues.CompanyName);
   formData.append("VOEN", parsedValues.VOEN);
@@ -574,7 +582,7 @@ const CompaniesModal: React.FC<Props> = ({
                                  formikProps.setFieldValue("Logo", file);
                                }}
                                className="mt-3 w-[95%] rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
-                               required
+                             
                              />
                         </div>
                         

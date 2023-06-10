@@ -102,7 +102,7 @@ console.log(selectedRow,"selectedRow")
         console.log(response, "response");
         console.log(fetch(selectedRow.image), "fetchhh");
         const imageBlob = await response.blob();
-        formData.append("Image", imageBlob);
+        formData.append("Image", imageBlob,"image.png");
       }
       formData.append("VendorCompanyId", String(parsedValues.VendorCompanyId));
       const res = await useGetResponse(
