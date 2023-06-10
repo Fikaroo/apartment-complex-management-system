@@ -32,7 +32,7 @@ const Tables = ({
 }: PropsType) => {
   const nav = useNavigate();
 
-   const handleTableRow = ({id}:any) => nav(`/references/objects/${id}`);
+  const handleTableRow = ({ id }: any) => nav(`/references/objects/${id}`);
 
   return (
     <div className="w-full mt-8 overflow-x-auto">
@@ -54,7 +54,7 @@ const Tables = ({
             <tr
               key={item.id}
               className="cursor-pointer  hover:bg-gray-200"
-                onClick={() => handleTableRow({ id: item.id })}
+              onClick={() => handleTableRow({ id: item.id })}
             >
               <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
                 <div className="flex-shrink-0 w-10 h-10">
@@ -73,16 +73,19 @@ const Tables = ({
                 </div>
               </td>
               <td className="px-6 py-4 text-sm leading-5 text-gray-500 whitespace-no-wrap border-b border-gray-200">
-                {item.paymentType ? "Ödənişli" :"Ödənişsiz"}
+                {item.paymentType==true ? "Ödənişli" :item.paymentType==false? "Ödənişsiz":"-"}
               </td>
               <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
                 <div className="text-sm leading-5 text-gray-900">
-                  {item.prepaymentType}
+                  {item.prepaymentType===1 ? "Advance payment required":item.prepaymentType===0 ? "No advance payment is required":"-"}
                 </div>
               </td>
               <td className="px-6 py-4 text-sm leading-5 text-gray-500 whitespace-no-wrap border-b border-gray-200">
-                {item.priceType}
+                {item.priceType===0 ? "Stable":item.priceType===1 ? "From/To" :item.priceType===2 ?"From":"-"}
               </td>
+              <td className="px-6 py-4 text-sm leading-5 text-gray-500 whitespace-no-wrap border-b border-gray-200">{item.fromPrice ? item.fromPrice :"-"}</td>
+              <td className="px-6 py-4 text-sm leading-5 text-gray-500 whitespace-no-wrap border-b border-gray-200">{item.toPrice ? item.toPrice:"-"}</td>
+              <td className="px-6 py-4 text-sm leading-5 text-gray-500 whitespace-no-wrap border-b border-gray-200">{item.stable ? item.stable:"-"}</td>
               <td
                 className="px-6 py-4 text-sm font-medium leading-5 text-right whitespace-no-wrap border-b border-gray-200"
                 onClick={(e) => e.stopPropagation()}
@@ -92,9 +95,7 @@ const Tables = ({
                     openModal();
                     setProcess("Edit");
                     setVendorId(item.id);
-                    setSelectedRow(
-                      item
-                    );
+                    setSelectedRow(item);
                   }}
                   className="ursor-pointer"
                   src="/icons/edit.svg"

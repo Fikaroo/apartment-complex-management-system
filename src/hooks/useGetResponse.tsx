@@ -12,6 +12,9 @@ const useGetResponse = async (api: any, mutate: any, closeModal: any) => {
     } else if (statusCode === 400) {
       return message?.[0];
     }
+    else if (statusCode === 404) {
+      return message?.[0];
+    }
   } catch (error) {
     console.log(error);
     return "Server Error";

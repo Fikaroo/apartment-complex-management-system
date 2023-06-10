@@ -632,3 +632,55 @@ export const EditRentRoom = {
     return data;
   },
 };
+export const AddOrderType = {
+  user: async (
+    path: string,
+    {
+      arg,
+    }: {
+      arg: {
+        name: string;
+        paymentType: boolean;
+        prepaymentType: number;
+        priceType: number;
+        fromPrice?: number;
+        toPrice?: number;
+        stable?: number;
+      };
+    }
+  ) => {
+    const { data } = await admin.post(path, arg, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("user-token")}`,
+      },
+    });
+    return data;
+  },
+};
+
+export const EditOrderType = {
+  user: async (
+    path: string,
+    {
+      arg,
+    }: {
+      arg: {
+        id: number;
+        name: string;
+        paymentType: boolean;
+        prepaymentType: number;
+        priceType: number;
+        fromPrice?: number;
+        toPrice?: number;
+        stable?: number;
+      };
+    }
+  ) => {
+    const { data } = await admin.put(path, arg, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("user-token")}`,
+      },
+    });
+    return data;
+  },
+};
