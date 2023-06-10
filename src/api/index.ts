@@ -70,22 +70,26 @@ export const RegisterUser = {
       apartmentId: number;
     }
   ) => {
-    const { data } = await admin.post(path, {
-      name: name,
-      surname: surname,
-      patrionimyc: patrionimyc,
-      email: email,
-      phoneNumber: phoneNumber,
-      roleName: roleName,
-      customerStatusId: customerStatusId,
-      propertyTypeId: propertyTypeId,
-      proportion: proportion,
-      apartmentId: apartmentId,
-    },{
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("user-token")}`,
+    const { data } = await admin.post(
+      path,
+      {
+        name: name,
+        surname: surname,
+        patrionimyc: patrionimyc,
+        email: email,
+        phoneNumber: phoneNumber,
+        roleName: roleName,
+        customerStatusId: customerStatusId,
+        propertyTypeId: propertyTypeId,
+        proportion: proportion,
+        apartmentId: apartmentId,
       },
-    });
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("user-token")}`,
+        },
+      }
+    );
     return data;
   },
 };
@@ -536,7 +540,7 @@ export const AddRentRooms = {
         description: string;
         companyTenantId: number;
         name: string;
-        vendorRoomId:number;
+        vendorRoomId: number;
       };
     }
   ) => {
@@ -561,7 +565,59 @@ export const EditRentRoom = {
         description: string;
         companyTenantId: number;
         name: string;
-        vendorRoomId:number;
+        vendorRoomId: number;
+      };
+    }
+  ) => {
+    const { data } = await admin.put(path, arg, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("user-token")}`,
+      },
+    });
+    return data;
+  },
+};
+export const AddOrderType = {
+  user: async (
+    path: string,
+    {
+      arg,
+    }: {
+      arg: {
+        name: string;
+        paymentType: boolean;
+        prepaymentType: number;
+        priceType: number;
+        fromPrice?: number;
+        toPrice?: number;
+        stable?: number;
+      };
+    }
+  ) => {
+    const { data } = await admin.post(path, arg, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("user-token")}`,
+      },
+    });
+    return data;
+  },
+};
+
+export const EditOrderType = {
+  user: async (
+    path: string,
+    {
+      arg,
+    }: {
+      arg: {
+        id: number;
+        name: string;
+        paymentType: boolean;
+        prepaymentType: number;
+        priceType: number;
+        fromPrice?: number;
+        toPrice?: number;
+        stable?: number;
       };
     }
   ) => {
