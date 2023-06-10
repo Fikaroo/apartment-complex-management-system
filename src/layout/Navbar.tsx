@@ -136,6 +136,7 @@ const Navbar = () => {
         { name: "Apartments", path: "/references/apartments" },
         { name: "Employees", path: "/references/employees" },
         { name: "Residents", path: "/references/residents" },
+        { name: "VendorRooms", path: "/references/vendorRooms"},
         { name: "Transport", path: "/references/transport" },
       ],
     },
@@ -163,12 +164,19 @@ const Navbar = () => {
       path: "/notification",
       icon: <BellIcon className="w-5 h-5" />,
       iconSolid: <BellIconSolid className="w-5 h-5 fill-white" />,
+      
     },
     {
       name: "Settings",
-      path: "/settings",
+      path: "",
       icon: <Cog6ToothIcon className="w-5 h-5" />,
       iconSolid: <Cog6ToothIconSolid className="w-5 h-5 fill-white" />,
+      children: [
+        { name: "OrderType", path: "/settings/ordertype" },
+        { name: "Parking", path: "/settings/parking" }
+      
+      ]
+      
     },
   ];
 
@@ -182,7 +190,7 @@ const Navbar = () => {
         </div>
       </div>
 
-      <ul className="p-5 space-y-4 overflow-x-hidden overflow-y-auto h-[600px]">
+      <ul className="p-5 space-y-4 overflow-x-hidden overflow-y-auto h-[80vh]">
         {sidebarItems.map(
           ({ name, path, icon, iconSolid, children }: ISidebarItems) => (
             <NavItem

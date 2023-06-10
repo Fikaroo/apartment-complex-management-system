@@ -116,16 +116,16 @@ const [tableId,setTableId]=useState<number>(0);
                 </div>
               </td>
               <td className="px-6 py-4 text-sm leading-5 text-gray-500 whitespace-no-wrap border-b border-gray-200">
-                {item.orderClass.name}
+                {item.orderClass?.name}
               </td>
               <td className="px-6 py-4 text-sm leading-5 text-gray-500 whitespace-no-wrap border-b border-gray-200">
-                {item.orderSource.name}
+                {item.orderSource?.name}
               </td>
               <td className="px-6 py-4 text-sm leading-5 text-gray-500 whitespace-no-wrap border-b border-gray-200">
-                {item.orderType.name}
+                {item.orderType?.name}
               </td>
               <td className="px-6 py-4 text-sm leading-5 text-gray-500 whitespace-no-wrap border-b border-gray-200">
-                {item.phoneNumber}
+                {item?.phoneNumber}
               </td>
               <td className="px-6 py-4 text-sm leading-5 text-gray-500 whitespace-no-wrap border-b border-gray-200">
                 {
@@ -165,7 +165,7 @@ const [tableId,setTableId]=useState<number>(0);
                         .join("-"),
                     });
                   }}
-                  className="absolute z-50 ml-4 cursor-pointer"
+                  className="cursor-pointer"
                   src="/icons/edit.svg"
                 />
               </td>

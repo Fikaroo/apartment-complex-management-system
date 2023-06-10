@@ -11,7 +11,7 @@ const Employees = () => {
   let [isOpen, setIsOpen] = useState<boolean>(false);
   let [isOpenAdd, setIsOpenAdd] = useState<boolean>(false);
   const [process, setProcess] = useState("");
-  const [orderId, setOrderId] = useState<number>(0);
+  const [employeeId, setEmployeeId] = useState<number>(0);
   const [selectedRow, setSelectedRow] = useState(null);
 
   const closeModal = (): void => {
@@ -76,13 +76,17 @@ const Employees = () => {
       id: 6,
       title: "Role Name",
     },
+    {
+      id: 7,
+      title: "Edit",
+    },
   ];
 
   return (
     <Fragment>
       <div className="flex items-center justify-between">
         <p className="font-bold font-inter text-16 leading-30 text-dark">
-          Ümumi: 178 Sakin
+          Employees 
         </p>{" "}
         <div className="flex items-center gap-4">
           <AddBtn
@@ -93,7 +97,7 @@ const Employees = () => {
                 isOpen={isOpenAdd}
                 closeModal={closeModalAdd}
                 process={process}
-                deleteId={orderId}
+                deleteId={employeeId}
                 selectedRow={selectedRow}
               />
             }
@@ -111,14 +115,14 @@ const Employees = () => {
             isOpen={isOpen}
             closeModal={closeModal}
             process={process}
-            deleteId={orderId}
+            deleteId={employeeId}
             selectedRow={selectedRow}
           />
         }
         headers={headers}
         data={data}
         setProcess={setProcess}
-        setOrderId={setOrderId}
+        setEmployeeId={setEmployeeId}
         setSelectedRow={setSelectedRow}
       />
     </Fragment>

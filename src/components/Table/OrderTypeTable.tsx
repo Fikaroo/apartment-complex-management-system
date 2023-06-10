@@ -17,7 +17,7 @@ type PropsType = {
   openModal: () => void;
   data: any;
   setProcess: React.Dispatch<React.SetStateAction<string>>;
-  setEmployeeId: React.Dispatch<React.SetStateAction<number>>;
+  setVendorId: React.Dispatch<React.SetStateAction<number>>;
   setSelectedRow: React.Dispatch<React.SetStateAction<any>>;
 };
 
@@ -27,12 +27,12 @@ const Tables = ({
   openModal,
   data,
   setProcess,
-  setEmployeeId,
+  setVendorId,
   setSelectedRow,
 }: PropsType) => {
   const nav = useNavigate();
 
-  const handleTableRow = ({ id }: any) => nav(`${id}`);
+   const handleTableRow = ({id}:any) => nav(`/references/objects/${id}`);
 
   return (
     <div className="w-full mt-8 overflow-x-auto">
@@ -53,11 +53,11 @@ const Tables = ({
           {data?.data?.map((item: any) => (
             <tr
               key={item.id}
-              className="cursor-pointer hover:bg-gray-200"
-              onClick={() => handleTableRow({ id: item.id })}
+              className="cursor-pointer  hover:bg-gray-200"
+                onClick={() => handleTableRow({ id: item.id })}
             >
               <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-                <div className="flex items-center flex-shrink-0 w-10 h-10">
+                <div className="flex-shrink-0 w-10 h-10">
                   <img
                     className="rounded-full"
                     src="/icons/exclamation.svg"
@@ -68,32 +68,21 @@ const Tables = ({
               <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
                 <div className="ml-4">
                   <div className="text-sm font-medium leading-5 text-gray-900">
-                    {item.fullName}
+                    {item.name}
                   </div>
                 </div>
               </td>
               <td className="px-6 py-4 text-sm leading-5 text-gray-500 whitespace-no-wrap border-b border-gray-200">
-                {item.jobPosition}
+                {item.paymentType ? "Ödənişli" :"Ödənişsiz"}
               </td>
               <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
                 <div className="text-sm leading-5 text-gray-900">
-                  {item.phoneNumber}
+                  {item.prepaymentType}
                 </div>
               </td>
               <td className="px-6 py-4 text-sm leading-5 text-gray-500 whitespace-no-wrap border-b border-gray-200">
-                {item.companyName}
+                {item.priceType}
               </td>
-              <td className="px-6 py-4 text-sm leading-5 text-gray-500 whitespace-no-wrap border-b border-gray-200">
-                {item.roleName}
-              </td>
-
-              {/* <td className="px-6 py-4 text-sm leading-5 text-gray-500 whitespace-no-wrap border-b border-gray-200">
-                {
-                  optionsStatus.find((option) => option.id === item.statusId)
-                    ?.name
-                }
-              </td> */}
-
               <td
                 className="px-6 py-4 text-sm font-medium leading-5 text-right whitespace-no-wrap border-b border-gray-200"
                 onClick={(e) => e.stopPropagation()}
@@ -102,10 +91,12 @@ const Tables = ({
                   onClick={() => {
                     openModal();
                     setProcess("Edit");
-                    setEmployeeId(item.id);
-                    setSelectedRow(item);
+                    setVendorId(item.id);
+                    setSelectedRow(
+                      item
+                    );
                   }}
-                  className="cursor-pointer"
+                  className="ursor-pointer"
                   src="/icons/edit.svg"
                 />
               </td>

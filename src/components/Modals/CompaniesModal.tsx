@@ -20,16 +20,16 @@ type Props = {
   mutate: any;
 };
 type Values = {
-  directorName: string;
-  directorSurname: string;
-  directorFatherName: string;
-  phonenumber: string;
-  email: string;
-  logo: string;
-  objectId: string;
-  companyName: string;
-  voen: string;
-  vin: string;
+  DirectorName: string;
+  DirectorSurname: string;
+  DirectorFatherName: string;
+  Phonenumber: string;
+  Email: string;
+  Logo:  File | null;
+  ObjectId: string;
+  CompanyName: string;
+  VOEN: string;
+  VIN: string;
 };
 
 const CompaniesModal: React.FC<Props> = ({
@@ -40,6 +40,7 @@ const CompaniesModal: React.FC<Props> = ({
   selectedRow,
   mutate,
 }) => {
+  const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const {
     data: dataObjects,
     error: errorObjects,
@@ -47,29 +48,60 @@ const CompaniesModal: React.FC<Props> = ({
   } = useSWR("/api/VendorObjects/GetAll", (key) => GetAll.user(key));
 
   const handleSubmit = async (values: Values) => {
+    setIsButtonDisabled(true);
     const parsedValues = {
       ...values,
-      objectId: parseInt(values.objectId),
+      ObjectId: Number(values.ObjectId),
+  
     };
+    const formData = new FormData();
+    formData.append("DirectorName", parsedValues.DirectorName);
+    formData.append("DirectorSurname", parsedValues.DirectorSurname);
+    formData.append("DirectorFatherName", parsedValues.DirectorFatherName);
+    formData.append("Phonenumber", parsedValues.Phonenumber);
+    formData.append("Email", parsedValues.Email);
+    if(parsedValues.Logo){
+      formData.append("Logo", parsedValues.Logo);
+    }
+  formData.append("ObjectId", String(parsedValues.ObjectId));
+  formData.append("CompanyName", parsedValues.CompanyName);
+  formData.append("VOEN", parsedValues.VOEN);
+  formData.append("VIN", parsedValues.VIN);
     const res = await useGetResponse(
       CreateCompany.user("/api/VendorCompany/Create", {
-        arg: parsedValues,
+        arg: formData,
       }),
       mutate,
       closeModal
     );
 
     alert(res);
+    setIsButtonDisabled(false);
   };
   const handleEdit = async (values: Values) => {
+  
     const parsedValues = {
       ...values,
-      objectId: parseInt(values.objectId),
+      ObjectId: Number(values.ObjectId),
       id: selectedRow.id,
     };
+    const formData = new FormData();
+    formData.append("Id", parsedValues.id);
+    formData.append("DirectorName", parsedValues.DirectorName);
+    formData.append("DirectorSurname", parsedValues.DirectorSurname);
+    formData.append("DirectorFatherName", parsedValues.DirectorFatherName);
+    formData.append("Phonenumber", parsedValues.Phonenumber);
+    formData.append("Email", parsedValues.Email);
+    if(parsedValues.Logo){
+      formData.append("Logo", parsedValues.Logo);
+    }
+  formData.append("ObjectId", String(parsedValues.ObjectId));
+  formData.append("CompanyName", parsedValues.CompanyName);
+  formData.append("VOEN", parsedValues.VOEN);
+  formData.append("VIN", parsedValues.VIN);
     const res = await useGetResponse(
       EditCompany.user("/api/VendorCompany/Update", {
-        arg: parsedValues,
+        arg: formData,
       }),
       mutate,
       closeModal
@@ -135,194 +167,208 @@ const CompaniesModal: React.FC<Props> = ({
                     </Dialog.Title>
                     <Formik
                       initialValues={{
-                        directorName: "",
-                        directorSurname: "",
-                        directorFatherName: "",
-                        phonenumber: "",
-                        email: "",
-                        logo: "",
-                        objectId: "",
-                        companyName: "",
-                        voen: "",
-                        vin: "",
+                        DirectorName: "",
+                        DirectorSurname: "",
+                        DirectorFatherName: "",
+                        Phonenumber: "",
+                        Email: "",
+                        Logo: null,
+                        ObjectId: "",
+                        CompanyName: "",
+                        VOEN: "",
+                        VIN: "",
                       }}
                       onSubmit={handleSubmit}
                     >
-                      <Form>
-                        <div className=" w-full flex items-center flex-row justify-between mt-5 font-bold font-inter text-16 leading-30 text-dark">
-                          <div className="w-[48%]">
-                            {" "}
-                            <label
-                              htmlFor="objectId"
-                              className="flex items-center justify-between mt-10 font-bold font-inter text-16 leading-30 text-dark"
-                            >
-                              Object Name
-                            </label>
-                            <Field
-                              as="select"
-                              id="objectId"
-                              className="mt-3 w-full rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md hover:outline-none"
-                              name="objectId"
-                              required
-                            >
-                              <option value="-1">Choose</option>
-                              {dataObjects?.data.map((item: any) => (
-                                <option value={item.id}>{item.title}</option>
-                              ))}
-                            </Field>
-                          </div>
-                          <div className="w-[48%]">
-                            {" "}
-                            <label
-                              htmlFor="directorName"
-                              className="flex items-center justify-between mt-10 font-bold font-inter text-16 leading-30 text-dark"
-                            >
-                              Director Name
-                            </label>
-                            <Field
-                              type="text"
-                              className="mt-3 w-full  rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none  font-medium text-md"
-                              name="directorName"
-                              required
-                            />
-                          </div>
-                        </div>
+                 {(formikProps)=>(
+                       <Form>
+                       <div className=" w-full flex items-center flex-row justify-between mt-5 font-bold font-inter text-16 leading-30 text-dark">
+                         <div className="w-[48%]">
+                           {" "}
+                           <label
+                             htmlFor="ObjectId"
+                             className="flex items-center justify-between mt-10 font-bold font-inter text-16 leading-30 text-dark"
+                           >
+                             Object Name
+                           </label>
+                           <Field
+                             as="select"
+                             id="ObjectId"
+                             className="mt-3 w-full rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md hover:outline-none"
+                             name="ObjectId"
+                             required
+                           >
+                             <option value="-1">Choose</option>
+                             {dataObjects?.data.map((item: any) => (
+                               <option value={item.id}>{item.title}</option>
+                             ))}
+                           </Field>
+                         </div>
+                         <div className="w-[48%]">
+                           {" "}
+                           <label
+                             htmlFor="DirectorName"
+                             className="flex items-center justify-between mt-10 font-bold font-inter text-16 leading-30 text-dark"
+                           >
+                             Director Name
+                           </label>
+                           <Field
+                             type="text"
+                             className="mt-3 w-full  rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none  font-medium text-md"
+                             name="DirectorName"
+                             required
+                           />
+                         </div>
+                       </div>
 
-                        <div className=" w-full flex items-center flex-row justify-between mt-5 font-bold font-inter text-16 leading-30 text-dark">
-                          <div className="w-[48%]">
-                            <label
-                              htmlFor="directorSurname"
-                              className="inline-flex  justify-star items-center  w-1/2"
-                            >
-                              Director Surname
-                            </label>
-                            <div className="flex items-center justify-between relative">
-                              <Field
-                                type="text"
-                                className="mt-3 w-full rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
-                                name="directorSurname"
-                              />
-                            </div>
-                          </div>
-                          <div className="w-[48%]">
-                            <label
-                              htmlFor="directorFatherName"
-                              className="inline-flex  justify-star items-center  w-1/2"
-                            >
-                              Father Name
-                            </label>
-                            <Field
-                              type="text"
-                              className="mt-3 w-full rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
-                              name="directorFatherName"
-                            />
-                          </div>
-                        </div>
-                        <div className=" w-full flex items-center flex-row justify-between mt-5 font-bold font-inter text-16 leading-30 text-dark">
-                          <div className="w-[48%]">
-                            <label
-                              htmlFor="email"
-                              className="inline-flex  justify-star items-center  w-1/2"
-                            >
-                              Email
-                            </label>
-                            <div className="flex items-center justify-between relative">
-                              <Field
-                                type="email"
-                                className="mt-3 w-full rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
-                                name="email"
-                              />
-                            </div>
-                          </div>
-                          <div className="w-[48%]">
-                            <label
-                              htmlFor="logo"
-                              className="inline-flex  justify-star items-center  w-1/2"
-                            >
-                              Logo
-                            </label>
-                            <Field
-                              type="text"
-                              className="mt-3 w-full rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
-                              name="logo"
-                            />
-                          </div>
-                        </div>
+                       <div className=" w-full flex items-center flex-row justify-between mt-5 font-bold font-inter text-16 leading-30 text-dark">
+                         <div className="w-[48%]">
+                           <label
+                             htmlFor="DirectorSurname"
+                             className="inline-flex  justify-star items-center  w-1/2"
+                           >
+                             Director Surname
+                           </label>
+                           <div className="flex items-center justify-between relative">
+                             <Field
+                               type="text"
+                               className="mt-3 w-full rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
+                               name="DirectorSurname"
+                             />
+                           </div>
+                         </div>
+                         <div className="w-[48%]">
+                           <label
+                             htmlFor="DirectorFatherName"
+                             className="inline-flex  justify-star items-center  w-1/2"
+                           >
+                             Father Name
+                           </label>
+                           <Field
+                             type="text"
+                             className="mt-3 w-full rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
+                             name="DirectorFatherName"
+                           />
+                         </div>
+                       </div>
+                       <div className=" w-full flex items-center flex-row justify-between mt-5 font-bold font-inter text-16 leading-30 text-dark">
+                         <div className="w-[48%]">
+                           <label
+                             htmlFor="email"
+                             className="inline-flex  justify-star items-center  w-1/2"
+                           >
+                             Email
+                           </label>
+                           <div className="flex items-center justify-between relative">
+                             <Field
+                               type="Email"
+                               className="mt-3 w-full rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
+                               name="Email"
+                             />
+                           </div>
+                         </div>
+                         <div className="w-[48%]">
+                         <label
+                                htmlFor="Logo"
+                                className="inline-flex items-center w-1/2 justify-star"
+                              >
+                                Logo
+                              </label>
 
-                        <div className=" w-full flex items-center flex-row justify-between mt-5 font-bold font-inter text-16 leading-30 text-dark">
-                          <div className="w-[48%]">
-                            <label
-                              htmlFor="companyName"
-                              className="inline-flex  justify-star items-center  w-1/2"
-                            >
-                              Company Name
-                            </label>
-                            <div className="flex items-center justify-between relative">
-                              <Field
-                                type="text"
-                                className="mt-3 w-full rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
-                                name="companyName"
+                              <input
+                                type="file"
+                                id="Logo"
+                                name="Logo"
+                                accept="image/*"
+                                onChange={(event) => {
+                                  const file = (
+                                    event.currentTarget as HTMLInputElement
+                                  ).files?.[0];
+                                  formikProps.setFieldValue("Logo", file);
+                                }}
+                                className="mt-3 w-[95%] rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
+                                required
                               />
-                            </div>
-                          </div>
-                          <div className="w-[48%]">
-                            <label
-                              htmlFor="voen"
-                              className="inline-flex  justify-star items-center  w-1/2"
-                            >
-                              Voen
-                            </label>
-                            <Field
-                              type="text"
-                              className="mt-3 w-full rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
-                              name="voen"
-                            />
-                          </div>
-                        </div>
+                         </div>
+                       </div>
 
-                        <div className=" w-full flex items-center flex-row justify-between mt-5 font-bold font-inter text-16 leading-30 text-dark">
-                          <div className="w-[48%]">
-                            <label
-                              htmlFor="vin"
-                              className="inline-flex  justify-star items-center  w-1/2"
-                            >
-                              Vin
-                            </label>
-                            <Field
-                              type="text"
-                              className="mt-3 w-full rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
-                              name="vin"
-                            />
-                          </div>
-                          <div className="w-[48%]">
-                            <label
-                              htmlFor="phonenumber"
-                              className="inline-flex  justify-star items-center  w-1/2"
-                            >
-                              Phone Number
-                            </label>
-                            <div className="flex items-center justify-between relative">
-                              <Field
-                                type="text"
-                                className="mt-3 w-full rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
-                                name="phonenumber"
-                              />
-                            </div>
-                          </div>
-                        </div>
+                       <div className=" w-full flex items-center flex-row justify-between mt-5 font-bold font-inter text-16 leading-30 text-dark">
+                         <div className="w-[48%]">
+                           <label
+                             htmlFor="CompanyName"
+                             className="inline-flex  justify-star items-center  w-1/2"
+                           >
+                             Company Name
+                           </label>
+                           <div className="flex items-center justify-between relative">
+                             <Field
+                               type="text"
+                               className="mt-3 w-full rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
+                               name="CompanyName"
+                             />
+                           </div>
+                         </div>
+                         <div className="w-[48%]">
+                           <label
+                             htmlFor="VOEN"
+                             className="inline-flex  justify-star items-center  w-1/2"
+                           >
+                             Voen
+                           </label>
+                           <Field
+                             type="text"
+                             className="mt-3 w-full rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
+                             name="VOEN"
+                           />
+                         </div>
+                       </div>
 
-                        <div className="flex w-full items-center justify-around mt-10 font-bold font-inter text-16 leading-30 text-dark">
-                          <button
-                            type="submit"
-                            className="flex items-center justify-center w-1/4 px-2 py-4 text-sm font-medium text-white border border-transparent rounded-full bg-primary hover:bg-primary-200 focus:outline-none"
-                          >
-                            Əlavə et
-                          </button>
-                        </div>
-                      </Form>
+                       <div className=" w-full flex items-center flex-row justify-between mt-5 font-bold font-inter text-16 leading-30 text-dark">
+                         <div className="w-[48%]">
+                           <label
+                             htmlFor="VIN"
+                             className="inline-flex  justify-star items-center  w-1/2"
+                           >
+                             Vin
+                           </label>
+                           <Field
+                             type="text"
+                             className="mt-3 w-full rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
+                             name="VIN"
+                           />
+                         </div>
+                         <div className="w-[48%]">
+                           <label
+                             htmlFor="Phonenumber"
+                             className="inline-flex  justify-star items-center  w-1/2"
+                           >
+                             Phone Number
+                           </label>
+                           <div className="flex items-center justify-between relative">
+                             <Field
+                               type="text"
+                               className="mt-3 w-full rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
+                               name="Phonenumber"
+                             />
+                           </div>
+                         </div>
+                       </div>
+
+                       <div className="flex w-full items-center justify-around mt-10 font-bold font-inter text-16 leading-30 text-dark">
+                         <button
+                           type="submit"
+                           disabled={isButtonDisabled}
+                           className="flex items-center justify-center w-1/4 px-2 py-4 text-sm font-medium text-white border border-transparent rounded-full bg-primary hover:bg-primary-200 focus:outline-none"
+                         >
+                           Əlavə et
+                         </button>
+                       </div>
+                     </Form>
+                 )}
                     </Formik>
                   </Dialog.Panel>
-                ) : process === "Edit" ? (
+                ) 
+                : process === "Edit" ? (
                   <Dialog.Panel className="w-full max-w-[40em] p-6 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl rounded-2xl">
                     <Dialog.Title
                       as="h3"
@@ -336,206 +382,230 @@ const CompaniesModal: React.FC<Props> = ({
                     </Dialog.Title>
                     <Formik
                       initialValues={{
-                        objectId:
+                        ObjectId:
                           dataObjects?.data.find(
                             (item: any) =>
                               item.title === selectedRow?.objectName
                           )?.id || "",
-                        directorName: selectedRow?.directorName || "",
-                        directorSurname: selectedRow?.directorSurname || "",
-                        directorFatherName:
+                          DirectorName: selectedRow?.directorName || "",
+                          DirectorSurname: selectedRow?.directorSurname || "",
+                          DirectorFatherName:
                           selectedRow?.directorFatherName || "",
-                        phonenumber: selectedRow?.phonenumber || "",
-                        email: selectedRow?.email || "",
-                        logo: selectedRow?.logo || "",
-                        companyName: selectedRow?.companyName || "",
-                        voen: selectedRow?.voen || "",
-                        vin: selectedRow?.vin || "",
+                          Phonenumber: selectedRow?.phonenumber || "",
+                          Email: selectedRow?.email || "",
+                        Logo: null,
+                        CompanyName: selectedRow?.companyName || "",
+                        VOEN: selectedRow?.voen || "",
+                        VIN: selectedRow?.vin || "",
                       }}
                       onSubmit={handleEdit}
                     >
+                 {(formikProps) => (
                       <Form>
-                        <div className=" w-full flex items-center flex-row justify-between mt-5 font-bold font-inter text-16 leading-30 text-dark">
-                          <div className="w-[48%]">
-                            {" "}
-                            <label
-                              htmlFor="objectId"
-                              className="flex items-center justify-between mt-10 font-bold font-inter text-16 leading-30 text-dark"
-                            >
-                              Object Name
-                            </label>
-                            <Field
-                              as="select"
-                              id="objectId"
-                              className="mt-3 w-full rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md hover:outline-none"
-                              name="objectId"
-                              required
-                            >
-                              <option value="-1">Choose</option>
-                              {dataObjects?.data.map((item: any) => (
-                                <option value={item.id}>{item.title}</option>
-                              ))}
-                            </Field>
-                          </div>
-                          <div className="w-[48%]">
-                            {" "}
-                            <label
-                              htmlFor="directorName"
-                              className="flex items-center justify-between mt-10 font-bold font-inter text-16 leading-30 text-dark"
-                            >
-                              Director Name
-                            </label>
-                            <Field
-                              type="text"
-                              className="mt-3 w-full  rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none  font-medium text-md"
-                              name="directorName"
-                              required
-                            />
-                          </div>
-                        </div>
-
-                        <div className=" w-full flex items-center flex-row justify-between mt-5 font-bold font-inter text-16 leading-30 text-dark">
-                          <div className="w-[48%]">
-                            <label
-                              htmlFor="directorSurname"
-                              className="inline-flex  justify-star items-center  w-1/2"
-                            >
-                              Director Surname
-                            </label>
-                            <div className="flex items-center justify-between relative">
-                              <Field
-                                type="text"
-                                className="mt-3 w-full rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
-                                name="directorSurname"
-                              />
-                            </div>
-                          </div>
-                          <div className="w-[48%]">
-                            <label
-                              htmlFor="directorFatherName"
-                              className="inline-flex  justify-star items-center  w-1/2"
-                            >
-                              Father Name
-                            </label>
-                            <Field
-                              type="text"
-                              className="mt-3 w-full rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
-                              name="directorFatherName"
-                            />
-                          </div>
-                        </div>
-                        <div className=" w-full flex items-center flex-row justify-between mt-5 font-bold font-inter text-16 leading-30 text-dark">
-                          <div className="w-[48%]">
-                            <label
-                              htmlFor="email"
-                              className="inline-flex  justify-star items-center  w-1/2"
-                            >
-                              Email
-                            </label>
-                            <div className="flex items-center justify-between relative">
-                              <Field
-                                type="email"
-                                className="mt-3 w-full rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
-                                name="email"
-                              />
-                            </div>
-                          </div>
-                          <div className="w-[48%]">
-                            <label
-                              htmlFor="logo"
-                              className="inline-flex  justify-star items-center  w-1/2"
-                            >
-                              Logo
-                            </label>
-                            <Field
-                              type="text"
-                              className="mt-3 w-full rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
-                              name="logo"
-                            />
-                          </div>
-                        </div>
-
-                        <div className=" w-full flex items-center flex-row justify-between mt-5 font-bold font-inter text-16 leading-30 text-dark">
-                          <div className="w-[48%]">
-                            <label
-                              htmlFor="companyName"
-                              className="inline-flex  justify-star items-center  w-1/2"
-                            >
-                              Company Name
-                            </label>
-                            <div className="flex items-center justify-between relative">
-                              <Field
-                                type="text"
-                                className="mt-3 w-full rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
-                                name="companyName"
-                              />
-                            </div>
-                          </div>
-                          <div className="w-[48%]">
-                            <label
-                              htmlFor="voen"
-                              className="inline-flex  justify-star items-center  w-1/2"
-                            >
-                              Voen
-                            </label>
-                            <Field
-                              type="text"
-                              className="mt-3 w-full rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
-                              name="voen"
-                            />
-                          </div>
-                        </div>
-
-                        <div className=" w-full flex items-center flex-row justify-between mt-5 font-bold font-inter text-16 leading-30 text-dark">
-                          <div className="w-[48%]">
-                            <label
-                              htmlFor="vin"
-                              className="inline-flex  justify-star items-center  w-1/2"
-                            >
-                              Vin
-                            </label>
-                            <Field
-                              type="text"
-                              className="mt-3 w-full rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
-                              name="vin"
-                            />
-                          </div>
-                          <div className="w-[48%]">
-                            <label
-                              htmlFor="phonenumber"
-                              className="inline-flex  justify-star items-center  w-1/2"
-                            >
-                              Phone Number
-                            </label>
-                            <div className="flex items-center justify-between relative">
-                              <Field
-                                type="text"
-                                className="mt-3 w-full rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
-                                name="phonenumber"
-                              />
-                            </div>
-                          </div>
-                        </div>
-
-                        <div className="flex w-full items-center justify-around mt-10 font-bold font-inter text-16 leading-30 text-dark">
-                          <button
-                            type="button"
-                            className="inline-flex items-center justify-center w-1/4 px-2 py-4 text-sm font-medium text-red-400 rounded-full outline font-inter"
-                            onClick={handleDelete}
+                      <div className=" w-full flex items-center flex-row justify-between mt-5 font-bold font-inter text-16 leading-30 text-dark">
+                        <div className="w-[48%]">
+                          {" "}
+                          <label
+                            htmlFor="ObjectId"
+                            className="flex items-center justify-between mt-10 font-bold font-inter text-16 leading-30 text-dark"
                           >
-                            Delete
-                          </button>
-                          <button
-                            type="submit"
-                            className="flex items-center justify-center w-1/4 px-2 py-4 text-sm font-medium text-white border border-transparent rounded-full bg-primary hover:bg-primary-200 focus:outline-none"
+                            Object Name
+                          </label>
+                          <Field
+                            as="select"
+                            id="ObjectId"
+                            className="mt-3 w-full rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md hover:outline-none"
+                            name="ObjectId"
+                            required
                           >
-                            Edit
-                          </button>
+                            <option value="-1">Choose</option>
+                            {dataObjects?.data.map((item: any) => (
+                              <option value={item.id}>{item.title}</option>
+                            ))}
+                          </Field>
                         </div>
-                      </Form>
+                        <div className="w-[48%]">
+                          {" "}
+                          <label
+                            htmlFor="DirectorName"
+                            className="flex items-center justify-between mt-10 font-bold font-inter text-16 leading-30 text-dark"
+                          >
+                            Director Name
+                          </label>
+                          <Field
+                            type="text"
+                            className="mt-3 w-full  rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none  font-medium text-md"
+                            name="DirectorName"
+                            required
+                          />
+                        </div>
+                      </div>
+
+                      <div className=" w-full flex items-center flex-row justify-between mt-5 font-bold font-inter text-16 leading-30 text-dark">
+                        <div className="w-[48%]">
+                          <label
+                            htmlFor="DirectorSurname"
+                            className="inline-flex  justify-star items-center  w-1/2"
+                          >
+                            Director Surname
+                          </label>
+                          <div className="flex items-center justify-between relative">
+                            <Field
+                              type="text"
+                              className="mt-3 w-full rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
+                              name="DirectorSurname"
+                            />
+                          </div>
+                        </div>
+                        <div className="w-[48%]">
+                          <label
+                            htmlFor="DirectorFatherName"
+                            className="inline-flex  justify-star items-center  w-1/2"
+                          >
+                            Father Name
+                          </label>
+                          <Field
+                            type="text"
+                            className="mt-3 w-full rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
+                            name="DirectorFatherName"
+                          />
+                        </div>
+                      </div>
+                  
+
+                      <div className=" w-full flex items-center flex-row justify-between mt-5 font-bold font-inter text-16 leading-30 text-dark">
+                        <div className="w-[48%]">
+                          <label
+                            htmlFor="CompanyName"
+                            className="inline-flex  justify-star items-center  w-1/2"
+                          >
+                            Company Name
+                          </label>
+                          <div className="flex items-center justify-between relative">
+                            <Field
+                              type="text"
+                              className="mt-3 w-full rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
+                              name="CompanyName"
+                            />
+                          </div>
+                        </div>
+                        <div className="w-[48%]">
+                          <label
+                            htmlFor="VOEN"
+                            className="inline-flex  justify-star items-center  w-1/2"
+                          >
+                            Voen
+                          </label>
+                          <Field
+                            type="text"
+                            className="mt-3 w-full rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
+                            name="VOEN"
+                          />
+                        </div>
+                      </div>
+
+                      <div className=" w-full flex items-center flex-row justify-between mt-5 font-bold font-inter text-16 leading-30 text-dark">
+                        <div className="w-[48%]">
+                          <label
+                            htmlFor="VIN"
+                            className="inline-flex  justify-star items-center  w-1/2"
+                          >
+                            Vin
+                          </label>
+                          <Field
+                            type="text"
+                            className="mt-3 w-full rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
+                            name="VIN"
+                          />
+                        </div>
+                        <div className="w-[48%]">
+                          <label
+                            htmlFor="Phonenumber"
+                            className="inline-flex  justify-star items-center  w-1/2"
+                          >
+                            Phone Number
+                          </label>
+                          <div className="flex items-center justify-between relative">
+                            <Field
+                              type="text"
+                              className="mt-3 w-full rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
+                              name="Phonenumber"
+                            />
+                          </div>
+                        </div>
+                      </div>
+                      <div className=" w-full flex items-center flex-row justify-between mt-5 font-bold font-inter text-16 leading-30 text-dark">
+                        <div className="w-[48%]">
+                          <label
+                            htmlFor="email"
+                            className="inline-flex  justify-star items-center  w-1/2"
+                          >
+                            Email
+                          </label>
+                          <div className="flex items-center justify-between relative">
+                            <Field
+                              type="Email"
+                              className="mt-3 w-full rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
+                              name="Email"
+                            />
+                          </div>
+                        </div>
+                     
+                      </div>
+                      <div className=" w-full flex items-center flex-row justify-between mt-5 font-bold font-inter text-16 leading-30 text-dark">
+                     
+                        <div className="w-[48%]">
+                        <label
+                               htmlFor="Logo"
+                               className="inline-flex items-center w-1/2 justify-star"
+                             >
+                               Logo
+                             </label>
+
+                             <input
+                               type="file"
+                               id="Logo"
+                               name="Logo"
+                               accept="image/*"
+                               onChange={(event) => {
+                                 const file = (
+                                   event.currentTarget as HTMLInputElement
+                                 ).files?.[0];
+                                 formikProps.setFieldValue("Logo", file);
+                               }}
+                               className="mt-3 w-[95%] rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
+                               required
+                             />
+                        </div>
+                        
+                        <div className="w-1/2 flex items-center justify-center">
+                            <div className="w-[140px] h-[100px] rounded-lg  object-cover object-center">
+                                <img className="w-full h-full" src={selectedRow.logo} alt="" />
+                            </div>
+                            </div>
+                      </div>
+
+                      <div className="flex w-full items-center justify-around mt-10 font-bold font-inter text-16 leading-30 text-dark">
+                      <button
+                           type="button"
+                           className="inline-flex items-center justify-center w-1/4 px-2 py-4 text-sm font-medium text-red-400 rounded-full outline font-inter"
+                           onClick={handleDelete}
+                         >
+                           Delete
+                         </button>
+                         <button
+                           type="submit"
+                           className="flex items-center justify-center w-1/4 px-2 py-4 text-sm font-medium text-white border border-transparent rounded-full bg-primary hover:bg-primary-200 focus:outline-none"
+                         >
+                           Edit
+                         </button>
+                      </div>
+                    </Form>
+                 )}
                     </Formik>
                   </Dialog.Panel>
-                ) : null}
+                ) 
+                : null}
               </Transition.Child>
             </div>
           </div>

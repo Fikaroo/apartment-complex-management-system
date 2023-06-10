@@ -1,30 +1,38 @@
 import React, { Fragment, useState } from "react";
-import Tables, { IHeaders } from "../../components/Table/BuildingsTable";
-import SearchInput from "../../components/SearchInput";
+import Tables, { IHeaders } from "../../components/Table/VendorRoomsTable";
 import Filter from "../../components/Filter";
 import OrderDate from "../../components/OrderDate";
 import AddBtn from "../../components/AddBtn";
-import BuildingsModal from "../../components/Modals/BuildingsModal";
+import VendorRoomsModal from "../../components/Modals/VendorRoomsModal";
 import useSWR from "swr";
 import { GetAll } from "../../api";
-const Users = () => {
+const VendorRooms = () => {
   let [isOpen, setIsOpen] = useState<boolean>(false);
   let [isOpenAdd, setIsOpenAdd] = useState<boolean>(false);
+
   const [process, setProcess] = useState("");
-  const [buildingId, setBuildingId] = useState<number>(0);
+  const [roomId, setRoomId] = useState<number>(0);
   const [selectedRow, setSelectedRow] = useState(null);
+
   const closeModal = (): void => {
     setIsOpen(false);
   };
- 
+
+  const closeModalAdd = (): void => {
+    setIsOpenAdd(false);
+  };
+
   const openModal = (): void => {
     setIsOpen(true);
   };
 
+  const openModalAdd = (): void => {
+    setIsOpenAdd(true);
+  };
+
   const { data, error, isLoading, mutate } = useSWR(
-    "/api/VendorBuildings/GetAll",
-    (key) => GetAll.user(key),
-    { revalidateIfStale: true }
+    "/api/VendorRooms/GetAllByVendorId",
+    (key) => GetAll.user(key)
   );
 
   const headers: IHeaders[] = [
@@ -52,82 +60,83 @@ const Users = () => {
     },
     {
       id: 3,
-      title: "Region Name",
+      title: "Company Name",
     },
     {
       id: 4,
-      title: "Street",
+      title: "Region Name",
     },
     {
       id: 5,
-      title: "BuildingNo",
+      title: "Room Type",
     },
     {
       id: 6,
-      title: "Security Phone",
+      title: "Available",
     },
     {
       id: 7,
-      title: "Floor",
-    },
-    {
+      title: "Rent Price",
+    },  {
       id: 8,
-      title: "Entrance",
-    },
-    {
-      id: 9,
       title: "Edit",
     },
   ];
 
   return (
-    <Fragment>
+    <div>
       <div className="flex items-center justify-between">
         <p className="font-bold font-inter text-16 leading-30 text-dark">
-          Ümumi: 178 Buildings
+          Ümumi:
         </p>{" "}
         <div className="flex items-center gap-4">
           <AddBtn
-            openModal={openModal}
-            setProcess={setProcess}
+            openModal={openModalAdd}
             modal={
-              <BuildingsModal
-              mutate={mutate}
-                isOpen={isOpen}
-                closeModal={closeModal}
+              <VendorRoomsModal
+                mutate={mutate}
+                isOpen={isOpenAdd}
+                closeModal={closeModalAdd}
                 process={process}
-                deleteId={buildingId}
+                deleteId={roomId}
                 selectedRow={selectedRow}
               />
-
-        
             }
+            setProcess={setProcess}
           />
+
           <OrderDate />
 
           <Filter />
         </div>
       </div>
-      <Tables
-        openModal={openModal}
-        modal={
-          <BuildingsModal
-          mutate={mutate}
-            isOpen={isOpen}
-            closeModal={closeModal}
-            process={process}
-            deleteId={buildingId}
-            selectedRow={selectedRow}
-          />
-        }
-        headers={headers}
-        data={data}
-        setProcess={setProcess}
-        setBuildingId={setBuildingId}
-        setSelectedRow={setSelectedRow}
-      />
-    </Fragment>
+
+      {isLoading ? (
+        <div>Loading...</div>
+      ) : error ? (
+        <div>error</div>
+      ) : (
+        <Tables
+          openModal={openModal}
+          modal={
+            <VendorRoomsModal
+              mutate={mutate}
+              isOpen={isOpen}
+              closeModal={closeModal}
+              process={process}
+              deleteId={roomId}
+              selectedRow={selectedRow}
+            />
+          }
+          headers={headers}
+          data={data}
+          setProcess={setProcess}
+          setSelectedRow={setSelectedRow}
+          setRoomId={setRoomId}
+        />
+      )}
+    </div>
   );
 };
 
-export default Users;
+export default VendorRooms;

@@ -1,30 +1,39 @@
 import React, { Fragment, useState } from "react";
-import Tables, { IHeaders } from "../../components/Table/BuildingsTable";
+import Tables, { IHeaders } from "../../components/Table/OrderTypeTable";
 import SearchInput from "../../components/SearchInput";
 import Filter from "../../components/Filter";
 import OrderDate from "../../components/OrderDate";
 import AddBtn from "../../components/AddBtn";
-import BuildingsModal from "../../components/Modals/BuildingsModal";
+import OrderTypeModal from "../../components/Modals/OrderTypeModal";
 import useSWR from "swr";
 import { GetAll } from "../../api";
-const Users = () => {
+const OrderType = () => {
   let [isOpen, setIsOpen] = useState<boolean>(false);
   let [isOpenAdd, setIsOpenAdd] = useState<boolean>(false);
+
   const [process, setProcess] = useState("");
-  const [buildingId, setBuildingId] = useState<number>(0);
+  const [vendorId, setVendorId] = useState<number>(0);
   const [selectedRow, setSelectedRow] = useState(null);
+
   const closeModal = (): void => {
     setIsOpen(false);
   };
- 
+
+  const closeModalAdd = (): void => {
+    setIsOpenAdd(false);
+  };
+
   const openModal = (): void => {
     setIsOpen(true);
   };
 
+  const openModalAdd = (): void => {
+    setIsOpenAdd(true);
+  };
+
   const { data, error, isLoading, mutate } = useSWR(
-    "/api/VendorBuildings/GetAll",
-    (key) => GetAll.user(key),
-    { revalidateIfStale: true }
+    "/api/OrderTypeAdmin/GetAll",
+    (key) => GetAll.user(key)
   );
 
   const headers: IHeaders[] = [
@@ -52,30 +61,18 @@ const Users = () => {
     },
     {
       id: 3,
-      title: "Region Name",
+      title: "Payment Type",
     },
     {
       id: 4,
-      title: "Street",
+      title: "Prepayment Type",
     },
     {
       id: 5,
-      title: "BuildingNo",
+      title: "Price Type",
     },
     {
       id: 6,
-      title: "Security Phone",
-    },
-    {
-      id: 7,
-      title: "Floor",
-    },
-    {
-      id: 8,
-      title: "Entrance",
-    },
-    {
-      id: 9,
       title: "Edit",
     },
   ];
@@ -84,50 +81,56 @@ const Users = () => {
     <Fragment>
       <div className="flex items-center justify-between">
         <p className="font-bold font-inter text-16 leading-30 text-dark">
-          Ümumi: 178 Buildings
+          
         </p>{" "}
         <div className="flex items-center gap-4">
           <AddBtn
-            openModal={openModal}
-            setProcess={setProcess}
+            openModal={openModalAdd}
             modal={
-              <BuildingsModal
-              mutate={mutate}
-                isOpen={isOpen}
-                closeModal={closeModal}
+              <OrderTypeModal
+                mutate={mutate}
+                isOpen={isOpenAdd}
+                closeModal={closeModalAdd}
                 process={process}
-                deleteId={buildingId}
+                deleteId={vendorId}
                 selectedRow={selectedRow}
               />
-
-        
             }
+            setProcess={setProcess}
           />
+
           <OrderDate />
 
           <Filter />
         </div>
       </div>
-      <Tables
-        openModal={openModal}
-        modal={
-          <BuildingsModal
-          mutate={mutate}
-            isOpen={isOpen}
-            closeModal={closeModal}
-            process={process}
-            deleteId={buildingId}
-            selectedRow={selectedRow}
-          />
-        }
-        headers={headers}
-        data={data}
-        setProcess={setProcess}
-        setBuildingId={setBuildingId}
-        setSelectedRow={setSelectedRow}
-      />
+
+      {isLoading ? (
+        <div>Loading...</div>
+      ) : error ? (
+        <div>error</div>
+      ) : (
+        <Tables
+          openModal={openModal}
+          modal={
+            <OrderTypeModal
+              mutate={mutate}
+              isOpen={isOpen}
+              closeModal={closeModal}
+              process={process}
+              deleteId={vendorId}
+              selectedRow={selectedRow}
+            />
+          }
+          headers={headers}
+          data={data}
+          setProcess={setProcess}
+          setVendorId={setVendorId}
+          setSelectedRow={setSelectedRow}
+        />
+      )}
     </Fragment>
   );
 };
 
-export default Users;
+export default OrderType;
