@@ -1,9 +1,7 @@
-import { Fragment, useRef, useState } from "react";
-import Tables, { IHeaders } from "../../components/Table/UsersTable";
+import { Fragment, useState } from "react";
+import Tables, { IHeaders } from "../../components/Table/AccidentTable";
 import Filter from "../../components/Filter";
 import OrderDate from "../../components/OrderDate";
-import AddBtn from "../../components/AddBtn";
-import UserModal from "../../components/Modals/UserModal";
 import useSWR from "swr";
 import { GetAll } from "../../api";
 

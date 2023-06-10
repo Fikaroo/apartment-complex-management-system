@@ -2,7 +2,6 @@ import { Dialog, Transition } from "@headlessui/react";
 import { Fragment, useState } from "react";
 import SosModal from "../Modals/SosModal";
 import { Link, useNavigate } from "react-router-dom";
-import { IAccidentArgs } from "../../pages/Accident/Accident";
 export interface IHeaders {
   isStatus?: boolean;
   isAvatar?: boolean;
@@ -16,7 +15,7 @@ type PropsType = {
   headers: IHeaders[];
   modal: JSX.Element;
   openModal: () => void;
-  data: { data: IAccidentArgs[] };
+  data: any;
   setProcess: React.Dispatch<React.SetStateAction<string>>;
   setOrderId: React.Dispatch<React.SetStateAction<number>>;
   setSelectedRow: React.Dispatch<React.SetStateAction<any>>;
@@ -68,83 +67,70 @@ const Tables = ({
           </tr>
         </thead>
         <tbody>
-          {data?.data?.map(
-            ({
-              id,
-              description,
-              statusId,
-              orderTypeName,
-              orderSourceName,
-              phoneNumber,
-              actualDeadline,
-              normativeDeadline,
-            }) => (
-              <tr
-                key={id}
-                className="cursor-pointer hover:bg-gray-200"
-                //   onClick={() => handleTableRow({ id: item.id })}
-              >
-                <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-                  <div className="flex items-center flex-shrink-0 w-10 h-10">
-                    <img
-                      className="rounded-full"
-                      src="/icons/exclamation.svg"
-                      alt=""
-                    />
+          {data?.data?.map((item: any) => (
+            <tr
+              key={item.id}
+              className="cursor-pointer hover:bg-gray-200"
+              //   onClick={() => handleTableRow({ id: item.id })}
+            >
+              <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
+                <div className="flex items-center flex-shrink-0 w-10 h-10">
+                  <img
+                    className="rounded-full"
+                    src="/icons/exclamation.svg"
+                    alt=""
+                  />
+                </div>
+              </td>
+              <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
+                <div className="ml-4">
+                  <div className="text-sm font-medium leading-5 text-gray-900">
+                    {item.name}
                   </div>
-                </td>
-                <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-                  <div className="ml-4">
-                    <div className="text-sm font-medium leading-5 text-gray-900">
-                      {description}
-                    </div>
-                  </div>
-                </td>
-                <td className="px-6 py-4 text-sm leading-5 text-gray-500 whitespace-no-wrap border-b border-gray-200">
-                  {statusId === 0 ? "Active" : "Deactiva"}
-                </td>
-                <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-                  <div className="text-sm leading-5 text-gray-900">
-                    {orderTypeName}
-                  </div>
-                </td>
-                <td className="px-6 py-4 text-sm leading-5 text-gray-500 whitespace-no-wrap border-b border-gray-200">
-                  {orderSourceName}
-                </td>
-                <td className="px-6 py-4 text-sm leading-5 text-gray-500 whitespace-no-wrap border-b border-gray-200">
-                  {phoneNumber}
-                </td>
-                <td className="px-6 py-4 text-sm leading-5 text-gray-500 whitespace-no-wrap border-b border-gray-200">
-                  {new Date(actualDeadline)
-                    .toLocaleDateString("en-GB", {
-                      day: "2-digit",
-                      month: "2-digit",
-                      year: "numeric",
-                    })
-                    .split("/")
-                    .reverse()
-                    .join("-")}
-                </td>
-                <td className="px-6 py-4 text-sm leading-5 text-gray-500 whitespace-no-wrap border-b border-gray-200">
-                  {new Date(normativeDeadline)
-                    .toLocaleDateString("en-GB", {
-                      day: "2-digit",
-                      month: "2-digit",
-                      year: "numeric",
-                    })
-                    .split("/")
-                    .reverse()
-                    .join("-")}
-                </td>
-
-                {/* <td className="px-6 py-4 text-sm leading-5 text-gray-500 whitespace-no-wrap border-b border-gray-200">
+                </div>
+              </td>
+              <td className="px-6 py-4 text-sm leading-5 text-gray-500 whitespace-no-wrap border-b border-gray-200">
+                {item.surname}
+              </td>
+              <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
+                <div className="text-sm leading-5 text-gray-900">
+                  {item.patrionimyc}
+                </div>
+              </td>
+              <td className="px-6 py-4 text-sm leading-5 text-gray-500 whitespace-no-wrap border-b border-gray-200">
+                {item.email}
+              </td>
+              <td className="px-6 py-4 text-sm leading-5 text-gray-500 whitespace-no-wrap border-b border-gray-200">
+                {item.phoneNumber}
+              </td>
+              <td className="px-6 py-4 text-sm leading-5 text-gray-500 whitespace-no-wrap border-b border-gray-200">
+                {new Date(item.createdDate)
+                  .toLocaleDateString("en-GB", {
+                    day: "2-digit",
+                    month: "2-digit",
+                    year: "numeric",
+                  })
+                  .split("/")
+                  .reverse()
+                  .join("-")}
+              </td>
+              <td className="px-6 py-4 text-sm leading-5 text-gray-500 whitespace-no-wrap border-b border-gray-200">
+                {item.customerStatusName}
+              </td>
+              <td className="px-6 py-4 text-sm leading-5 text-gray-500 whitespace-no-wrap border-b border-gray-200">
+                {item.propertyTypeName}
+              </td>
+              <td className="px-6 py-4 text-sm leading-5 text-gray-500 whitespace-no-wrap border-b border-gray-200">
+                {item.proportion}
+              </td>
+              {/* <td className="px-6 py-4 text-sm leading-5 text-gray-500 whitespace-no-wrap border-b border-gray-200">
                 {
                   optionsStatus.find((option) => option.id === item.statusId)
                     ?.name
                 }
               </td> */}
 
-                {/* <td
+              <td
                 className="px-6 py-4 text-sm leading-5 text-gray-500 whitespace-no-wrap border-b border-gray-200"
                 onClick={(e) => e.stopPropagation()}
               >
@@ -169,10 +155,9 @@ const Tables = ({
                   className="cursor-pointer"
                   src="/icons/edit.svg"
                 />
-              </td> */}
-              </tr>
-            )
-          )}
+              </td>
+            </tr>
+          ))}
         </tbody>
       </table>
 
