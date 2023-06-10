@@ -1,13 +1,16 @@
-import React,{useState} from "react";
-import {GetbyId} from "../../api";
-import useSWR from 'swr'
+import React, { useState } from "react";
+import { GetbyId } from "../../api";
+import useSWR from "swr";
 import { useParams } from "react-router-dom";
 import ObjectsModal from "../../components/Modals/ObjectsModal";
 type Props = {};
 
 const ApartmentDetail = (props: Props) => {
-  const { apartmentId } = useParams()
-  const { data, error, isLoading } = useSWR(`/api/VendorApartment/GetById?id=${apartmentId}`,GetbyId.user)
+  const { apartmentId } = useParams();
+  const { data, error, isLoading } = useSWR(
+    `/api/VendorApartment/GetById?id=${apartmentId}`,
+    GetbyId.user
+  );
   let [isOpen, setIsOpen] = useState<boolean>(false);
   const [process, setProcess] = useState("");
   const closeModal = (): void => {
@@ -18,18 +21,15 @@ const ApartmentDetail = (props: Props) => {
   };
   return (
     <React.Fragment>
-    
       <div className="w-1/2 h-[200px] flex items-center justify-between p-5 bg-white">
-      <div className="w-1/2">
-          
+        <div className="w-1/2">
           <div className="w-full mt-10">
-             
-              <p className="font-inter text-16 leading-30 text-[#7E92A2] ">
+            <p className="font-inter text-16 leading-30 text-[#7E92A2] ">
               {data?.data?.buildingName}
-              </p>
-            </div>
+            </p>
+          </div>
         </div>
-        <div className="w-1/6 flex items-center justify-between">
+        <div className="flex items-center justify-between w-1/6">
           <div className="w-[50px] h-[50px] border-[1px] border-slate-300 rounded-full flex items-center justify-center">
             <img
               src="/icons/edit.svg"
@@ -38,7 +38,6 @@ const ApartmentDetail = (props: Props) => {
               onClick={() => {
                 openModal();
                 setProcess("Edit");
-        
               }}
             />
           </div>
@@ -50,54 +49,49 @@ const ApartmentDetail = (props: Props) => {
             />
           </div>
         </div>
-       
-       
       </div>
-      
-     
-      <div className="w-1/2 flex items-center justify-between">
+
+      <div className="flex items-center justify-between w-1/2">
         <div className="w-2/3 h-[300px] pr-10 ">
           {" "}
-          <div className=" w-full flex items-center flex-row justify-between mt-5 p-5">
+          <div className="flex flex-row items-center justify-between w-full p-5 mt-5 ">
             <div className="w-1/2">
               <p className="font-inter text-[14px] leading-30 text-[#7E92A2]">
-               Apartment No
+                Apartment No
               </p>
               <p className="font-bold font-inter text-16 leading-30 text-dark">
-                {data?.data.apartmentNo}	
+                {data?.data.apartmentNo}
               </p>
             </div>
             <div className="w-1/2">
               <p className="font-inter text-[14px] leading-30 text-[#7E92A2]">
-              Entrance No
+                Entrance No
               </p>
               <p className="font-bold font-inter text-16 leading-30 text-dark">
-                {data?.data.entranceNo}	</p>
-            </div>
-          </div>
-          <div className=" w-full flex items-center flex-row justify-between mt-5 p-5 font-bold font-inter text-16 leading-30 text-dark">
-            <div className="w-1/2">
-              <p className="font-inter text-[14px] leading-30 text-[#7E92A2]">
-              Area
-              </p>
-              <p className="font-bold font-inter text-16 leading-30 text-dark">
-                {data?.data.area}	
-              </p>
-            </div>
-            <div className="w-1/2">
-              <p className="font-inter text-[14px] leading-30 text-[#7E92A2]">
-              Floor No
-              </p>
-              <p className="font-bold font-inter text-16 leading-30 text-dark">
-                {data?.data.floorNo}	
+                {data?.data.entranceNo}{" "}
               </p>
             </div>
           </div>
-         
+          <div className="flex flex-row items-center justify-between w-full p-5 mt-5 font-bold  font-inter text-16 leading-30 text-dark">
+            <div className="w-1/2">
+              <p className="font-inter text-[14px] leading-30 text-[#7E92A2]">
+                Area
+              </p>
+              <p className="font-bold font-inter text-16 leading-30 text-dark">
+                {data?.data.area}
+              </p>
+            </div>
+            <div className="w-1/2">
+              <p className="font-inter text-[14px] leading-30 text-[#7E92A2]">
+                Floor No
+              </p>
+              <p className="font-bold font-inter text-16 leading-30 text-dark">
+                {data?.data.floorNo}
+              </p>
+            </div>
+          </div>
         </div>
-
       </div>
-     
     </React.Fragment>
   );
 };

@@ -27,12 +27,12 @@ const Apartments = () => {
     setIsOpen(true);
   };
 
-  const { data, error, isLoading ,mutate} = useSWR(
+  const { data, error, isLoading, mutate } = useSWR(
     "/api/VendorApartment/GetAll",
     (key) => GetAll.user(key),
     { revalidateIfStale: true }
   );
- 
+
   const headers: IHeaders[] = [
     {
       id: 1,
@@ -65,9 +65,9 @@ const Apartments = () => {
       title: "EntranceNo",
     },
     {
-        id: 5,
-        title: "Area",
-      },
+      id: 5,
+      title: "Area",
+    },
     {
       id: 6,
       title: "FloorNo",
@@ -76,7 +76,6 @@ const Apartments = () => {
       id: 7,
       title: "Edit",
     },
-   
   ];
 
   return (
@@ -91,7 +90,7 @@ const Apartments = () => {
             setProcess={setProcess}
             modal={
               <ApartmentsModal
-              mutate={mutate}
+                mutate={mutate}
                 isOpen={isOpen}
                 closeModal={closeModal}
                 process={process}
@@ -110,7 +109,7 @@ const Apartments = () => {
         openModal={openModal}
         modal={
           <ApartmentsModal
-          mutate={mutate}
+            mutate={mutate}
             isOpen={isOpen}
             closeModal={closeModal}
             process={process}

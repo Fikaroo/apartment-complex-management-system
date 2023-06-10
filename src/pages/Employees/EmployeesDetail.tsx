@@ -71,7 +71,8 @@ const EmployeesDetail = (props: Props) => {
     mutate,
   } = useSWR<{ data: ITransportArgs[] }>(
     employeesId ? `api/Transport/GetByEmployeeOrUserId/${employeesId}` : null,
-    GetAll.user
+    GetAll.user,
+    { revalidateIfStale: true }
   );
 
   let { data, error, isLoading } = useSWR<{ data: IEmployeesArgs }>(
