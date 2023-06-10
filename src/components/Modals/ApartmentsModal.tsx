@@ -52,29 +52,19 @@ const ApartmentsModal: React.FC<Props> = ({
   } = useSWR("/api/VendorBuildings/GetAll", (key) => GetAll.user(key));
 const [editBuildingId, setEditBuildingId] = useState(-1);
 const [editData, setEditData] = useState(dataBuilding);
-const fetchData=async()=>{
+useEffect(() => {
   if(selectedRow){
-  try {
-    const resp = await GetbyId.user(`/api/VendorBuildings/GetById?id=${dataBuilding?.data.find(
-      (item: any) =>
-        item.name === selectedRow?.buildingName
-    )?.id}`)
-    setEditData(resp)
-    console.log('resp!!!', resp)
-  } catch (error) {
-    console.log('error' , error )
-  }
+    setEditBuildingId(dataBuilding?.data.find(
+    (item: any) =>
+      item.name === selectedRow?.buildingName
+  )?.id);
+
   }
   else{
     console.log("fff")
   }
- 
-}
-useEffect(() => {
-
-  fetchData()
 },[selectedRow])
-console.log(editData, "value")
+console.log(editBuildingId, "value")
   const handleSubmit = async (values: Values) => {
     const parsedValues = {
       ...values,
@@ -325,9 +315,9 @@ console.log(editData, "value")
                               item.name === selectedRow?.buildingName
                           )?.id || "",
                         apartmentNo: selectedRow?.apartmentNo || "",
-                        entranceNo: editData?.data?.entrance || "",
+                        entranceNo: selectedRow?.entranceNo || "",
                         area: selectedRow?.area || -1,
-                        floorNo: editData?.data?.floor || "",
+                        floorNo: selectedRow?.floorNo || "",
                       }}
                       onSubmit={handleEdit}
                     >
@@ -392,9 +382,9 @@ console.log(editData, "value")
                                 required
                               >
                                 <option value="-1">Choose</option>
-                                {editData?.data?.entrance &&
+                                {dataBuildingId?.data?.entrance &&
                                   Array.from(
-                                    { length: editData.data.entrance },
+                                    { length: dataBuildingId.data.entrance },
                                     (_, index) => (
                                       <option key={index + 1} value={index + 1}>
                                         {index + 1}
@@ -436,9 +426,9 @@ console.log(editData, "value")
                                 required
                               >
                                 <option value="-1">Choose</option>
-                                {editData?.data?.floor &&
+                                {dataBuildingId?.data?.floor &&
                                   Array.from(
-                                    { length: editData.data.floor },
+                                    { length: dataBuildingId.data.floor },
                                     (_, index) => (
                                       <option key={index + 1} value={index + 1}>
                                         {index + 1}
