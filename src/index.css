@@ -10,19 +10,23 @@
   }
 }
 
+*::-webkit-scrollbar {
+  width: 8px;
+}
+
 ul::-webkit-scrollbar {
   width: 4px;
 }
 
-ul::-webkit-scrollbar-track {
+*::-webkit-scrollbar-track {
   background: #f1f1f1;
 }
 
-ul::-webkit-scrollbar-thumb {
-  background: #514EF3;
+*::-webkit-scrollbar-thumb {
+  background: #514ef3;
   border-radius: 10px;
 }
 
-ul::-webkit-scrollbar-thumb:hover {
-  background: #514EF3;
+*::-webkit-scrollbar-thumb:hover {
+  background: #514ef3;
 }

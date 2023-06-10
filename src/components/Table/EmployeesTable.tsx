@@ -17,7 +17,7 @@ type PropsType = {
   openModal: () => void;
   data: any;
   setProcess: React.Dispatch<React.SetStateAction<string>>;
-  setEmployeeId: React.Dispatch<React.SetStateAction<number>>;
+  setEmployeeId: React.Dispatch<React.SetStateAction<string>>;
   setSelectedRow: React.Dispatch<React.SetStateAction<any>>;
 };
 

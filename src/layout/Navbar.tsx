@@ -136,8 +136,9 @@ const Navbar = () => {
         { name: "Apartments", path: "/references/apartments" },
         { name: "Employees", path: "/references/employees" },
         { name: "Residents", path: "/references/residents" },
-        { name: "VendorRooms", path: "/references/vendorRooms"},
+        { name: "VendorRooms", path: "/references/vendorRooms" },
         { name: "Transport", path: "/references/transport" },
+        { name: "Accident", path: "/references/accident" },
       ],
     },
     {
@@ -164,7 +165,6 @@ const Navbar = () => {
       path: "/notification",
       icon: <BellIcon className="w-5 h-5" />,
       iconSolid: <BellIconSolid className="w-5 h-5 fill-white" />,
-      
     },
     {
       name: "Settings",
@@ -173,10 +173,8 @@ const Navbar = () => {
       iconSolid: <Cog6ToothIconSolid className="w-5 h-5 fill-white" />,
       children: [
         { name: "OrderType", path: "/settings/ordertype" },
-        { name: "Parking", path: "/settings/parking" }
-      
-      ]
-      
+        { name: "Parking", path: "/settings/parking" },
+      ],
     },
   ];
 

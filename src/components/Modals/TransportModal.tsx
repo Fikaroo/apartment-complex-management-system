@@ -24,7 +24,7 @@ export type TransportValues = {
   brand: string;
   serialNumber: string;
   color: string;
-  id: string;
+  id?: string;
 };
 
 const TransportModal = ({
@@ -199,7 +199,7 @@ const TransportModal = ({
                                 htmlFor="id"
                                 className="inline-flex items-center w-1/2 justify-star"
                               >
-                                Employee Or UserId
+                                UserId
                               </label>
                               <Field
                                 as="select"

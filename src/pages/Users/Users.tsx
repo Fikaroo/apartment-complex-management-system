@@ -6,15 +6,13 @@ import AddBtn from "../../components/AddBtn";
 import UserModal from "../../components/Modals/UserModal";
 import useSWR from "swr";
 import { GetAll } from "../../api";
-import SearchInput from "../../components/SearchInput";
-const Users = () => {
-  const ref = useRef();
 
+const Users = () => {
   let [isOpen, setIsOpen] = useState<boolean>(false);
   const [process, setProcess] = useState("");
   const [orderId, setOrderId] = useState<number>(0);
   const [selectedRow, setSelectedRow] = useState(null);
-   const closeModal = (): void => {
+  const closeModal = (): void => {
     setIsOpen(false);
   };
 
@@ -29,7 +27,6 @@ const Users = () => {
     (key) => GetAll.user(key),
     { revalidateIfStale: true }
   );
-console.log(process,"procesadd");
   const headers: IHeaders[] = [
     {
       id: 1,

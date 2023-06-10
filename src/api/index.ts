@@ -1,6 +1,7 @@
 import axios from "axios";
 import { EmployeeValues } from "../components/Modals/EmployeesModal";
 import { TransportValues } from "../components/Modals/TransportModal";
+import { string } from "prop-types";
 
 const baseUrl = import.meta.env.VITE_BASE_URL;
 
@@ -465,7 +466,25 @@ export const CreateTransport = {
     {
       arg,
     }: {
-      arg: TransportValues;
+      arg: TransportValues & { EmployeeOrUserId?: string };
+    }
+  ) => {
+    const { data } = await admin.post(path, arg, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("user-token")}`,
+      },
+    });
+
+    return data;
+  },
+};
+export const UpdateTransport = {
+  user: async (
+    path: string,
+    {
+      arg,
+    }: {
+      arg: TransportValues & { EmployeeOrUserId?: string };
     }
   ) => {
     const { data } = await admin.put(path, arg, {
