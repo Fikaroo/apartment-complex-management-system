@@ -32,7 +32,7 @@ export type EmployeeValues = {
   vendorCompanyId: number | null;
   vendorObjectsId: number[];
   vendorBuildingsId: any[];
-  roleName: string;
+  roleId: string;
   voen: string;
   email: string;
   phoneNumber: string;
@@ -215,7 +215,7 @@ const EmployeesModal = ({
                         vendorCompanyId: null,
                         vendorObjectsId: [],
                         vendorBuildingsId: [],
-                        roleName: "",
+                        roleId: "",
                         voen: "",
                         email: "",
                         phoneNumber: "",
@@ -502,15 +502,15 @@ const EmployeesModal = ({
 
                             <div>
                               <label
-                                htmlFor="roleName"
+                                htmlFor="roleId"
                                 className="inline-flex items-center "
                               >
                                 Role Name
                               </label>
                               <Field
                                 as="select"
-                                name="roleName"
-                                id="roleName"
+                                name="roleId"
+                                id="roleId"
                                 className="flex items-center justify-center px-5 py-2 mt-3 font-medium border rounded-lg border-line bg-background focus:outline-none text-md"
                                 required
                               >
@@ -569,7 +569,7 @@ const EmployeesModal = ({
                           vendorCompanyId: null,
                           vendorObjectsId: [],
                           vendorBuildingsId: [],
-                          roleName: "",
+                          roleId: "",
                           voen: "",
                           email: "",
                           phoneNumber: "",
@@ -857,15 +857,15 @@ const EmployeesModal = ({
 
                             <div>
                               <label
-                                htmlFor="roleName"
+                                htmlFor="roleId"
                                 className="inline-flex items-center "
                               >
                                 Role Name
                               </label>
                               <Field
                                 as="select"
-                                name="roleName"
-                                id="roleName"
+                                name="roleId"
+                                id="roleId"
                                 className="flex items-center justify-center px-5 py-2 mt-3 font-medium border rounded-lg border-line bg-background focus:outline-none text-md"
                                 required
                               >

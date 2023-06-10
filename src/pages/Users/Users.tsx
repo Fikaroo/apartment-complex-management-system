@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from "react";
+import { Fragment, useRef, useState } from "react";
 import Tables, { IHeaders } from "../../components/Table/UsersTable";
 import Filter from "../../components/Filter";
 import OrderDate from "../../components/OrderDate";
@@ -6,7 +6,10 @@ import AddBtn from "../../components/AddBtn";
 import UserModal from "../../components/Modals/UserModal";
 import useSWR from "swr";
 import { GetAll } from "../../api";
+import SearchInput from "../../components/SearchInput";
 const Users = () => {
+  const ref = useRef();
+
   let [isOpen, setIsOpen] = useState<boolean>(false);
   let [isOpenAdd, setIsOpenAdd] = useState<boolean>(false);
   const [process, setProcess] = useState("");
@@ -98,12 +101,12 @@ const Users = () => {
             openModal={openModalAdd}
             modal={
               <UserModal
-              mutate={mutate}
-              isOpen={isOpen}
-              closeModal={closeModal}
-              process={process}
-              deleteId={orderId}
-              selectedRow={selectedRow}
+                mutate={mutate}
+                isOpen={isOpen}
+                closeModal={closeModal}
+                process={process}
+                deleteId={orderId}
+                selectedRow={selectedRow}
               />
             }
             setProcess={setProcess}
