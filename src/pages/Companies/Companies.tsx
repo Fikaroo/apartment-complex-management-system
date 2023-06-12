@@ -49,33 +49,35 @@ const Companies = () => {
         </svg>
       ),
     },
+       
     {
       id: 2,
-      title: "Director Name",
+      title: "Company Name",
     },
     {
       id: 3,
-      title: "Director Surname",
+      title: "Director Name",
     },
     {
       id: 4,
+      title: "Director Surname",
+    },
+    {
+      id: 5,
       title: "Director Father Name",
     },
     {
-        id: 5,
+        id: 6,
         title: "Phonenumber",
       },
     {
-      id: 6,
+      id: 7,
       title: "Email",
     },
     {
-      id: 7,
-      title: "Object Name",
-    },  {
       id: 8,
-      title: "Company Name",
-    },  {
+      title: "Object Name",
+    },    {
       id: 9,
       title: "Vendor Name",
     },

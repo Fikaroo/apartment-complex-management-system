@@ -112,20 +112,10 @@ export const CreateDeal = {
     {
       arg,
     }: {
-      arg: {
-        orderSourceId: number;
-        orderTypeId: number;
-        priorityId: number;
-        statusId: number;
-        orderClassId: number;
-        description: string;
-        appUserId: string;
-        actualDeadline: string;
-        normativeDeadline: string;
-      };
+      arg:FormData
     }
   ) => {
-    const { data } = await admin.post(path, arg, {
+    const { data } = await company.post(path, arg, {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("user-token")}`,
       },
@@ -179,21 +169,10 @@ export const EditDeal = {
     {
       arg,
     }: {
-      arg: {
-        orderSourceId: number;
-        orderTypeId: number;
-        priorityId: number;
-        statusId: number;
-        orderClassId: number;
-        description: string;
-        appUserId: string;
-        actualDeadline: string;
-        normativeDeadline: string;
-        id: number;
-      };
+      arg: FormData
     }
   ) => {
-    const { data } = await admin.put(path, arg, {
+    const { data } = await company.put(path, arg, {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("user-token")}`,
       },

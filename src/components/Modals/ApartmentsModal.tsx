@@ -36,6 +36,7 @@ const ApartmentsModal: React.FC<Props> = ({
   selectedRow,
   mutate,
 }) => {
+  const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const [buildingId, setBuildingId] = useState(-1);
 
   console.log(buildingId, "buildingId");
@@ -80,6 +81,7 @@ const ApartmentsModal: React.FC<Props> = ({
   }, [selectedRow]);
   console.log(editData, "value");
   const handleSubmit = async (values: Values) => {
+    setIsButtonDisabled(true);
     const parsedValues = {
       ...values,
       vendorBuildingId: dataBuildingId?.data?.id,
@@ -94,9 +96,11 @@ const ApartmentsModal: React.FC<Props> = ({
     );
     alert(res);
     setBuildingId(-1);
+    setIsButtonDisabled(false);
   };
 
   const handleEdit = async (values: Values) => {
+    setIsButtonDisabled(true);
     const parsedValues = {
       ...values,
       vendorBuildingId: dataBuildingId?.data?.id,
@@ -113,6 +117,7 @@ const ApartmentsModal: React.FC<Props> = ({
     );
 
     alert(res);
+    setIsButtonDisabled(false);
   };
 
   const deleteObject = async (deleteId: any) => {
@@ -302,6 +307,7 @@ const ApartmentsModal: React.FC<Props> = ({
                         <div className="flex items-center justify-around w-full mt-10 font-bold font-inter text-16 leading-30 text-dark">
                           <button
                             type="submit"
+                            disabled={isButtonDisabled}
                             className="flex items-center justify-center w-1/4 px-2 py-4 text-sm font-medium text-white border border-transparent rounded-full bg-primary hover:bg-primary-200 focus:outline-none"
                           >
                             Əlavə et
@@ -316,7 +322,7 @@ const ApartmentsModal: React.FC<Props> = ({
                       as="h3"
                       className="flex items-center justify-between font-bold font-inter text-16 leading-30 text-dark"
                     >
-                      Sifarişə düzəliş et
+              Edit Apartment
                       <XCircleIcon
                         onClick={closeModal}
                         className="w-6 h-6 cursor-pointer fill-icon"
@@ -477,6 +483,7 @@ const ApartmentsModal: React.FC<Props> = ({
                             </button>
                             <button
                               type="submit"
+                              disabled={isButtonDisabled}
                               className="flex items-center justify-center w-1/4 px-2 py-4 text-sm font-medium text-white border border-transparent rounded-full bg-primary hover:bg-primary-200 focus:outline-none"
                             >
                               Edit

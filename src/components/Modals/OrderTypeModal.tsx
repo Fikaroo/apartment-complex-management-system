@@ -360,7 +360,7 @@ console.log(selectedRow, "selectedRow")
                   as="h3"
                   className="flex items-center justify-between font-bold font-inter text-16 leading-30 text-dark"
                 >
-                  Add Order Type
+                  Edit Order Type
                   <XCircleIcon
                     onClick={closeModal}
                     className="w-6 h-6 cursor-pointer fill-icon"
