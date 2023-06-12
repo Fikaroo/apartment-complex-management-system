@@ -40,15 +40,17 @@ const OrderTypeModal = ({
   selectedRow,
   mutate,
 }: Props) => {
+   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const [paymentType, setPaymentType] = useState("false");
   const [priceType, setPriceType] = useState("false");
 console.log(selectedRow, "selectedRow")
   const handleSubmit = async (values: Values) => {
+        setIsButtonDisabled(true);
     const parsedValues = {
       ...values,
       paymentType: values.paymentType === "true",
       prepaymentType: parseInt(values.prepaymentType ),
-      priceType: parseInt(values.prepaymentType ),
+      priceType: parseInt(values.priceType ),
     };
     
 
@@ -63,14 +65,16 @@ console.log(selectedRow, "selectedRow")
     alert(res);
     setPaymentType("false");
     setPriceType("false");
+    setIsButtonDisabled(false);
   };
 
     const handleEdit = async (values: Values) => {
+      setIsButtonDisabled(true);
       const parsedValues = {
         ...values,
       paymentType: values.paymentType === "true",
       prepaymentType: parseInt(values.prepaymentType ),
-      priceType: parseInt(values.prepaymentType ),
+      priceType: parseInt(values.priceType),
         id: selectedRow.id,
       };
 
@@ -83,9 +87,11 @@ console.log(selectedRow, "selectedRow")
       );
 
       alert(res);
+      setIsButtonDisabled(false);
     };
 
   const deleteObject = async (deleteId: any) => {
+    setIsButtonDisabled(true);
     const res = await useGetResponse(
       Delete.user("/api/OrderTypeAdmin/Delete", {
         arg: { deleteId },
@@ -95,6 +101,7 @@ console.log(selectedRow, "selectedRow")
     );
 
     alert(res);
+    setIsButtonDisabled(false);
   };
 
   const handleDelete = () => {
@@ -198,7 +205,7 @@ console.log(selectedRow, "selectedRow")
                             </Field>
                           </div>
                         </div>
-                        {paymentType !== "false" && (
+                        {paymentType === "true" && (
                           <>
                             {" "}
                             <div className="flex flex-row items-center justify-between mt-10 font-bold font-inter text-16 leading-30 text-dark">
@@ -336,6 +343,7 @@ console.log(selectedRow, "selectedRow")
                         <div className="flex items-center justify-around w-full mt-10 font-bold font-inter text-16 leading-30 text-dark">
                           <button
                             type="submit"
+                            disabled={isButtonDisabled}
                             className="flex items-center justify-center w-1/4 px-2 py-4 text-sm font-medium text-white border border-transparent rounded-full bg-primary hover:bg-primary-200 focus:outline-none"
                           >
                             Əlavə et
@@ -416,7 +424,7 @@ console.log(selectedRow, "selectedRow")
                         </Field>
                       </div>
                     </div>
-                    {selectedRow.paymentType !== false && (
+                    {selectedRow.paymentType === true || paymentType==="true" ? (
                       <>
                         {" "}
                         <div className="flex flex-row items-center justify-between mt-10 font-bold font-inter text-16 leading-30 text-dark">
@@ -475,7 +483,7 @@ console.log(selectedRow, "selectedRow")
                             </Field>
                           </div>
                         </div>
-                        {selectedRow.priceType === 1 && (
+                        {selectedRow.priceType === 1 || priceType==="1" && (
                           <>
                             <div className="flex flex-row items-center justify-between mt-10 font-bold font-inter text-16 leading-30 text-dark">
                               <div className="w-1/2">
@@ -550,20 +558,23 @@ console.log(selectedRow, "selectedRow")
                           </>
                         )}
                       </>
-                    )}
+                    ):null}
                     <div className="flex items-center justify-around w-full mt-10 font-bold font-inter text-16 leading-30 text-dark">
                     <button
                               type="button"
                               className="inline-flex items-center justify-center w-1/4 px-2 py-4 text-sm font-medium text-red-400 rounded-full outline font-inter"
                               onClick={handleDelete}
+                              disabled={isButtonDisabled}
                             >
                               Delete
                             </button>
                             <button
                               type="submit"
+                              disabled={isButtonDisabled}
                               className="flex items-center justify-center w-1/4 px-2 py-4 text-sm font-medium text-white border border-transparent rounded-full bg-primary hover:bg-primary-200 focus:outline-none"
                             >
                               Edit
+                           
                             </button>
                     </div>
                   </Form>

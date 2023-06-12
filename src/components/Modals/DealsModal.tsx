@@ -31,6 +31,7 @@ type Values = {
   appUserId: string;
   actualDeadline: string;
   normativeDeadline: string;
+  isAccident:string
 };
 
 const DealsModal: React.FC<Props> = ({
@@ -43,8 +44,10 @@ const DealsModal: React.FC<Props> = ({
 }) => {
   const [isOpenSub, setIsOpenSub] = useState<boolean>(false);
 
-  
- 
+  const [employee,setEmployee] = useState<any>({}); 
+  console.log(employee,"employee")
+  console.log(employee?.id,"employeedd")
+ console.log(selectedRow,"selectedRow")
   
   const closeModalSub = (): void => {
     setIsOpenSub(false);
@@ -85,6 +88,8 @@ const DealsModal: React.FC<Props> = ({
       priorityId: parseInt(values.priorityId),
       statusId: parseInt(values.statusId),
       orderClassId: parseInt(values.orderClassId),
+      appUserId: employee?.id || "",
+      isAccident:values.isAccident === "true"
     };
     const res = await useGetResponse(
       CreateDeal.user("/api/OrderAdmin/Create", {
@@ -95,6 +100,7 @@ const DealsModal: React.FC<Props> = ({
     );
 
     alert(res);
+    setEmployee({});
   };
   const handleEdit = async (values: Values) => {
     const parsedValues = {
@@ -104,6 +110,8 @@ const DealsModal: React.FC<Props> = ({
       priorityId: parseInt(values.priorityId),
       statusId: parseInt(values.statusId),
       orderClassId: parseInt(values.orderClassId),
+      appUserId: employee?.id || "",
+      isAccident:values.isAccident === "true",
       id: selectedRow.id,
     };
     
@@ -214,9 +222,10 @@ const DealsModal: React.FC<Props> = ({
                         orderSourceId: "",
                         priorityId: "",
                         orderClassId: "",
-                        appUserId: "",
+                        appUserId: employee?.fullName ||"",
                         actualDeadline: "",
                         normativeDeadline: "",
+                        isAccident:"true"
                       }}
                       onSubmit={handleSubmit}
                     >
@@ -267,7 +276,10 @@ const DealsModal: React.FC<Props> = ({
                                 type="text"
                                 className="mt-3 w-full rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
                                 name="appUserId"
-                              />
+                                value={employee?.fullName}
+                                disabled
+                                />
+                             
                               <ChevronDownIcon
                                 className="h-5 w-5 text-gray-400 absolute top-[50%] right-4 cursor-pointer"
                                 onClick={openModalSub}
@@ -402,6 +414,25 @@ const DealsModal: React.FC<Props> = ({
                               required
                             ></Field>
                           </div>
+                          <div className="w-[48%]">
+                            <label
+                              htmlFor="isAccident"
+                              className="inline-flex items-center w-1/2 justify-star"
+                            >
+                           Is Accident
+                            </label>
+                            <Field
+                              as="select"
+                              name="isAccident"
+                              id="isAccident"
+                              className="mt-3 w-[95%] rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
+                              required
+                            >
+                              <option value="-1">Choose</option>
+                              <option value="true">Yes</option>
+                              <option value="false">No</option>
+                            </Field>
+                          </div>
                         </div>
                         <div className="flex w-full items-center justify-around mt-10 font-bold font-inter text-16 leading-30 text-dark">
                           <button
@@ -437,6 +468,7 @@ const DealsModal: React.FC<Props> = ({
                         appUserId: selectedRow?.appUserId || "",
                         actualDeadline: selectedRow?.actualDeadline || "",
                         normativeDeadline: selectedRow?.normativeDeadline || "",
+                        isAccident: selectedRow?.isAccident || "",
                       }}
                       onSubmit={handleEdit}
                     >
@@ -474,7 +506,7 @@ const DealsModal: React.FC<Props> = ({
                         </div>
 
                         <div className=" w-full flex items-center flex-row justify-between mt-5 font-bold font-inter text-16 leading-30 text-dark">
-                          <div className="w-[48%]">
+                        <div className="w-[48%]">
                             <label
                               htmlFor="appUserId"
                               className="inline-flex  justify-star items-center  w-1/2"
@@ -486,7 +518,10 @@ const DealsModal: React.FC<Props> = ({
                                 type="text"
                                 className="mt-3 w-full rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
                                 name="appUserId"
-                              />
+                                value={employee?.fullName}
+                                disabled
+                                />
+                             
                               <ChevronDownIcon
                                 className="h-5 w-5 text-gray-400 absolute top-[50%] right-4 cursor-pointer"
                                 onClick={openModalSub}
@@ -621,6 +656,25 @@ const DealsModal: React.FC<Props> = ({
                               required
                             ></Field>
                           </div>
+                          <div className="w-[48%]">
+                            <label
+                              htmlFor="isAccident"
+                              className="inline-flex items-center w-1/2 justify-star"
+                            >
+                           Is Accident
+                            </label>
+                            <Field
+                              as="select"
+                              name="isAccident"
+                              id="isAccident"
+                              className="mt-3 w-[95%] rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
+                              required
+                            >
+                              <option value="-1">Choose</option>
+                              <option value="true">Yes</option>
+                              <option value="false">No</option>
+                            </Field>
+                          </div>
                         </div>
                         <div className="flex w-full items-center justify-around mt-10 font-bold font-inter text-16 leading-30 text-dark">
                           <button
@@ -646,7 +700,7 @@ const DealsModal: React.FC<Props> = ({
           </div>
         </Dialog>
       </Transition>
-      <DealsSubModal isOpenSub={isOpenSub} closeModalSub={closeModalSub} />
+      <DealsSubModal isOpenSub={isOpenSub} closeModalSub={closeModalSub} setEmployee={setEmployee} />
     </div>
   );
 };

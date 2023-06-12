@@ -5,6 +5,7 @@ import { Fragment, useState } from "react";
 import { RegisterUser } from "../../api";
 import { Formik, Field, Form } from "formik";
 import useSWR from "swr";
+import { ErrorMessage } from "formik";
 import useGetResponse from "../../hooks/useGetResponse";
 import { GetAll } from "../../api";
 import { EditUser } from "../../api";
@@ -167,6 +168,14 @@ const UserModal: React.FC<Props> = ({
                         customerStatusId: "",
                         proportion: "",
                         apartmentId: "",
+                      }}
+                      validate={(values) => {
+                        const errors: Partial<Values> = {};
+                        if (values.propertyTypeId === "-1" || values.customerStatusId ==="-1" || values.apartmentId === "-1") {
+                          errors.apartmentId = "Please select an option";
+                        }
+                        // Add additional validation logic if needed
+                        return errors;
                       }}
                       onSubmit={handleSubmit}
                     >
