@@ -112,7 +112,7 @@ const EmployeesModal = ({
 
   const deleteObject = async (deleteId: string) => {
     const res = await useGetResponse(
-      Delete.user(`/api/Employees/Delete?employeeId=`, {
+      Delete.user(`/api/Employees/Delete`, {
         arg: {
           deleteId,
         },

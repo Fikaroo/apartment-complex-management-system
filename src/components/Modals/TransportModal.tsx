@@ -79,7 +79,7 @@ const TransportModal = ({
 
   const deleteObject = async (deleteId: any) => {
     const res = await useGetResponse(
-      Delete.user(`/api/Transport/Delete/${deleteId}`, {
+      Delete.user(`/api/Transport/Delete`, {
         arg: { deleteId },
       }),
       mutate,

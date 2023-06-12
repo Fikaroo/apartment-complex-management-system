@@ -2,41 +2,23 @@ import { Dialog, Transition } from "@headlessui/react";
 import { Fragment, useState } from "react";
 import { XCircleIcon } from "@heroicons/react/24/solid";
 import { ArrowRightIcon } from "@heroicons/react/24/outline";
+import { GetAll } from "../../api";
+import useSWR, { mutate } from "swr";
 
 type Props = {
   isOpenSub: boolean;
   closeModalSub: () => void;
+  setEmployee: any;
 };
-const array = [
-  { id: 1, name: "Aysel Memmedova", email: "aysel@gmail.com" },
-  {
-    id: 2,
-    name: "Aysel Memmedova",
-    email: "aysel@gmail.com",
-  },
-  {
-    id: 3,
-    name: "Aysel Memmedova",
-    email: "aysel@gmail.com",
-  },
-  {
-    id: 4,
-    name: "Aysel Memmedova",
-    email: "aysel@gmail.com",
-  },
-  {
-    id: 5,
-    name: "Aysel Memmedova",
-    email: "aysel@gmail.com",
-  },
-  {
-    id: 6,
-    name: "Aysel Memmedova",
-    email: "aysel@gmail.com",
-  },
-  { id: 7, name: "Aysel Memmedova", email: "aysel@gmail.com" },
-];
-const DealsSubModal: React.FC<Props> = ({ isOpenSub, closeModalSub }) => {
+
+
+const DealsSubModal: React.FC<Props> = ({ isOpenSub, closeModalSub,setEmployee }) => {
+  const {
+    data: dataEmployee,
+    error: errorEmployee,
+    isLoading: isLoadingEmployee,
+  } = useSWR("/api/Employees/GetAll", (key) => GetAll.user(key));
+ 
   return (
     <Fragment>
       <Transition appear show={isOpenSub} as={Fragment}>
@@ -76,33 +58,33 @@ const DealsSubModal: React.FC<Props> = ({ isOpenSub, closeModalSub }) => {
                     />
                   </Dialog.Title>
                   <div className="flex flex-col">
-                    {array.map((item) => (
+                    {dataEmployee?.data?.map((item: any) => (
                       <div
                         key={item.id}
                         className="mt-4 flex items-center justify-between"
                       >
-                        <div className="flex justify-between items-start w-1/2">
-                          {" "}
-                          <div className="w-[40px] h-[40px]">
-                            <img src="/Avatar.svg" alt="" />
+                        <div className="flex justify-between items-start w-full">
+                       
+                          <div className="w-[20%]">
+                            <img className="w-[40px] h-[40px] rounded-full object-contain" src={item.image} alt="" />
                           </div>
-                          <div className="flex flex-col items-start">
+                          <div className=" w-[70%] flex flex-col items-start justify-start">
                             <p className="font-bold font-inter text-[16px] leading-30 text-dark">
-                              {item.name}
+                              {item.fullName}
                             </p>
                             <p className="font-medium font-inter text-[14px] leading-30 text-icon text-start">
-                              {item.email}
+                              {item.jobPosition}
                             </p>
                           </div>
                         </div>
-                        <div className="w-1/2 flex justify-end items-center">
+                        <div className="w-1/2 flex justify-end items-center" onClick={()=>{setEmployee(item);closeModalSub()}}>
                           <ArrowRightIcon className="w-6 h-6 cursor-pointer fill-primary text-primary " />
                         </div>
                       </div>
                     ))}
-                    <p className="mt-4 font-medium font-inter text-[16px] leading-30 text-primary text-center cursor-pointer">
+                    {/* <p className="mt-4 font-medium font-inter text-[16px] leading-30 text-primary text-center cursor-pointer">
                       Daha çox
-                    </p>
+                    </p> */}
                   </div>
                 </Dialog.Panel>
               </Transition.Child>

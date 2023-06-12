@@ -165,7 +165,7 @@ export const DeleteUser = {
     }
   ) => {
     console.log(arg, "argg");
-    const { data } = await admin.delete(`${path}?userId=${arg.deleteId}`, {
+    const { data } = await admin.delete(`${path}/${arg.deleteId}`, {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("user-token")}`,
       },
@@ -451,7 +451,7 @@ export const DeleteEmployees = {
       arg: string;
     }
   ) => {
-    const { data } = await admin.delete(`${path}?employeeId=${arg}`, {
+    const { data } = await admin.delete(`${path}/${arg}`, {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("user-token")}`,
       },
