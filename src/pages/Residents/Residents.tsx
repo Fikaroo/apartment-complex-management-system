@@ -62,24 +62,21 @@ const Residents = () => {
       id: 3,
       title: "Surname",
     },
+   
     {
       id: 4,
-      title: "FatherName",
-    },
-    {
-      id: 5,
       title: "Phone Number",
     },
     {
-      id: 6,
+      id: 5,
       title: "Email",
     },
     {
-      id: 7,
+      id: 6,
       title: "Company Name",
     },
     {
-      id: 8,
+      id: 7,
       title: "Edit",
     },
   ];

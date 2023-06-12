@@ -12,6 +12,7 @@ import { CreateDeal } from "../../api";
 import { Delete } from "../../api";
 import { EditDeal } from "../../api";
 import useGetResponse from "../../hooks/useGetResponse";
+import { GetAll } from "../../api";
 
 type Props = {
   isOpen: boolean;
@@ -22,16 +23,17 @@ type Props = {
   mutate: any;
 };
 type Values = {
-  description: string;
-  statusId: string;
-  orderTypeId: string;
-  orderSourceId: string;
-  priorityId: string;
-  orderClassId: string;
-  appUserId: string;
-  actualDeadline: string;
-  normativeDeadline: string;
-  isAccident: string;
+  Description: string;
+  OrderStatusId: string;
+  OrderTypeId: string;
+  OrderSourceId: string;
+  PriorityId: string;
+  OrderClassId: string;
+  AppUserId: string;
+  ActualDeadline: string;
+  NormativeDeadline: string;
+  IsAccident: string;
+  Image: any;
 };
 
 const DealsModal: React.FC<Props> = ({
@@ -43,6 +45,11 @@ const DealsModal: React.FC<Props> = ({
   mutate,
 }) => {
   const [isOpenSub, setIsOpenSub] = useState<boolean>(false);
+  const [selectedImage, setSelectedImage] = useState(null);
+  const handleChange = (event: any) => {
+    const file = event.target.files[0];
+    setSelectedImage(file);
+  };
 
   const [employee, setEmployee] = useState<any>({});
   console.log(employee, "employee");
@@ -62,7 +69,7 @@ const DealsModal: React.FC<Props> = ({
 
     const parsedValues = {
       ...values,
-      actualDeadline: new Date(values.actualDeadline)
+      ActualDeadline: new Date(values.ActualDeadline)
         .toLocaleDateString("en-GB", {
           day: "2-digit",
           month: "2-digit",
@@ -71,7 +78,7 @@ const DealsModal: React.FC<Props> = ({
         .split("/")
         .reverse()
         .join("-"),
-      normativeDeadline: new Date(values.normativeDeadline)
+      NormativeDeadline: new Date(values.NormativeDeadline)
         .toLocaleDateString("en-GB", {
           day: "2-digit",
           month: "2-digit",
@@ -80,17 +87,31 @@ const DealsModal: React.FC<Props> = ({
         .split("/")
         .reverse()
         .join("-"),
-      orderSourceId: parseInt(values.orderSourceId),
-      orderTypeId: parseInt(values.orderTypeId),
-      priorityId: parseInt(values.priorityId),
-      statusId: parseInt(values.statusId),
-      orderClassId: parseInt(values.orderClassId),
-      appUserId: employee?.id || "",
-      isAccident: values.isAccident === "true",
+      OrderSourceId: Number(values.OrderSourceId),
+      OrderTypeId: Number(values.OrderTypeId),
+      PriorityId: Number(values.PriorityId),
+      OrderStatusId: Number(values.OrderStatusId),
+      OrderClassId: Number(values.OrderClassId),
+      AppUserId: employee?.id || "",
+      IsAccident: values.IsAccident === "true",
     };
+    const formData = new FormData();
+    formData.append("Description", parsedValues.Description);
+    if (selectedImage !== null) {
+      formData.append("Image", selectedImage);
+    }
+    formData.append("OrderStatusId", String(parsedValues.OrderStatusId));
+    formData.append("OrderTypeId", String(parsedValues.OrderTypeId));
+    formData.append("PriorityId", String(parsedValues.PriorityId));
+    formData.append("OrderClassId", String(parsedValues.OrderClassId));
+    formData.append("OrderSourceId", String(parsedValues.OrderSourceId));
+    formData.append("AppUserId", String(parsedValues.AppUserId));
+    formData.append("ActualDeadline", parsedValues.ActualDeadline);
+    formData.append("NormativeDeadline", parsedValues.NormativeDeadline);
+    formData.append("IsAccident", String(parsedValues.IsAccident));
     const res = await useGetResponse(
       CreateDeal.user("/api/OrderAdmin/Create", {
-        arg: parsedValues,
+        arg: formData,
       }),
       mutate,
       closeModal
@@ -102,19 +123,56 @@ const DealsModal: React.FC<Props> = ({
   const handleEdit = async (values: Values) => {
     const parsedValues = {
       ...values,
-      orderSourceId: parseInt(values.orderSourceId),
-      orderTypeId: parseInt(values.orderTypeId),
-      priorityId: parseInt(values.priorityId),
-      statusId: parseInt(values.statusId),
-      orderClassId: parseInt(values.orderClassId),
-      appUserId: employee?.id || "",
-      isAccident: values.isAccident === "true",
-      id: selectedRow.id,
+      ActualDeadline: new Date(values.ActualDeadline)
+        .toLocaleDateString("en-GB", {
+          day: "2-digit",
+          month: "2-digit",
+          year: "numeric",
+        })
+        .split("/")
+        .reverse()
+        .join("-"),
+      NormativeDeadline: new Date(values.NormativeDeadline)
+        .toLocaleDateString("en-GB", {
+          day: "2-digit",
+          month: "2-digit",
+          year: "numeric",
+        })
+        .split("/")
+        .reverse()
+        .join("-"),
+      OrderSourceId: Number(values.OrderSourceId),
+      OrderTypeId: Number(values.OrderTypeId),
+      PriorityId: Number(values.PriorityId),
+      OrderStatusId: Number(values.OrderStatusId),
+      OrderClassId: Number(values.OrderClassId),
+      AppUserId: employee?.id || "",
+      IsAccident: values.IsAccident === "true",
     };
-
+    const formData = new FormData();
+    formData.append("Description", parsedValues.Description);
+    if (selectedImage !== null) {
+      formData.append("Image", selectedImage);
+    } else if (selectedRow.image) {
+      console.log("else if");
+      const response = await fetch(selectedRow.image);
+      console.log(response, "response");
+      const imageBlob = await response.blob();
+      console.log(imageBlob, "imageBlob");
+      formData.append("Image", imageBlob, "image.png");
+    }
+    formData.append("OrderStatusId", String(parsedValues.OrderStatusId));
+    formData.append("OrderTypeId", String(parsedValues.OrderTypeId));
+    formData.append("PriorityId", String(parsedValues.PriorityId));
+    formData.append("OrderClassId", String(parsedValues.OrderClassId));
+    formData.append("OrderSourceId", String(parsedValues.OrderSourceId));
+    formData.append("AppUserId", String(parsedValues.AppUserId));
+    formData.append("ActualDeadline", parsedValues.ActualDeadline);
+    formData.append("NormativeDeadline", parsedValues.NormativeDeadline);
+    formData.append("IsAccident", String(parsedValues.IsAccident));
     const res = await useGetResponse(
       EditDeal.user("/api/OrderAdmin/Update", {
-        arg: parsedValues,
+        arg: formData,
       }),
       mutate,
       closeModal
@@ -137,40 +195,32 @@ const DealsModal: React.FC<Props> = ({
   const handleDelete = () => {
     deleteObject(deleteId);
   };
+  const {
+    data: dataOrderType,
+    error: errorOrderType,
+    isLoading: isLoadingOrderType,
+  } = useSWR("/api/OrderType/GetAll", (key) => GetAll.user(key));
+  const {
+    data: dataOrderSource,
+    error: errorOrderSource,
+    isLoading: isLoadingOrderSource,
+  } = useSWR("/api/OrderSource/GetAll", (key) => GetAll.user(key));
 
-  const options = [
-    { id: 1, name: "Yanğinsöndürmə sistemləri" },
-    { id: 2, name: "Su catdirilmasi" },
-    { id: 3, name: "Avtomatik Qapi" },
-    { id: 4, name: "Santexnik, istilik, kanalizasiya+" },
-  ];
-  const optionsSource = [
-    { id: 1, name: "Şəxsi Ziyarət" },
-    { id: 2, name: "Sosial Sebeke+" },
-  ];
-  const optionsPriority = [
-    { id: 0, name: "Low" },
-    { id: 1, name: "Normal+" },
-    { id: 2, name: "High" },
-    { id: 3, name: "Critical" },
-  ];
-  const optionsClass = [
-    { id: 1, name: "Client" },
-    { id: 2, name: "Planned+" },
-  ];
-  const optionsStatus = [
-    { id: 0, name: "NewOrder+" },
-    { id: 1, name: "Appointed" },
-    { id: 2, name: "Inprogress" },
-    { id: 3, name: "OnPause" },
-    { id: 4, name: "OnConfirmation" },
-    { id: 5, name: "Completed" },
-    { id: 6, name: "Rejected" },
-    { id: 7, name: "Returned" },
-    { id: 8, name: "Cancelled" },
-    { id: 9, name: "Closed" },
-    { id: 10, name: "EnteredIncorrectly" },
-  ];
+  const {
+    data: dataOrderClass,
+    error: errorOrderClass,
+    isLoading: isLoadingOrderClass,
+  } = useSWR("/api/OrderClass/GetAll", (key) => GetAll.user(key));
+  const {
+    data: dataOrderPriority,
+    error: errorOrderPriority,
+    isLoading: isLoadingOrderPriority,
+  } = useSWR("/api/OrderPriority/GetAll", (key) => GetAll.user(key));
+  const {
+    data: dataOrderStatus,
+    error: errorOrderStatus,
+    isLoading: isLoadingOrderStatus,
+  } = useSWR("/api/OrderStatus/GetAll", (key) => GetAll.user(key));
 
   return (
     <div>
@@ -213,16 +263,17 @@ const DealsModal: React.FC<Props> = ({
                     </Dialog.Title>
                     <Formik
                       initialValues={{
-                        description: "",
-                        statusId: "",
-                        orderTypeId: "",
-                        orderSourceId: "",
-                        priorityId: "",
-                        orderClassId: "",
-                        appUserId: employee?.fullName || "",
-                        actualDeadline: "",
-                        normativeDeadline: "",
-                        isAccident: "true",
+                        Description: "",
+                        OrderStatusId: "-1",
+                        OrderTypeId: "-1",
+                        OrderSourceId: "-1",
+                        PriorityId: "-1",
+                        OrderClassId: "-1",
+                        AppUserId: employee?.fullName || "",
+                        IsAccident: "false",
+                        ActualDeadline: "",
+                        NormativeDeadline: "",
+                        Image: null,
                       }}
                       onSubmit={handleSubmit}
                     >
@@ -231,30 +282,30 @@ const DealsModal: React.FC<Props> = ({
                           <div className="w-[48%]">
                             {" "}
                             <label
-                              htmlFor="actualDeadline"
+                              htmlFor="ActualDeadline"
                               className="flex items-center justify-between mt-10 font-bold font-inter text-16 leading-30 text-dark"
                             >
                               Actual Deadline
                             </label>
                             <Field
                               type="date"
-                              className="flex items-center justify-center w-full px-5 py-2 mt-3 font-medium border rounded-lg border-line bg-background focus:outline-none text-md"
-                              name="actualDeadline"
+                              className="mt-3 w-full  rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none  font-medium text-md"
+                              name="ActualDeadline"
                               required
                             />
                           </div>
                           <div className="w-[48%]">
                             {" "}
                             <label
-                              htmlFor="normativeDeadline"
+                              htmlFor="NormativeDeadline"
                               className="flex items-center justify-between mt-10 font-bold font-inter text-16 leading-30 text-dark"
                             >
                               Normative Deadline
                             </label>
                             <Field
                               type="date"
-                              className="flex items-center justify-center w-full px-5 py-2 mt-3 font-medium border rounded-lg border-line bg-background focus:outline-none text-md"
-                              name="normativeDeadline"
+                              className="mt-3 w-full  rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none  font-medium text-md"
+                              name="NormativeDeadline"
                               required
                             />
                           </div>
@@ -263,16 +314,16 @@ const DealsModal: React.FC<Props> = ({
                         <div className="flex flex-row items-center justify-between w-full mt-5 font-bold  font-inter text-16 leading-30 text-dark">
                           <div className="w-[48%]">
                             <label
-                              htmlFor="appUserId"
-                              className="inline-flex items-center w-1/2 justify-star"
+                              htmlFor="AppUserId"
+                              className="inline-flex  justify-star items-center  w-1/2"
                             >
                               İcraçı
                             </label>
                             <div className="relative flex items-center justify-between">
                               <Field
                                 type="text"
-                                className="flex items-center justify-center w-full px-5 py-2 mt-3 font-medium border rounded-lg border-line bg-background focus:outline-none text-md"
-                                name="appUserId"
+                                className="mt-3 w-full rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
+                                name="AppUserId"
                                 value={employee?.fullName}
                                 disabled
                               />
@@ -285,20 +336,20 @@ const DealsModal: React.FC<Props> = ({
                           </div>
                           <div className="w-[48%]">
                             <label
-                              htmlFor="orderTypeId"
-                              className="inline-flex items-center w-1/2 justify-star"
+                              htmlFor="OrderTypeId"
+                              className="inline-flex  justify-star items-center  w-1/2"
                             >
                               Order Type
                             </label>
                             <Field
                               as="select"
-                              id="orderTypeId"
-                              className="flex items-center justify-center w-full px-5 py-2 mt-3 font-medium border rounded-lg border-line bg-background focus:outline-none text-md hover:outline-none"
-                              name="orderTypeId"
+                              id="OrderTypeId"
+                              className="mt-3 w-full rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md hover:outline-none"
+                              name="OrderTypeId"
                               required
                             >
                               <option value="-1">Choose</option>
-                              {options.map((item) => (
+                              {dataOrderType?.data?.map((item: any) => (
                                 <option value={item.id}>{item.name}</option>
                               ))}
                             </Field>
@@ -307,21 +358,21 @@ const DealsModal: React.FC<Props> = ({
                         <div className="flex flex-row items-center justify-between w-full mt-5 font-bold  font-inter text-16 leading-30 text-dark">
                           <div className="w-[48%]">
                             <label
-                              htmlFor="orderSourceId"
-                              className="inline-flex items-center w-1/2 justify-star"
+                              htmlFor="OrderSourceId"
+                              className="inline-flex  justify-star items-center  w-1/2"
                             >
                               Order Source
                             </label>
                             <div className="relative flex items-center justify-between">
                               <Field
                                 as="select"
-                                className="flex items-center justify-center w-full px-5 py-2 mt-3 font-medium border rounded-lg border-line bg-background focus:outline-none text-md hover:outline-none"
-                                id="orderSourceId"
-                                name="orderSourceId"
+                                className="mt-3 w-full rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md hover:outline-none"
+                                id="OrderSourceId"
+                                name="OrderSourceId"
                                 required
                               >
                                 <option value="-1">Choose</option>
-                                {optionsSource.map((item) => (
+                                {dataOrderSource?.data?.map((item: any) => (
                                   <option value={item.id}>{item.name}</option>
                                 ))}
                               </Field>
@@ -329,20 +380,20 @@ const DealsModal: React.FC<Props> = ({
                           </div>
                           <div className="w-[48%]">
                             <label
-                              htmlFor="priorityId"
-                              className="inline-flex items-center w-1/2 justify-star"
+                              htmlFor="PriorityId"
+                              className="inline-flex  justify-star items-center  w-1/2"
                             >
                               Priorty
                             </label>
                             <Field
                               className="flex items-center justify-center w-full px-5 py-2 mt-3 font-medium border rounded-lg border-line bg-background focus:outline-none text-md hover:outline-none"
                               as="select"
-                              id="priorityId"
-                              name="priorityId"
+                              id="PriorityId"
+                              name="PriorityId"
                               required
                             >
                               <option value="-1">Choose</option>
-                              {optionsPriority.map((item) => (
+                              {dataOrderPriority?.data?.map((item: any) => (
                                 <option value={item.id}>{item.name}</option>
                               ))}
                             </Field>
@@ -351,8 +402,8 @@ const DealsModal: React.FC<Props> = ({
                         <div className="flex flex-row items-center justify-between w-full mt-5 font-bold  font-inter text-16 leading-30 text-dark">
                           <div className="w-[48%]">
                             <label
-                              htmlFor="orderClassId"
-                              className="inline-flex items-center w-1/2 justify-star"
+                              htmlFor="OrderClassId"
+                              className="inline-flex  justify-star items-center  w-1/2"
                             >
                               Order Class
                             </label>
@@ -360,12 +411,12 @@ const DealsModal: React.FC<Props> = ({
                               <Field
                                 className="flex items-center justify-center w-full px-5 py-2 mt-3 font-medium border rounded-lg border-line bg-background focus:outline-none text-md hover:outline-none"
                                 as="select"
-                                name="orderClassId"
-                                id="orderClassId"
+                                name="OrderClassId"
+                                id="OrderClassId"
                                 required
                               >
                                 <option value="-1">Choose</option>
-                                {optionsClass.map((item) => (
+                                {dataOrderClass?.data?.map((item: any) => (
                                   <option value={item.id}>{item.name}</option>
                                 ))}
                               </Field>
@@ -373,8 +424,8 @@ const DealsModal: React.FC<Props> = ({
                           </div>
                           <div className="w-[48%]">
                             <label
-                              htmlFor="statusId"
-                              className="inline-flex items-center w-1/2 justify-star"
+                              htmlFor="OrderStatusId"
+                              className="inline-flex  justify-star items-center  w-1/2"
                             >
                               Status
                             </label>
@@ -382,12 +433,12 @@ const DealsModal: React.FC<Props> = ({
                             <Field
                               className="flex items-center justify-center w-full px-5 py-2 mt-3 font-medium border rounded-lg border-line bg-background focus:outline-none text-md hover:outline-none"
                               as="select"
-                              name="statusId"
-                              id="statusId"
+                              name="OrderStatusId"
+                              id="OrderStatusId"
                               required
                             >
                               <option value="-1">Choose</option>
-                              {optionsStatus.map((item) => (
+                              {dataOrderStatus?.data?.map((item: any) => (
                                 <option value={item.id}>{item.name}</option>
                               ))}
                             </Field>
@@ -397,8 +448,8 @@ const DealsModal: React.FC<Props> = ({
                         <div className="flex items-end justify-between w-full mt-5 font-bold font-inter text-16 leading-30 text-dark">
                           <div className="w-[48%]">
                             <label
-                              htmlFor="description"
-                              className="inline-flex items-center w-1/2 justify-star"
+                              htmlFor="Description"
+                              className="inline-flex  justify-star items-center  w-1/2"
                             >
                               Description
                             </label>
@@ -406,8 +457,8 @@ const DealsModal: React.FC<Props> = ({
                             <Field
                               className="mt-3 w-full min-h-[100px] rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md hover:outline-none"
                               as="textarea"
-                              name="description"
-                              id="description"
+                              name="Description"
+                              id="Description"
                               required
                             ></Field>
                           </div>
@@ -420,18 +471,51 @@ const DealsModal: React.FC<Props> = ({
                             </label>
                             <Field
                               as="select"
-                              name="isAccident"
-                              id="isAccident"
+                              name="IsAccident"
+                              id="IsAccident"
                               className="mt-3 w-[95%] rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
                               required
                             >
-                              <option value="-1">Choose</option>
+                              <option disabled value="-1">
+                                Choose
+                              </option>
                               <option value="true">Yes</option>
                               <option value="false">No</option>
                             </Field>
                           </div>
                         </div>
-                        <div className="flex items-center justify-around w-full mt-10 font-bold font-inter text-16 leading-30 text-dark">
+                        <div className="flex flex-row items-center justify-between w-full mt-5 font-bold font-inter text-16 leading-30 text-dark">
+                          <div className="w-[48%]">
+                            <label
+                              htmlFor="Image"
+                              className="inline-flex items-center w-1/2 justify-star"
+                            >
+                              Image
+                            </label>
+
+                            <input
+                              type="file"
+                              id="Image"
+                              name="Image"
+                              accept="image/*"
+                              onChange={handleChange}
+                              className="mt-3 w-[95%] rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
+                              required
+                            />
+                          </div>
+                          <div className="w-[48%] flex items-center justify-center">
+                            <div className="w-[140px] h-[100px] rounded-lg  object-cover object-center">
+                              {selectedImage && (
+                                <img
+                                  src={URL.createObjectURL(selectedImage)}
+                                  alt="Selected Image"
+                                  className="object-contain w-full h-full "
+                                />
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                        <div className="flex w-full items-center justify-around mt-10 font-bold font-inter text-16 leading-30 text-dark">
                           <button
                             type="submit"
                             className="flex items-center justify-center w-1/4 px-2 py-4 text-sm font-medium text-white border border-transparent rounded-full bg-primary hover:bg-primary-200 focus:outline-none"
@@ -448,7 +532,7 @@ const DealsModal: React.FC<Props> = ({
                       as="h3"
                       className="flex items-center justify-between font-bold font-inter text-16 leading-30 text-dark"
                     >
-                      Edit Deal
+                      Edit Order
                       <XCircleIcon
                         onClick={closeModal}
                         className="w-6 h-6 cursor-pointer fill-icon"
@@ -456,66 +540,92 @@ const DealsModal: React.FC<Props> = ({
                     </Dialog.Title>
                     <Formik
                       initialValues={{
-                        description: selectedRow?.description || "",
-                        statusId: selectedRow?.statusId || "",
-                        orderTypeId: selectedRow?.orderTypeId || "",
-                        orderSourceId: selectedRow?.orderSourceId || "",
-                        priorityId: selectedRow?.priorityId || "",
-                        orderClassId: selectedRow?.orderClassId || "",
-                        appUserId: selectedRow?.appUserId || "",
-                        actualDeadline: selectedRow?.actualDeadline || "",
-                        normativeDeadline: selectedRow?.normativeDeadline || "",
-                        isAccident: selectedRow?.isAccident || "",
+                        Description: selectedRow.description || "",
+                        OrderStatusId:
+                          dataOrderStatus?.data.find(
+                            (item: any) =>
+                              item.name === selectedRow?.orderStatusName
+                          )?.id || "-1",
+                        OrderTypeId:
+                          dataOrderType?.data.find(
+                            (item: any) =>
+                              item.name === selectedRow?.orderTypeName
+                          )?.id || "-1",
+                        OrderSourceId:
+                          dataOrderSource?.data.find(
+                            (item: any) =>
+                              item.name === selectedRow?.orderSourceName
+                          )?.id || "-1",
+                        PriorityId:
+                          dataOrderPriority?.data.find(
+                            (item: any) =>
+                              item.name === selectedRow?.orderPriorityName
+                          )?.id || "-1",
+                        OrderClassId:
+                          dataOrderClass?.data.find(
+                            (item: any) =>
+                              item.name === selectedRow?.orderClassName
+                          )?.id || "-1",
+                        AppUserId: selectedRow.appUserId || "",
+                        IsAccident: selectedRow.isAccident || "false",
+                        ActualDeadline: selectedRow.actualDeadline || "",
+                        NormativeDeadline: selectedRow.normativeDeadline || "",
+                        Image: null,
                       }}
                       onSubmit={handleEdit}
                     >
                       <Form>
-                        <div className="flex flex-row items-center justify-between w-full mt-5 font-bold  font-inter text-16 leading-30 text-dark">
+                        <div className=" w-full flex items-center flex-row justify-between mt-5 font-bold font-inter text-16 leading-30 text-dark">
                           <div className="w-[48%]">
                             {" "}
                             <label
-                              htmlFor="actualDeadline"
+                              htmlFor="ActualDeadline"
                               className="flex items-center justify-between mt-10 font-bold font-inter text-16 leading-30 text-dark"
                             >
                               Actual Deadline
                             </label>
                             <Field
                               type="date"
-                              className="flex items-center justify-center w-full px-5 py-2 mt-3 font-medium border rounded-lg border-line bg-background focus:outline-none text-md"
-                              name="actualDeadline"
+                              className="mt-3 w-full  rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none  font-medium text-md"
+                              name="ActualDeadline"
+                              required
                             />
                           </div>
                           <div className="w-[48%]">
                             {" "}
                             <label
-                              htmlFor="normativeDeadline"
+                              htmlFor="NormativeDeadline"
                               className="flex items-center justify-between mt-10 font-bold font-inter text-16 leading-30 text-dark"
                             >
                               Normative Deadline
                             </label>
                             <Field
                               type="date"
-                              className="flex items-center justify-center w-full px-5 py-2 mt-3 font-medium border rounded-lg border-line bg-background focus:outline-none text-md"
-                              name="normativeDeadline"
+                              className="mt-3 w-full  rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none  font-medium text-md"
+                              name="NormativeDeadline"
                               required
                             />
                           </div>
                         </div>
 
-                        <div className="flex flex-row items-center justify-between w-full mt-5 font-bold  font-inter text-16 leading-30 text-dark">
+                        <div className=" w-full flex items-center flex-row justify-between mt-5 font-bold font-inter text-16 leading-30 text-dark">
                           <div className="w-[48%]">
                             <label
-                              htmlFor="appUserId"
-                              className="inline-flex items-center w-1/2 justify-star"
+                              htmlFor="AppUserId"
+                              className="inline-flex  justify-star items-center  w-1/2"
                             >
                               İcraçı
                             </label>
-                            <div className="relative flex items-center justify-between">
+                            <div className="flex items-center justify-between relative">
                               <Field
                                 type="text"
-                                className="flex items-center justify-center w-full px-5 py-2 mt-3 font-medium border rounded-lg border-line bg-background focus:outline-none text-md"
-                                name="appUserId"
-                                value={employee?.fullName}
+                                className="mt-3 w-full rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
+                                name="AppUserId"
+                                value={
+                                  selectedRow.appUserName
+                                    ? selectedRow.appUserName
+                                    : employee?.fullName
+                                }
                                 disabled
                               />
 
@@ -527,43 +637,43 @@ const DealsModal: React.FC<Props> = ({
                           </div>
                           <div className="w-[48%]">
                             <label
-                              htmlFor="orderTypeId"
-                              className="inline-flex items-center w-1/2 justify-star"
+                              htmlFor="OrderTypeId"
+                              className="inline-flex  justify-star items-center  w-1/2"
                             >
                               Order Type
                             </label>
                             <Field
                               as="select"
-                              id="orderTypeId"
-                              className="flex items-center justify-center w-full px-5 py-2 mt-3 font-medium border rounded-lg border-line bg-background focus:outline-none text-md hover:outline-none"
-                              name="orderTypeId"
+                              id="OrderTypeId"
+                              className="mt-3 w-full rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md hover:outline-none"
+                              name="OrderTypeId"
                               required
                             >
                               <option value="-1">Choose</option>
-                              {options.map((item) => (
+                              {dataOrderType?.data?.map((item: any) => (
                                 <option value={item.id}>{item.name}</option>
                               ))}
                             </Field>
                           </div>
                         </div>
-                        <div className="flex flex-row items-center justify-between w-full mt-5 font-bold  font-inter text-16 leading-30 text-dark">
+                        <div className=" w-full flex items-center flex-row justify-between mt-5 font-bold font-inter text-16 leading-30 text-dark">
                           <div className="w-[48%]">
                             <label
-                              htmlFor="orderSourceId"
-                              className="inline-flex items-center w-1/2 justify-star"
+                              htmlFor="OrderSourceId"
+                              className="inline-flex  justify-star items-center  w-1/2"
                             >
                               Order Source
                             </label>
-                            <div className="relative flex items-center justify-between">
+                            <div className="flex items-center justify-between relative">
                               <Field
                                 as="select"
-                                className="flex items-center justify-center w-full px-5 py-2 mt-3 font-medium border rounded-lg border-line bg-background focus:outline-none text-md hover:outline-none"
-                                id="orderSourceId"
-                                name="orderSourceId"
+                                className="mt-3 w-full rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md hover:outline-none"
+                                id="OrderSourceId"
+                                name="OrderSourceId"
                                 required
                               >
                                 <option value="-1">Choose</option>
-                                {optionsSource.map((item) => (
+                                {dataOrderSource?.data?.map((item: any) => (
                                   <option value={item.id}>{item.name}</option>
                                 ))}
                               </Field>
@@ -571,43 +681,43 @@ const DealsModal: React.FC<Props> = ({
                           </div>
                           <div className="w-[48%]">
                             <label
-                              htmlFor="priorityId"
-                              className="inline-flex items-center w-1/2 justify-star"
+                              htmlFor="PriorityId"
+                              className="inline-flex  justify-star items-center  w-1/2"
                             >
                               Priorty
                             </label>
                             <Field
-                              className="flex items-center justify-center w-full px-5 py-2 mt-3 font-medium border rounded-lg border-line bg-background focus:outline-none text-md hover:outline-none"
+                              className="mt-3 w-full rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md hover:outline-none"
                               as="select"
-                              id="priorityId"
-                              name="priorityId"
+                              id="PriorityId"
+                              name="PriorityId"
                               required
                             >
                               <option value="-1">Choose</option>
-                              {optionsPriority.map((item) => (
+                              {dataOrderPriority?.data?.map((item: any) => (
                                 <option value={item.id}>{item.name}</option>
                               ))}
                             </Field>
                           </div>
                         </div>
-                        <div className="flex flex-row items-center justify-between w-full mt-5 font-bold  font-inter text-16 leading-30 text-dark">
+                        <div className=" w-full flex items-center flex-row justify-between mt-5 font-bold font-inter text-16 leading-30 text-dark">
                           <div className="w-[48%]">
                             <label
-                              htmlFor="orderClassId"
-                              className="inline-flex items-center w-1/2 justify-star"
+                              htmlFor="OrderClassId"
+                              className="inline-flex  justify-star items-center  w-1/2"
                             >
                               Order Class
                             </label>
-                            <div className="relative flex items-center justify-between">
+                            <div className="flex items-center justify-between relative">
                               <Field
-                                className="flex items-center justify-center w-full px-5 py-2 mt-3 font-medium border rounded-lg border-line bg-background focus:outline-none text-md hover:outline-none"
+                                className="mt-3 w-full rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md hover:outline-none"
                                 as="select"
-                                name="orderClassId"
-                                id="orderClassId"
+                                name="OrderClassId"
+                                id="OrderClassId"
                                 required
                               >
                                 <option value="-1">Choose</option>
-                                {optionsClass.map((item) => (
+                                {dataOrderClass?.data?.map((item: any) => (
                                   <option value={item.id}>{item.name}</option>
                                 ))}
                               </Field>
@@ -615,32 +725,32 @@ const DealsModal: React.FC<Props> = ({
                           </div>
                           <div className="w-[48%]">
                             <label
-                              htmlFor="statusId"
-                              className="inline-flex items-center w-1/2 justify-star"
+                              htmlFor="OrderStatusId"
+                              className="inline-flex  justify-star items-center  w-1/2"
                             >
                               Status
                             </label>
 
                             <Field
-                              className="flex items-center justify-center w-full px-5 py-2 mt-3 font-medium border rounded-lg border-line bg-background focus:outline-none text-md hover:outline-none"
+                              className="mt-3 w-full rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md hover:outline-none"
                               as="select"
-                              name="statusId"
-                              id="statusId"
+                              name="OrderStatusId"
+                              id="OrderStatusId"
                               required
                             >
                               <option value="-1">Choose</option>
-                              {optionsStatus.map((item) => (
+                              {dataOrderStatus?.data?.map((item: any) => (
                                 <option value={item.id}>{item.name}</option>
                               ))}
                             </Field>
                           </div>
                         </div>
 
-                        <div className="flex items-end justify-between w-full mt-5 font-bold font-inter text-16 leading-30 text-dark">
+                        <div className="w-full  flex items-end justify-between  mt-5 font-bold font-inter text-16 leading-30 text-dark">
                           <div className="w-[48%]">
                             <label
-                              htmlFor="description"
-                              className="inline-flex items-center w-1/2 justify-star"
+                              htmlFor="Description"
+                              className="inline-flex  justify-star items-center  w-1/2"
                             >
                               Description
                             </label>
@@ -648,8 +758,8 @@ const DealsModal: React.FC<Props> = ({
                             <Field
                               className="mt-3 w-full min-h-[100px] rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md hover:outline-none"
                               as="textarea"
-                              name="description"
-                              id="description"
+                              name="Description"
+                              id="Description"
                               required
                             ></Field>
                           </div>
@@ -662,15 +772,53 @@ const DealsModal: React.FC<Props> = ({
                             </label>
                             <Field
                               as="select"
-                              name="isAccident"
-                              id="isAccident"
+                              name="IsAccident"
+                              id="IsAccident"
                               className="mt-3 w-[95%] rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
                               required
                             >
-                              <option value="-1">Choose</option>
+                              <option disabled value="-1">
+                                Choose
+                              </option>
                               <option value="true">Yes</option>
                               <option value="false">No</option>
                             </Field>
+                          </div>
+                        </div>
+                        <div className="flex flex-row items-center justify-between w-full mt-5 font-bold font-inter text-16 leading-30 text-dark">
+                          <div className="w-[48%]">
+                            <label
+                              htmlFor="Image"
+                              className="inline-flex items-center w-1/2 justify-star"
+                            >
+                              Image
+                            </label>
+
+                            <input
+                              type="file"
+                              id="Image"
+                              name="Image"
+                              accept="image/*"
+                              onChange={handleChange}
+                              className="mt-3 w-[95%] rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
+                            />
+                          </div>
+                          <div className="w-[48%] flex items-center justify-center">
+                            <div className="w-[140px] h-[100px] rounded-lg  object-cover object-center">
+                              {selectedImage && selectedImage ? (
+                                <img
+                                  src={URL.createObjectURL(selectedImage)}
+                                  alt="Selected Image"
+                                  className="object-contain w-full h-full "
+                                />
+                              ) : (
+                                <img
+                                  className="w-full h-full"
+                                  src={selectedRow.image}
+                                  alt=""
+                                />
+                              )}
+                            </div>
                           </div>
                         </div>
                         <div className="flex items-center justify-around w-full mt-10 font-bold font-inter text-16 leading-30 text-dark">

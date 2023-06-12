@@ -151,7 +151,7 @@ const UserModal: React.FC<Props> = ({
                       as="h3"
                       className="flex items-center justify-between font-bold font-inter text-16 leading-30 text-dark"
                     >
-                      Sakin əlavə et
+                    Add User
                       <XCircleIcon
                         onClick={closeModal}
                         className="w-6 h-6 cursor-pointer fill-icon"
@@ -269,7 +269,7 @@ const UserModal: React.FC<Props> = ({
                               className="mt-3 w-[95%]  rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none  font-medium text-md"
                               required
                             >
-                              <option value="-1">Choose</option>
+                              <option  value="-1">Choose</option>
                               {dataPropertyTypes?.data.map((item:any) => (
                                 <option value={item.id}>{item.name}</option>
                               ))}
@@ -360,7 +360,7 @@ const UserModal: React.FC<Props> = ({
                       as="h3"
                       className="flex items-center justify-between font-bold font-inter text-16 leading-30 text-dark"
                     >
-                      Sakin əlavə et
+          Edit User
                       <XCircleIcon
                         onClick={closeModal}
                         className="w-6 h-6 cursor-pointer fill-icon"

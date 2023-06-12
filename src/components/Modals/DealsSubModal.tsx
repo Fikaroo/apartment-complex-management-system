@@ -66,7 +66,7 @@ const DealsSubModal: React.FC<Props> = ({ isOpenSub, closeModalSub,setEmployee }
                         <div className="flex justify-between items-start w-full">
                        
                           <div className="w-[20%]">
-                            <img className="w-[40px] h-[40px] rounded-full object-contain" src={item.image} alt="" />
+                            <img className=" rounded-lg object-cover object-center" src={item.image} alt="" />
                           </div>
                           <div className=" w-[70%] flex flex-col items-start justify-start">
                             <p className="font-bold font-inter text-[16px] leading-30 text-dark">

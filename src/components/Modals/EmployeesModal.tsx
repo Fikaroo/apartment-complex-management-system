@@ -207,7 +207,7 @@ const EmployeesModal = ({
                       as="h3"
                       className="flex items-center justify-between font-bold font-inter text-16 leading-30 text-dark"
                     >
-                      Employee əlavə et
+                      Add Employee
                       <XCircleIcon
                         onClick={closeModal}
                         className="w-6 h-6 cursor-pointer fill-icon"
@@ -431,7 +431,7 @@ const EmployeesModal = ({
                                 name="vendorCompanyId"
                                 id="vendorCompanyId"
                                 className="flex items-center justify-center px-5 py-2 mt-3 font-medium border rounded-lg border-line bg-background focus:outline-none text-md"
-                                required
+                                // required
                               >
                                 <option value="" selected disabled>
                                   Choose
@@ -563,7 +563,7 @@ const EmployeesModal = ({
                       as="h3"
                       className="flex items-center justify-between font-bold font-inter text-16 leading-30 text-dark"
                     >
-                      Employees Edit
+                      Edit Employee
                       <XCircleIcon
                         onClick={closeModal}
                         className="w-6 h-6 cursor-pointer fill-icon"

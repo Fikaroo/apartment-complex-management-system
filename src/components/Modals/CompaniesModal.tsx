@@ -41,6 +41,12 @@ const CompaniesModal: React.FC<Props> = ({
   mutate,
 }) => {
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
+  const [selectedImage, setSelectedImage] = useState(null);
+  const handleChange = (event: any) => {
+    const file = event.target.files[0];
+    setSelectedImage(file);
+  };
+
   const {
     data: dataObjects,
     error: errorObjects,
@@ -59,8 +65,11 @@ const CompaniesModal: React.FC<Props> = ({
     formData.append("DirectorFatherName", parsedValues.DirectorFatherName);
     formData.append("Phonenumber", parsedValues.Phonenumber);
     formData.append("Email", parsedValues.Email);
-    if (parsedValues.Logo) {
-      formData.append("Logo", parsedValues.Logo);
+    // if(parsedValues.Logo){
+    //   formData.append("Logo", parsedValues.Logo);
+    // }
+    if (selectedImage !== null) {
+      formData.append("Logo", selectedImage);
     }
     formData.append("ObjectId", String(parsedValues.ObjectId));
     formData.append("CompanyName", parsedValues.CompanyName);
@@ -78,6 +87,8 @@ const CompaniesModal: React.FC<Props> = ({
     setIsButtonDisabled(false);
   };
   const handleEdit = async (values: Values) => {
+    setIsButtonDisabled(true);
+
     const parsedValues = {
       ...values,
       ObjectId: Number(values.ObjectId),
@@ -90,8 +101,8 @@ const CompaniesModal: React.FC<Props> = ({
     formData.append("DirectorFatherName", parsedValues.DirectorFatherName);
     formData.append("Phonenumber", parsedValues.Phonenumber);
     formData.append("Email", parsedValues.Email);
-    if (parsedValues.Logo) {
-      formData.append("Logo", parsedValues.Logo);
+    if (selectedImage !== null) {
+      formData.append("Logo", selectedImage);
     } else if (selectedRow.logo) {
       console.log("else if");
       const response = await fetch(selectedRow.logo);
@@ -113,6 +124,7 @@ const CompaniesModal: React.FC<Props> = ({
     );
 
     alert(res);
+    setIsButtonDisabled(false);
   };
 
   const deleteObject = async (deleteId: any) => {
@@ -179,7 +191,7 @@ const CompaniesModal: React.FC<Props> = ({
                         Email: "",
                         Logo: null,
                         ObjectId: "",
-                        CompanyName: "",
+                        CompanyName: "-1",
                         VOEN: "",
                         VIN: "",
                       }}
@@ -187,7 +199,7 @@ const CompaniesModal: React.FC<Props> = ({
                     >
                       {(formikProps) => (
                         <Form>
-                          <div className="flex flex-row items-center justify-between w-full mt-5 font-bold  font-inter text-16 leading-30 text-dark">
+                          <div className="flex flex-row items-center justify-between w-full mt-5 font-bold font-inter text-16 leading-30 text-dark">
                             <div className="w-[48%]">
                               {" "}
                               <label
@@ -253,45 +265,6 @@ const CompaniesModal: React.FC<Props> = ({
                                 type="text"
                                 className="flex items-center justify-center w-full px-5 py-2 mt-3 font-medium border rounded-lg border-line bg-background focus:outline-none text-md"
                                 name="DirectorFatherName"
-                              />
-                            </div>
-                          </div>
-                          <div className="flex flex-row items-center justify-between w-full mt-5 font-bold  font-inter text-16 leading-30 text-dark">
-                            <div className="w-[48%]">
-                              <label
-                                htmlFor="email"
-                                className="inline-flex items-center w-1/2 justify-star"
-                              >
-                                Email
-                              </label>
-                              <div className="relative flex items-center justify-between">
-                                <Field
-                                  type="Email"
-                                  className="flex items-center justify-center w-full px-5 py-2 mt-3 font-medium border rounded-lg border-line bg-background focus:outline-none text-md"
-                                  name="Email"
-                                />
-                              </div>
-                            </div>
-                            <div className="w-[48%]">
-                              <label
-                                htmlFor="Logo"
-                                className="inline-flex items-center w-1/2 justify-star"
-                              >
-                                Logo
-                              </label>
-
-                              <input
-                                type="file"
-                                id="Logo"
-                                name="Logo"
-                                accept="image/*"
-                                onChange={(event) => {
-                                  const file = (
-                                    event.currentTarget as HTMLInputElement
-                                  ).files?.[0];
-                                  formikProps.setFieldValue("Logo", file);
-                                }}
-                                className="mt-3 w-[95%] rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
                                 required
                               />
                             </div>
@@ -310,6 +283,7 @@ const CompaniesModal: React.FC<Props> = ({
                                   type="text"
                                   className="flex items-center justify-center w-full px-5 py-2 mt-3 font-medium border rounded-lg border-line bg-background focus:outline-none text-md"
                                   name="CompanyName"
+                                  required
                                 />
                               </div>
                             </div>
@@ -324,6 +298,7 @@ const CompaniesModal: React.FC<Props> = ({
                                 type="text"
                                 className="flex items-center justify-center w-full px-5 py-2 mt-3 font-medium border rounded-lg border-line bg-background focus:outline-none text-md"
                                 name="VOEN"
+                                required
                               />
                             </div>
                           </div>
@@ -340,6 +315,7 @@ const CompaniesModal: React.FC<Props> = ({
                                 type="text"
                                 className="flex items-center justify-center w-full px-5 py-2 mt-3 font-medium border rounded-lg border-line bg-background focus:outline-none text-md"
                                 name="VIN"
+                                required
                               />
                             </div>
                             <div className="w-[48%]">
@@ -354,7 +330,57 @@ const CompaniesModal: React.FC<Props> = ({
                                   type="text"
                                   className="flex items-center justify-center w-full px-5 py-2 mt-3 font-medium border rounded-lg border-line bg-background focus:outline-none text-md"
                                   name="Phonenumber"
+                                  required
                                 />
+                              </div>
+                            </div>
+                          </div>
+                          <div className="flex flex-row items-center justify-between w-full mt-5 font-bold  font-inter text-16 leading-30 text-dark">
+                            <div className="w-[48%]">
+                              <label
+                                htmlFor="email"
+                                className="inline-flex items-center w-1/2 justify-star"
+                              >
+                                Email
+                              </label>
+                              <div className="relative flex items-center justify-between">
+                                <Field
+                                  type="Email"
+                                  className="flex items-center justify-center w-full px-5 py-2 mt-3 font-medium border rounded-lg border-line bg-background focus:outline-none text-md"
+                                  name="Email"
+                                  required
+                                />
+                              </div>
+                            </div>
+                          </div>
+                          <div className="flex flex-row items-center justify-between w-full mt-5 font-bold  font-inter text-16 leading-30 text-dark">
+                            <div className="w-[48%]">
+                              <label
+                                htmlFor="Logo"
+                                className="inline-flex items-center w-1/2 justify-star"
+                              >
+                                Logo
+                              </label>
+
+                              <input
+                                type="file"
+                                id="Logo"
+                                name="Logo"
+                                accept="image/*"
+                                onChange={handleChange}
+                                className="mt-3 w-[95%] rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
+                                required
+                              />
+                            </div>
+                            <div className="w-[48%] flex items-center justify-center">
+                              <div className="w-[140px] h-[100px] rounded-lg  object-cover object-center">
+                                {selectedImage && (
+                                  <img
+                                    src={URL.createObjectURL(selectedImage)}
+                                    alt="Selected Image"
+                                    className="object-contain w-full h-full "
+                                  />
+                                )}
                               </div>
                             </div>
                           </div>
@@ -378,7 +404,7 @@ const CompaniesModal: React.FC<Props> = ({
                       as="h3"
                       className="flex items-center justify-between font-bold font-inter text-16 leading-30 text-dark"
                     >
-                      Companies Edit
+                      Edit Company
                       <XCircleIcon
                         onClick={closeModal}
                         className="w-6 h-6 cursor-pointer fill-icon"
@@ -398,7 +424,7 @@ const CompaniesModal: React.FC<Props> = ({
                         Phonenumber: selectedRow?.phonenumber || "",
                         Email: selectedRow?.email || "",
                         Logo: null,
-                        CompanyName: selectedRow?.companyName || "",
+                        CompanyName: selectedRow?.companyName || "-1",
                         VOEN: selectedRow?.voen || "",
                         VIN: selectedRow?.vin || "",
                       }}
@@ -406,7 +432,7 @@ const CompaniesModal: React.FC<Props> = ({
                     >
                       {(formikProps) => (
                         <Form>
-                          <div className="flex flex-row items-center justify-between w-full mt-5 font-bold  font-inter text-16 leading-30 text-dark">
+                          <div className="flex flex-row items-center justify-between w-full mt-5 font-bold font-inter text-16 leading-30 text-dark">
                             <div className="w-[48%]">
                               {" "}
                               <label
@@ -445,7 +471,7 @@ const CompaniesModal: React.FC<Props> = ({
                             </div>
                           </div>
 
-                          <div className="flex flex-row items-center justify-between w-full mt-5 font-bold  font-inter text-16 leading-30 text-dark">
+                          <div className="flex flex-row items-center justify-between w-full mt-5 font-bold font-inter text-16 leading-30 text-dark">
                             <div className="w-[48%]">
                               <label
                                 htmlFor="DirectorSurname"
@@ -476,7 +502,7 @@ const CompaniesModal: React.FC<Props> = ({
                             </div>
                           </div>
 
-                          <div className="flex flex-row items-center justify-between w-full mt-5 font-bold  font-inter text-16 leading-30 text-dark">
+                          <div className="flex flex-row items-center justify-between w-full mt-5 font-bold font-inter text-16 leading-30 text-dark">
                             <div className="w-[48%]">
                               <label
                                 htmlFor="CompanyName"
@@ -557,10 +583,10 @@ const CompaniesModal: React.FC<Props> = ({
                           <div className="flex flex-row items-center justify-between w-full mt-5 font-bold  font-inter text-16 leading-30 text-dark">
                             <div className="w-[48%]">
                               <label
-                                htmlFor="Logo"
+                                htmlFor="Image"
                                 className="inline-flex items-center w-1/2 justify-star"
                               >
-                                Logo
+                                Image
                               </label>
 
                               <input
@@ -568,23 +594,25 @@ const CompaniesModal: React.FC<Props> = ({
                                 id="Logo"
                                 name="Logo"
                                 accept="image/*"
-                                onChange={(event) => {
-                                  const file = (
-                                    event.currentTarget as HTMLInputElement
-                                  ).files?.[0];
-                                  formikProps.setFieldValue("Logo", file);
-                                }}
+                                onChange={handleChange}
                                 className="mt-3 w-[95%] rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
                               />
                             </div>
-
-                            <div className="flex items-center justify-center w-1/2">
+                            <div className="w-[48%] flex items-center justify-center">
                               <div className="w-[140px] h-[100px] rounded-lg  object-cover object-center">
-                                <img
-                                  className="w-full h-full"
-                                  src={selectedRow.logo}
-                                  alt=""
-                                />
+                                {selectedImage && selectedImage ? (
+                                  <img
+                                    src={URL.createObjectURL(selectedImage)}
+                                    alt="Selected Image"
+                                    className="object-contain w-full h-full "
+                                  />
+                                ) : (
+                                  <img
+                                    className="w-full h-full"
+                                    src={selectedRow.logo}
+                                    alt=""
+                                  />
+                                )}
                               </div>
                             </div>
                           </div>
@@ -599,6 +627,7 @@ const CompaniesModal: React.FC<Props> = ({
                             </button>
                             <button
                               type="submit"
+                              disabled={isButtonDisabled}
                               className="flex items-center justify-center w-1/4 px-2 py-4 text-sm font-medium text-white border border-transparent rounded-full bg-primary hover:bg-primary-200 focus:outline-none"
                             >
                               Edit

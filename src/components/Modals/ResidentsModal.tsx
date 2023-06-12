@@ -25,7 +25,6 @@ type Props = {
 type Values = {
   Name: string;
   Surname: string;
-  FatherName: string;
   Phonenumber: string;
   Email: string;
   Image: File | null;
@@ -41,6 +40,11 @@ const ResidentsModal = ({
   mutate,
 }: Props) => {
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
+  const [selectedImage, setSelectedImage] = useState(null);
+  const handleChange = (event: any) => {
+    const file = event.target.files[0];
+    setSelectedImage(file);
+  };
   const {
     data: dataCompany,
     error: errorCompany,
@@ -59,11 +63,13 @@ const ResidentsModal = ({
     const formData = new FormData();
     formData.append("Name", parsedValues.Name);
     formData.append("Surname", parsedValues.Surname);
-    formData.append("FatherName", parsedValues.FatherName);
     formData.append("Phonenumber", parsedValues.Phonenumber);
     formData.append("Email", parsedValues.Email);
-    if (parsedValues.Image) {
-      formData.append("Image", parsedValues.Image);
+    // if (parsedValues.Image) {
+    //   formData.append("Image", parsedValues.Image);
+    // }
+    if (selectedImage !== null) {
+      formData.append("Image", selectedImage);
     }
     formData.append("VendorCompanyId", String(parsedValues.VendorCompanyId));
 
@@ -77,9 +83,11 @@ const ResidentsModal = ({
 
     alert(res);
     setIsButtonDisabled(false);
+
   };
 
   const handleEdit = async (values: Values) => {
+    setIsButtonDisabled(true);
     const parsedValues = {
       ...values,
       VendorCompanyId: Number(values.VendorCompanyId),
@@ -89,11 +97,10 @@ const ResidentsModal = ({
     formData.append("Id", parsedValues.id);
     formData.append("Name", parsedValues.Name);
     formData.append("Surname", parsedValues.Surname);
-    formData.append("FatherName", parsedValues.FatherName);
     formData.append("Phonenumber", parsedValues.Phonenumber);
     formData.append("Email", parsedValues.Email);
-    if (parsedValues.Image) {
-      formData.append("Image", parsedValues.Image);
+    if (selectedImage !== null) {
+      formData.append("Image", selectedImage);
     } else if (selectedRow.image) {
       const response = await fetch(selectedRow.image);
       console.log(response, "response");
@@ -111,6 +118,7 @@ const ResidentsModal = ({
     );
 
     alert(res);
+    setIsButtonDisabled(false);
   };
 
   const deleteObject = async (deleteId: any) => {
@@ -163,7 +171,7 @@ const ResidentsModal = ({
                       as="h3"
                       className="flex items-center justify-between font-bold font-inter text-16 leading-30 text-dark"
                     >
-                      Resident əlavə et
+                     Add Resident 
                       <XCircleIcon
                         onClick={closeModal}
                         className="w-6 h-6 cursor-pointer fill-icon"
@@ -173,7 +181,6 @@ const ResidentsModal = ({
                       initialValues={{
                         Name: "",
                         Surname: "",
-                        FatherName: "",
                         Phonenumber: "",
                         Email: "",
                         Image: null,
@@ -231,8 +238,6 @@ const ResidentsModal = ({
                                 required
                               />
                             </div>
-                          </div>
-                          <div className="flex flex-row items-center justify-between mt-10 font-bold font-inter text-16 leading-30 text-dark">
                             <div className="w-1/2">
                               <label
                                 htmlFor="Email"
@@ -248,31 +253,7 @@ const ResidentsModal = ({
                                 required
                               />
                             </div>
-                            <div className="w-1/2">
-                              <label
-                                htmlFor="Image"
-                                className="inline-flex items-center w-1/2 justify-star"
-                              >
-                                Image
-                              </label>
-
-                              <input
-                                type="file"
-                                id="Image"
-                                name="Image"
-                                accept="image/*"
-                                onChange={(event) => {
-                                  const file = (
-                                    event.currentTarget as HTMLInputElement
-                                  ).files?.[0];
-                                  formikProps.setFieldValue("Image", file);
-                                }}
-                                className="mt-3 w-[95%] rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
-                                required
-                              />
-                            </div>
                           </div>
-
                           <div className="flex flex-row items-center justify-between mt-10 font-bold font-inter text-16 leading-30 text-dark">
                             <div className="w-1/2">
                               <label
@@ -297,6 +278,40 @@ const ResidentsModal = ({
                               </Field>
                             </div>
                           </div>
+                          <div className="flex flex-row items-center justify-between mt-10 font-bold font-inter text-16 leading-30 text-dark">
+                            
+                          <div className="w-[48%]">
+                              <label
+                                htmlFor="Image"
+                                className="inline-flex items-center w-1/2 justify-star"
+                              >
+                                Image
+                              </label>
+
+                              <input
+                                type="file"
+                                id="Image"
+                                name="Image"
+                                accept="image/*"
+                                onChange={handleChange}
+                                className="mt-3 w-[95%] rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
+                                required
+                              />
+                            </div>
+                            <div className="w-[48%] flex items-center justify-center">
+                              <div className="w-[140px] h-[100px] rounded-lg  object-cover object-center">
+                                {selectedImage && (
+                                  <img
+                                    src={URL.createObjectURL(selectedImage)}
+                                    alt="Selected Image"
+                                    className="object-contain w-full h-full "
+                                  />
+                                )}
+                              </div>
+                            </div>
+                          </div>
+
+                         
                           <div className="flex items-center justify-around w-full mt-10 font-bold font-inter text-16 leading-30 text-dark">
                             <button
                               type="submit"
@@ -326,7 +341,7 @@ const ResidentsModal = ({
                       initialValues={{
                         Name: selectedRow.name,
                         Surname: selectedRow.surname,
-                        FatherName: selectedRow.fatherName,
+                        
                         Phonenumber: selectedRow.phonenumber,
                         Email: selectedRow.email,
                         Image: null,
@@ -373,17 +388,17 @@ const ResidentsModal = ({
                             </div>
                           </div>
                           <div className="flex flex-row items-center justify-between mt-10 font-bold font-inter text-16 leading-30 text-dark">
-                            <div>
+                          <div className="w-1/2">
                               <label
-                                htmlFor="FatherName"
+                                htmlFor="Email"
                                 className="inline-flex items-center w-1/2 justify-star"
                               >
-                                Father Name
+                                Email
                               </label>
                               <Field
-                                type="text"
-                                id="FatherName"
-                                name="FatherName"
+                                type="email"
+                                id="Email"
+                                name="Email"
                                 className="mt-3 w-[95%] rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
                                 required
                               />
@@ -405,21 +420,7 @@ const ResidentsModal = ({
                             </div>
                           </div>
                           <div className="flex flex-row items-center justify-between mt-10 font-bold font-inter text-16 leading-30 text-dark">
-                            <div className="w-1/2">
-                              <label
-                                htmlFor="Email"
-                                className="inline-flex items-center w-1/2 justify-star"
-                              >
-                                Email
-                              </label>
-                              <Field
-                                type="email"
-                                id="Email"
-                                name="Email"
-                                className="mt-3 w-[95%] rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
-                                required
-                              />
-                            </div>
+                       
                             <div className="w-1/2">
                               <label
                                 htmlFor="VendorCompanyId"
@@ -445,7 +446,7 @@ const ResidentsModal = ({
                           </div>
 
                           <div className="flex flex-row items-center justify-between mt-10 font-bold font-inter text-16 leading-30 text-dark">
-                            <div className="w-1/2">
+                          <div className="w-[48%]">
                               <label
                                 htmlFor="Image"
                                 className="inline-flex items-center w-1/2 justify-star"
@@ -458,23 +459,24 @@ const ResidentsModal = ({
                                 id="Image"
                                 name="Image"
                                 accept="image/*"
-                                onChange={(event) => {
-                                  const file = (
-                                    event.currentTarget as HTMLInputElement
-                                  ).files?.[0];
-                                  formikProps.setFieldValue("Image", file);
-                                }}
+                                onChange={handleChange}
                                 className="mt-3 w-[95%] rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
+                        
                               />
                             </div>
-
-                            <div className="flex items-center justify-center w-1/2">
+                            <div className="w-[48%] flex items-center justify-center">
                               <div className="w-[140px] h-[100px] rounded-lg  object-cover object-center">
-                                <img
-                                  className="w-full h-full"
-                                  src={selectedRow.image}
-                                  alt=""
-                                />
+                                {selectedImage && selectedImage ? (
+                                  <img
+                                    src={URL.createObjectURL(selectedImage)}
+                                    alt="Selected Image"
+                                    className="object-contain w-full h-full "
+                                  />
+                                ): <img
+                                className="w-full h-full"
+                                src={selectedRow.image}
+                                alt=""
+                              />}
                               </div>
                             </div>
                           </div>
@@ -488,6 +490,7 @@ const ResidentsModal = ({
                             </button>
                             <button
                               type="submit"
+                              disabled={isButtonDisabled}
                               className="flex items-center justify-center w-1/4 px-2 py-4 text-sm font-medium text-white border border-transparent rounded-full bg-primary hover:bg-primary-200 focus:outline-none"
                             >
                               Edit

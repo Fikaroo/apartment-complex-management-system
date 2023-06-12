@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { XCircleIcon } from "@heroicons/react/24/solid";
 import { Formik, Field, Form } from "formik";
@@ -38,6 +38,12 @@ const BuildingsModal: React.FC<Props> = ({
   selectedRow,
   mutate,
 }) => {
+  const [selectedImage, setSelectedImage] = useState(null);
+  const handleChange = (event: any) => {
+    const file = event.target.files[0];
+    setSelectedImage(file);
+  };
+
   const {
     data: dataObjects,
     error: errorObjects,
@@ -66,8 +72,11 @@ const BuildingsModal: React.FC<Props> = ({
     formData.append("SecurityPhone", parsedValues.SecurityPhone);
     formData.append("Floor", String(parsedValues.Floor));
     formData.append("Entrance", String(parsedValues.Entrance));
-    if (parsedValues.Image) {
-      formData.append("Image", parsedValues.Image);
+    // if (parsedValues.Image) {
+    //   formData.append("Image", parsedValues.Image);
+    // }
+    if (selectedImage !== null) {
+      formData.append("Image", selectedImage);
     }
     formData.append("VendorObjectId", String(parsedValues.VendorObjectId));
     formData.append("RegionId", String(parsedValues.RegionId));
@@ -81,6 +90,7 @@ const BuildingsModal: React.FC<Props> = ({
     );
 
     alert(res);
+    setSelectedImage(null);
   };
   // const handleEdit = async (values: Values) => {
   //   const parsedValues = {
@@ -132,9 +142,8 @@ const BuildingsModal: React.FC<Props> = ({
     formData.append("Entrance", String(parsedValues.Entrance));
 
     // Check if a new image is selected, otherwise use the previous value as the default
-    if (parsedValues.Image) {
-      formData.append("Image", parsedValues.Image);
-      console.log(parsedValues.Image, "parsedValues.Image");
+    if (selectedImage !== null) {
+      formData.append("Image", selectedImage);
     } else if (selectedRow.image) {
       console.log("else if");
       const response = await fetch(selectedRow.image);
@@ -148,7 +157,7 @@ const BuildingsModal: React.FC<Props> = ({
     formData.append("RegionId", String(parsedValues.RegionId));
 
     const res = await useGetResponse(
-      EditBuilding.user("/api/VendorResident/Update", {
+      EditBuilding.user("/api/VendorBuildings/Update", {
         arg: formData,
       }),
       mutate,
@@ -156,6 +165,7 @@ const BuildingsModal: React.FC<Props> = ({
     );
 
     alert(res);
+    setSelectedImage(null);
   };
 
   const deleteObject = async (deleteId: any) => {
@@ -218,13 +228,13 @@ const BuildingsModal: React.FC<Props> = ({
                       initialValues={{
                         Image: null,
                         Name: "",
-                        RegionId: "",
+                        RegionId: "-1",
                         Street: "",
                         BuildingNo: "",
                         SecurityPhone: "",
                         Floor: -1,
                         Entrance: -1,
-                        VendorObjectId: "",
+                        VendorObjectId: "-1",
                       }}
                       onSubmit={handleSubmit}
                     >
@@ -388,15 +398,21 @@ const BuildingsModal: React.FC<Props> = ({
                                 id="Image"
                                 name="Image"
                                 accept="image/*"
-                                onChange={(event) => {
-                                  const file = (
-                                    event.currentTarget as HTMLInputElement
-                                  ).files?.[0];
-                                  formikProps.setFieldValue("Image", file);
-                                }}
+                                onChange={handleChange}
                                 className="mt-3 w-[95%] rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
                                 required
                               />
+                            </div>
+                            <div className="w-[48%] flex items-center justify-center">
+                              <div className="w-[140px] h-[100px] rounded-lg  object-cover object-center">
+                                {selectedImage && (
+                                  <img
+                                    src={URL.createObjectURL(selectedImage)}
+                                    alt="Selected Image"
+                                    className="object-contain w-full h-full "
+                                  />
+                                )}
+                              </div>
                             </div>
                           </div>
 
@@ -605,22 +621,24 @@ const BuildingsModal: React.FC<Props> = ({
                                 id="Image"
                                 name="Image"
                                 accept="image/*"
-                                onChange={(event) => {
-                                  const file = (
-                                    event.currentTarget as HTMLInputElement
-                                  ).files?.[0];
-                                  formikProps.setFieldValue("Image", file);
-                                }}
+                                onChange={handleChange}
                                 className="mt-3 w-[95%] rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
+                        
                               />
                             </div>
                             <div className="w-[48%] flex items-center justify-center">
                               <div className="w-[140px] h-[100px] rounded-lg  object-cover object-center">
-                                <img
-                                  className="object-contain w-full h-full "
-                                  src={selectedRow.image}
-                                  alt=""
-                                />
+                                {selectedImage && selectedImage ? (
+                                  <img
+                                    src={URL.createObjectURL(selectedImage)}
+                                    alt="Selected Image"
+                                    className="object-contain w-full h-full "
+                                  />
+                                ): <img
+                                className="w-full h-full"
+                                src={selectedRow.image}
+                                alt=""
+                              />}
                               </div>
                             </div>
                           </div>

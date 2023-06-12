@@ -74,6 +74,13 @@ const Tables = ({
               <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
                 <div className="ml-4">
                   <div className="text-sm font-medium leading-5 text-gray-900">
+                    {item?.companyName}
+                  </div>
+                </div>
+              </td>
+              <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
+                <div className="ml-4">
+                  <div className="text-sm font-medium leading-5 text-gray-900">
                     {item?.directorName}
                   </div>
                 </div>
@@ -95,9 +102,7 @@ const Tables = ({
               <td className="px-6 py-4 text-sm leading-5 text-gray-500 whitespace-no-wrap border-b border-gray-200">
                 {item?.objectName}
               </td>{" "}
-              <td className="px-6 py-4 text-sm leading-5 text-gray-500 whitespace-no-wrap border-b border-gray-200">
-                {item?.companyName}
-              </td>{" "}
+              
               <td className="px-6 py-4 text-sm leading-5 text-gray-500 whitespace-no-wrap border-b border-gray-200">
                 {item?.vendorName}
               </td>{" "}
