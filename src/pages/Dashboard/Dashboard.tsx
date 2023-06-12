@@ -86,14 +86,19 @@ const Dashboard = () => {
     revalidateIfStale: true,
   });
 
+  if (orderLoading && userLoading && accidentLoading) {
+    return <div>Loading</div>;
+  }
+
+  if (accidentError && userError && orderError) {
+    return <div>Error</div>;
+  }
   const orderLength = orderData?.data?.length;
   const lastOrder = orderData?.data?.slice(-4);
   const userLength = userData?.data?.length;
   const lastUser = userData?.data?.slice(-3);
-
   const accidents = accidentData?.data;
 
-  console.log(accidents);
   return (
     <div className="relative flex gap-6 p-6 bg-transparent">
       <div className="flex w-4/6 gap-6">
@@ -149,36 +154,28 @@ const Dashboard = () => {
             </div>
 
             <div className="flex flex-col justify-between h-full mt-6 pb-14">
-              {lastOrder?.map(
-                ({
-                  id,
-                  orderTypeName,
-                  orderSourceName,
-                  orderClassName,
-                  actualDeadline,
-                }: any) => (
-                  <div className="flex w-full gap-4" key={id}>
-                    <div className="flex-1">
-                      <p className="font-bold">{orderTypeName}</p>
-                      <p className="text-sm text-icon">{orderSourceName}</p>
-                    </div>
-                    <div className="flex flex-col text-sm">
-                      <p className="font-bold text-end">{orderClassName}</p>
-                      <p className="text-sm text-icon">
-                        {new Date(actualDeadline)
-                          .toLocaleDateString("en-GB", {
-                            day: "2-digit",
-                            month: "2-digit",
-                            year: "numeric",
-                          })
-                          .split("/")
-                          .reverse()
-                          .join("-")}
-                      </p>
-                    </div>
+              {lastOrder?.map((item: any) => (
+                <div className="flex w-full gap-4" key={item?.id}>
+                  <div className="flex-1">
+                    <p className="font-bold">{item?.orderTypeName}</p>
+                    <p className="text-sm text-icon">{item?.orderSourceName}</p>
                   </div>
-                )
-              )}
+                  <div className="flex flex-col text-sm">
+                    <p className="font-bold text-end">{item?.orderClassName}</p>
+                    <p className="text-sm text-icon">
+                      {new Date(item?.actualDeadline)
+                        .toLocaleDateString("en-GB", {
+                          day: "2-digit",
+                          month: "2-digit",
+                          year: "numeric",
+                        })
+                        .split("/")
+                        .reverse()
+                        .join("-")}
+                    </p>
+                  </div>
+                </div>
+              ))}
               {/* {fakeOrder.map(({ img, title, fullname, status, time }) => (
                 <div className="flex w-full gap-4">
                   {img ? (
@@ -230,14 +227,14 @@ const Dashboard = () => {
             </div>
             <PencilIcon className="w-5" />
           </div> */}
-          {lastUser?.map(({ name, surname, email, id }: any) => (
-            <div key={id} className="flex w-full gap-4">
+          {lastUser?.map((item: any) => (
+            <div key={item?.id} className="flex w-full gap-4">
               <div className="rounded-full w-11 h-11 bg-icon"></div>
               <div className="flex-1">
                 <p>
-                  {name} {surname}
+                  {item?.name} {item?.surname}
                 </p>
-                <p>{email}</p>
+                <p>{item?.email}</p>
               </div>
 
               {/* <PencilIcon className="w-5" /> */}
