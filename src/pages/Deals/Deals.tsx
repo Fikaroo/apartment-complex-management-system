@@ -25,7 +25,7 @@ const Deals = () => {
     setIsOpen(true);
   };
 
-  const { data, error, isLoading,mutate } = useSWR(
+  const { data, error, isLoading, mutate } = useSWR(
     "/api/OrderAdmin/GetAll",
     (key) => GetAll.user(key),
     { revalidateIfStale: true }
@@ -96,7 +96,7 @@ const Deals = () => {
     <Fragment>
       <div className="flex items-center justify-between">
         <p className="font-bold font-inter text-16 leading-30 text-dark">
-          Ümumi: 178 Sakin
+          Ümumi: {data?.data?.length} Deal
         </p>{" "}
         <div className="flex items-center gap-4">
           <AddBtn
@@ -104,7 +104,7 @@ const Deals = () => {
             setProcess={setProcess}
             modal={
               <DealsModal
-              mutate={mutate}
+                mutate={mutate}
                 isOpen={isOpen}
                 closeModal={closeModal}
                 process={process}
@@ -120,11 +120,10 @@ const Deals = () => {
         </div>
       </div>
       <Tables
-      
         openModal={openModal}
         modal={
           <DealsModal
-          mutate={mutate}
+            mutate={mutate}
             isOpen={isOpen}
             closeModal={closeModal}
             process={process}

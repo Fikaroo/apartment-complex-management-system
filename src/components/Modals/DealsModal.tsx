@@ -31,7 +31,7 @@ type Values = {
   appUserId: string;
   actualDeadline: string;
   normativeDeadline: string;
-  isAccident:string
+  isAccident: string;
 };
 
 const DealsModal: React.FC<Props> = ({
@@ -40,15 +40,15 @@ const DealsModal: React.FC<Props> = ({
   process,
   deleteId,
   selectedRow,
-  mutate
+  mutate,
 }) => {
   const [isOpenSub, setIsOpenSub] = useState<boolean>(false);
 
-  const [employee,setEmployee] = useState<any>({}); 
-  console.log(employee,"employee")
-  console.log(employee?.id,"employeedd")
- console.log(selectedRow,"selectedRow")
-  
+  const [employee, setEmployee] = useState<any>({});
+  console.log(employee, "employee");
+  console.log(employee?.id, "employeedd");
+  console.log(selectedRow, "selectedRow");
+
   const closeModalSub = (): void => {
     setIsOpenSub(false);
   };
@@ -56,9 +56,6 @@ const DealsModal: React.FC<Props> = ({
   const openModalSub = (): void => {
     setIsOpenSub(true);
   };
-
- 
- 
 
   const handleSubmit = async (values: Values) => {
     console.log(values, "values");
@@ -89,7 +86,7 @@ const DealsModal: React.FC<Props> = ({
       statusId: parseInt(values.statusId),
       orderClassId: parseInt(values.orderClassId),
       appUserId: employee?.id || "",
-      isAccident:values.isAccident === "true"
+      isAccident: values.isAccident === "true",
     };
     const res = await useGetResponse(
       CreateDeal.user("/api/OrderAdmin/Create", {
@@ -111,10 +108,10 @@ const DealsModal: React.FC<Props> = ({
       statusId: parseInt(values.statusId),
       orderClassId: parseInt(values.orderClassId),
       appUserId: employee?.id || "",
-      isAccident:values.isAccident === "true",
+      isAccident: values.isAccident === "true",
       id: selectedRow.id,
     };
-    
+
     const res = await useGetResponse(
       EditDeal.user("/api/OrderAdmin/Update", {
         arg: parsedValues,
@@ -208,7 +205,7 @@ const DealsModal: React.FC<Props> = ({
                       as="h3"
                       className="flex items-center justify-between font-bold font-inter text-16 leading-30 text-dark"
                     >
-                      Add Order
+                      Add Deal
                       <XCircleIcon
                         onClick={closeModal}
                         className="w-6 h-6 cursor-pointer fill-icon"
@@ -222,15 +219,15 @@ const DealsModal: React.FC<Props> = ({
                         orderSourceId: "",
                         priorityId: "",
                         orderClassId: "",
-                        appUserId: employee?.fullName ||"",
+                        appUserId: employee?.fullName || "",
                         actualDeadline: "",
                         normativeDeadline: "",
-                        isAccident:"true"
+                        isAccident: "true",
                       }}
                       onSubmit={handleSubmit}
                     >
                       <Form>
-                        <div className=" w-full flex items-center flex-row justify-between mt-5 font-bold font-inter text-16 leading-30 text-dark">
+                        <div className="flex flex-row items-center justify-between w-full mt-5 font-bold  font-inter text-16 leading-30 text-dark">
                           <div className="w-[48%]">
                             {" "}
                             <label
@@ -241,7 +238,7 @@ const DealsModal: React.FC<Props> = ({
                             </label>
                             <Field
                               type="date"
-                              className="mt-3 w-full  rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none  font-medium text-md"
+                              className="flex items-center justify-center w-full px-5 py-2 mt-3 font-medium border rounded-lg border-line bg-background focus:outline-none text-md"
                               name="actualDeadline"
                               required
                             />
@@ -256,30 +253,30 @@ const DealsModal: React.FC<Props> = ({
                             </label>
                             <Field
                               type="date"
-                              className="mt-3 w-full  rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none  font-medium text-md"
+                              className="flex items-center justify-center w-full px-5 py-2 mt-3 font-medium border rounded-lg border-line bg-background focus:outline-none text-md"
                               name="normativeDeadline"
                               required
                             />
                           </div>
                         </div>
 
-                        <div className=" w-full flex items-center flex-row justify-between mt-5 font-bold font-inter text-16 leading-30 text-dark">
+                        <div className="flex flex-row items-center justify-between w-full mt-5 font-bold  font-inter text-16 leading-30 text-dark">
                           <div className="w-[48%]">
                             <label
                               htmlFor="appUserId"
-                              className="inline-flex  justify-star items-center  w-1/2"
+                              className="inline-flex items-center w-1/2 justify-star"
                             >
                               İcraçı
                             </label>
-                            <div className="flex items-center justify-between relative">
+                            <div className="relative flex items-center justify-between">
                               <Field
                                 type="text"
-                                className="mt-3 w-full rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
+                                className="flex items-center justify-center w-full px-5 py-2 mt-3 font-medium border rounded-lg border-line bg-background focus:outline-none text-md"
                                 name="appUserId"
                                 value={employee?.fullName}
                                 disabled
-                                />
-                             
+                              />
+
                               <ChevronDownIcon
                                 className="h-5 w-5 text-gray-400 absolute top-[50%] right-4 cursor-pointer"
                                 onClick={openModalSub}
@@ -289,14 +286,14 @@ const DealsModal: React.FC<Props> = ({
                           <div className="w-[48%]">
                             <label
                               htmlFor="orderTypeId"
-                              className="inline-flex  justify-star items-center  w-1/2"
+                              className="inline-flex items-center w-1/2 justify-star"
                             >
                               Order Type
                             </label>
                             <Field
                               as="select"
                               id="orderTypeId"
-                              className="mt-3 w-full rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md hover:outline-none"
+                              className="flex items-center justify-center w-full px-5 py-2 mt-3 font-medium border rounded-lg border-line bg-background focus:outline-none text-md hover:outline-none"
                               name="orderTypeId"
                               required
                             >
@@ -307,18 +304,18 @@ const DealsModal: React.FC<Props> = ({
                             </Field>
                           </div>
                         </div>
-                        <div className=" w-full flex items-center flex-row justify-between mt-5 font-bold font-inter text-16 leading-30 text-dark">
+                        <div className="flex flex-row items-center justify-between w-full mt-5 font-bold  font-inter text-16 leading-30 text-dark">
                           <div className="w-[48%]">
                             <label
                               htmlFor="orderSourceId"
-                              className="inline-flex  justify-star items-center  w-1/2"
+                              className="inline-flex items-center w-1/2 justify-star"
                             >
                               Order Source
                             </label>
-                            <div className="flex items-center justify-between relative">
+                            <div className="relative flex items-center justify-between">
                               <Field
                                 as="select"
-                                className="mt-3 w-full rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md hover:outline-none"
+                                className="flex items-center justify-center w-full px-5 py-2 mt-3 font-medium border rounded-lg border-line bg-background focus:outline-none text-md hover:outline-none"
                                 id="orderSourceId"
                                 name="orderSourceId"
                                 required
@@ -333,12 +330,12 @@ const DealsModal: React.FC<Props> = ({
                           <div className="w-[48%]">
                             <label
                               htmlFor="priorityId"
-                              className="inline-flex  justify-star items-center  w-1/2"
+                              className="inline-flex items-center w-1/2 justify-star"
                             >
                               Priorty
                             </label>
                             <Field
-                              className="mt-3 w-full rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md hover:outline-none"
+                              className="flex items-center justify-center w-full px-5 py-2 mt-3 font-medium border rounded-lg border-line bg-background focus:outline-none text-md hover:outline-none"
                               as="select"
                               id="priorityId"
                               name="priorityId"
@@ -351,17 +348,17 @@ const DealsModal: React.FC<Props> = ({
                             </Field>
                           </div>
                         </div>
-                        <div className=" w-full flex items-center flex-row justify-between mt-5 font-bold font-inter text-16 leading-30 text-dark">
+                        <div className="flex flex-row items-center justify-between w-full mt-5 font-bold  font-inter text-16 leading-30 text-dark">
                           <div className="w-[48%]">
                             <label
                               htmlFor="orderClassId"
-                              className="inline-flex  justify-star items-center  w-1/2"
+                              className="inline-flex items-center w-1/2 justify-star"
                             >
                               Order Class
                             </label>
-                            <div className="flex items-center justify-between relative">
+                            <div className="relative flex items-center justify-between">
                               <Field
-                                className="mt-3 w-full rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md hover:outline-none"
+                                className="flex items-center justify-center w-full px-5 py-2 mt-3 font-medium border rounded-lg border-line bg-background focus:outline-none text-md hover:outline-none"
                                 as="select"
                                 name="orderClassId"
                                 id="orderClassId"
@@ -377,13 +374,13 @@ const DealsModal: React.FC<Props> = ({
                           <div className="w-[48%]">
                             <label
                               htmlFor="statusId"
-                              className="inline-flex  justify-star items-center  w-1/2"
+                              className="inline-flex items-center w-1/2 justify-star"
                             >
                               Status
                             </label>
 
                             <Field
-                              className="mt-3 w-full rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md hover:outline-none"
+                              className="flex items-center justify-center w-full px-5 py-2 mt-3 font-medium border rounded-lg border-line bg-background focus:outline-none text-md hover:outline-none"
                               as="select"
                               name="statusId"
                               id="statusId"
@@ -397,11 +394,11 @@ const DealsModal: React.FC<Props> = ({
                           </div>
                         </div>
 
-                        <div className="w-full  flex items-end justify-between  mt-5 font-bold font-inter text-16 leading-30 text-dark">
+                        <div className="flex items-end justify-between w-full mt-5 font-bold font-inter text-16 leading-30 text-dark">
                           <div className="w-[48%]">
                             <label
                               htmlFor="description"
-                              className="inline-flex  justify-star items-center  w-1/2"
+                              className="inline-flex items-center w-1/2 justify-star"
                             >
                               Description
                             </label>
@@ -419,7 +416,7 @@ const DealsModal: React.FC<Props> = ({
                               htmlFor="isAccident"
                               className="inline-flex items-center w-1/2 justify-star"
                             >
-                           Is Accident
+                              Is Accident
                             </label>
                             <Field
                               as="select"
@@ -434,7 +431,7 @@ const DealsModal: React.FC<Props> = ({
                             </Field>
                           </div>
                         </div>
-                        <div className="flex w-full items-center justify-around mt-10 font-bold font-inter text-16 leading-30 text-dark">
+                        <div className="flex items-center justify-around w-full mt-10 font-bold font-inter text-16 leading-30 text-dark">
                           <button
                             type="submit"
                             className="flex items-center justify-center w-1/4 px-2 py-4 text-sm font-medium text-white border border-transparent rounded-full bg-primary hover:bg-primary-200 focus:outline-none"
@@ -451,7 +448,7 @@ const DealsModal: React.FC<Props> = ({
                       as="h3"
                       className="flex items-center justify-between font-bold font-inter text-16 leading-30 text-dark"
                     >
-                      Sifarişə düzəliş et
+                      Edit Deal
                       <XCircleIcon
                         onClick={closeModal}
                         className="w-6 h-6 cursor-pointer fill-icon"
@@ -473,7 +470,7 @@ const DealsModal: React.FC<Props> = ({
                       onSubmit={handleEdit}
                     >
                       <Form>
-                        <div className=" w-full flex items-center flex-row justify-between mt-5 font-bold font-inter text-16 leading-30 text-dark">
+                        <div className="flex flex-row items-center justify-between w-full mt-5 font-bold  font-inter text-16 leading-30 text-dark">
                           <div className="w-[48%]">
                             {" "}
                             <label
@@ -484,7 +481,7 @@ const DealsModal: React.FC<Props> = ({
                             </label>
                             <Field
                               type="date"
-                              className="mt-3 w-full  rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none  font-medium text-md"
+                              className="flex items-center justify-center w-full px-5 py-2 mt-3 font-medium border rounded-lg border-line bg-background focus:outline-none text-md"
                               name="actualDeadline"
                             />
                           </div>
@@ -498,30 +495,30 @@ const DealsModal: React.FC<Props> = ({
                             </label>
                             <Field
                               type="date"
-                              className="mt-3 w-full  rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none  font-medium text-md"
+                              className="flex items-center justify-center w-full px-5 py-2 mt-3 font-medium border rounded-lg border-line bg-background focus:outline-none text-md"
                               name="normativeDeadline"
                               required
                             />
                           </div>
                         </div>
 
-                        <div className=" w-full flex items-center flex-row justify-between mt-5 font-bold font-inter text-16 leading-30 text-dark">
-                        <div className="w-[48%]">
+                        <div className="flex flex-row items-center justify-between w-full mt-5 font-bold  font-inter text-16 leading-30 text-dark">
+                          <div className="w-[48%]">
                             <label
                               htmlFor="appUserId"
-                              className="inline-flex  justify-star items-center  w-1/2"
+                              className="inline-flex items-center w-1/2 justify-star"
                             >
                               İcraçı
                             </label>
-                            <div className="flex items-center justify-between relative">
+                            <div className="relative flex items-center justify-between">
                               <Field
                                 type="text"
-                                className="mt-3 w-full rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
+                                className="flex items-center justify-center w-full px-5 py-2 mt-3 font-medium border rounded-lg border-line bg-background focus:outline-none text-md"
                                 name="appUserId"
                                 value={employee?.fullName}
                                 disabled
-                                />
-                             
+                              />
+
                               <ChevronDownIcon
                                 className="h-5 w-5 text-gray-400 absolute top-[50%] right-4 cursor-pointer"
                                 onClick={openModalSub}
@@ -531,14 +528,14 @@ const DealsModal: React.FC<Props> = ({
                           <div className="w-[48%]">
                             <label
                               htmlFor="orderTypeId"
-                              className="inline-flex  justify-star items-center  w-1/2"
+                              className="inline-flex items-center w-1/2 justify-star"
                             >
                               Order Type
                             </label>
                             <Field
                               as="select"
                               id="orderTypeId"
-                              className="mt-3 w-full rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md hover:outline-none"
+                              className="flex items-center justify-center w-full px-5 py-2 mt-3 font-medium border rounded-lg border-line bg-background focus:outline-none text-md hover:outline-none"
                               name="orderTypeId"
                               required
                             >
@@ -549,18 +546,18 @@ const DealsModal: React.FC<Props> = ({
                             </Field>
                           </div>
                         </div>
-                        <div className=" w-full flex items-center flex-row justify-between mt-5 font-bold font-inter text-16 leading-30 text-dark">
+                        <div className="flex flex-row items-center justify-between w-full mt-5 font-bold  font-inter text-16 leading-30 text-dark">
                           <div className="w-[48%]">
                             <label
                               htmlFor="orderSourceId"
-                              className="inline-flex  justify-star items-center  w-1/2"
+                              className="inline-flex items-center w-1/2 justify-star"
                             >
                               Order Source
                             </label>
-                            <div className="flex items-center justify-between relative">
+                            <div className="relative flex items-center justify-between">
                               <Field
                                 as="select"
-                                className="mt-3 w-full rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md hover:outline-none"
+                                className="flex items-center justify-center w-full px-5 py-2 mt-3 font-medium border rounded-lg border-line bg-background focus:outline-none text-md hover:outline-none"
                                 id="orderSourceId"
                                 name="orderSourceId"
                                 required
@@ -575,12 +572,12 @@ const DealsModal: React.FC<Props> = ({
                           <div className="w-[48%]">
                             <label
                               htmlFor="priorityId"
-                              className="inline-flex  justify-star items-center  w-1/2"
+                              className="inline-flex items-center w-1/2 justify-star"
                             >
                               Priorty
                             </label>
                             <Field
-                              className="mt-3 w-full rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md hover:outline-none"
+                              className="flex items-center justify-center w-full px-5 py-2 mt-3 font-medium border rounded-lg border-line bg-background focus:outline-none text-md hover:outline-none"
                               as="select"
                               id="priorityId"
                               name="priorityId"
@@ -593,17 +590,17 @@ const DealsModal: React.FC<Props> = ({
                             </Field>
                           </div>
                         </div>
-                        <div className=" w-full flex items-center flex-row justify-between mt-5 font-bold font-inter text-16 leading-30 text-dark">
+                        <div className="flex flex-row items-center justify-between w-full mt-5 font-bold  font-inter text-16 leading-30 text-dark">
                           <div className="w-[48%]">
                             <label
                               htmlFor="orderClassId"
-                              className="inline-flex  justify-star items-center  w-1/2"
+                              className="inline-flex items-center w-1/2 justify-star"
                             >
                               Order Class
                             </label>
-                            <div className="flex items-center justify-between relative">
+                            <div className="relative flex items-center justify-between">
                               <Field
-                                className="mt-3 w-full rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md hover:outline-none"
+                                className="flex items-center justify-center w-full px-5 py-2 mt-3 font-medium border rounded-lg border-line bg-background focus:outline-none text-md hover:outline-none"
                                 as="select"
                                 name="orderClassId"
                                 id="orderClassId"
@@ -619,13 +616,13 @@ const DealsModal: React.FC<Props> = ({
                           <div className="w-[48%]">
                             <label
                               htmlFor="statusId"
-                              className="inline-flex  justify-star items-center  w-1/2"
+                              className="inline-flex items-center w-1/2 justify-star"
                             >
                               Status
                             </label>
 
                             <Field
-                              className="mt-3 w-full rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md hover:outline-none"
+                              className="flex items-center justify-center w-full px-5 py-2 mt-3 font-medium border rounded-lg border-line bg-background focus:outline-none text-md hover:outline-none"
                               as="select"
                               name="statusId"
                               id="statusId"
@@ -639,11 +636,11 @@ const DealsModal: React.FC<Props> = ({
                           </div>
                         </div>
 
-                        <div className="w-full  flex items-end justify-between  mt-5 font-bold font-inter text-16 leading-30 text-dark">
+                        <div className="flex items-end justify-between w-full mt-5 font-bold font-inter text-16 leading-30 text-dark">
                           <div className="w-[48%]">
                             <label
                               htmlFor="description"
-                              className="inline-flex  justify-star items-center  w-1/2"
+                              className="inline-flex items-center w-1/2 justify-star"
                             >
                               Description
                             </label>
@@ -661,7 +658,7 @@ const DealsModal: React.FC<Props> = ({
                               htmlFor="isAccident"
                               className="inline-flex items-center w-1/2 justify-star"
                             >
-                           Is Accident
+                              Is Accident
                             </label>
                             <Field
                               as="select"
@@ -676,7 +673,7 @@ const DealsModal: React.FC<Props> = ({
                             </Field>
                           </div>
                         </div>
-                        <div className="flex w-full items-center justify-around mt-10 font-bold font-inter text-16 leading-30 text-dark">
+                        <div className="flex items-center justify-around w-full mt-10 font-bold font-inter text-16 leading-30 text-dark">
                           <button
                             type="button"
                             className="inline-flex items-center justify-center w-1/4 px-2 py-4 text-sm font-medium text-red-400 rounded-full outline font-inter"
@@ -700,7 +697,11 @@ const DealsModal: React.FC<Props> = ({
           </div>
         </Dialog>
       </Transition>
-      <DealsSubModal isOpenSub={isOpenSub} closeModalSub={closeModalSub} setEmployee={setEmployee} />
+      <DealsSubModal
+        isOpenSub={isOpenSub}
+        closeModalSub={closeModalSub}
+        setEmployee={setEmployee}
+      />
     </div>
   );
 };

@@ -118,7 +118,7 @@ const Tables = ({
           ))}
         </tbody>
       </table>
-      <ReactPaginate
+      {/* <ReactPaginate
         breakLabel="..."
         nextLabel="next >"
         onPageChange={() => 2}
@@ -126,7 +126,7 @@ const Tables = ({
         pageCount={itemCount() + 1}
         previousLabel="< previous"
         renderOnZeroPageCount={null}
-      />
+      /> */}
 
       {modal}
     </div>

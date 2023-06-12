@@ -27,9 +27,9 @@ type Values = {
   paymentType: string;
   prepaymentType: string;
   priceType: string;
-  fromPrice?:number;
-  toPrice?:number;
-  stable?:number
+  fromPrice?: number;
+  toPrice?: number;
+  stable?: number;
 };
 
 const OrderTypeModal = ({
@@ -40,19 +40,18 @@ const OrderTypeModal = ({
   selectedRow,
   mutate,
 }: Props) => {
-   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
+  const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const [paymentType, setPaymentType] = useState("false");
   const [priceType, setPriceType] = useState("false");
-console.log(selectedRow, "selectedRow")
+  console.log(selectedRow, "selectedRow");
   const handleSubmit = async (values: Values) => {
-        setIsButtonDisabled(true);
+    setIsButtonDisabled(true);
     const parsedValues = {
       ...values,
       paymentType: values.paymentType === "true",
-      prepaymentType: parseInt(values.prepaymentType ),
-      priceType: parseInt(values.priceType ),
+      prepaymentType: parseInt(values.prepaymentType),
+      priceType: parseInt(values.priceType),
     };
-    
 
     const res = await useGetResponse(
       AddOrderType.user("/api/OrderTypeAdmin/Create", {
@@ -68,27 +67,27 @@ console.log(selectedRow, "selectedRow")
     setIsButtonDisabled(false);
   };
 
-    const handleEdit = async (values: Values) => {
-      setIsButtonDisabled(true);
-      const parsedValues = {
-        ...values,
+  const handleEdit = async (values: Values) => {
+    setIsButtonDisabled(true);
+    const parsedValues = {
+      ...values,
       paymentType: values.paymentType === "true",
-      prepaymentType: parseInt(values.prepaymentType ),
+      prepaymentType: parseInt(values.prepaymentType),
       priceType: parseInt(values.priceType),
-        id: selectedRow.id,
-      };
-
-      const res = await useGetResponse(
-        EditOrderType.user("/api/OrderTypeAdmin/Update", {
-          arg: parsedValues,
-        }),
-        mutate,
-        closeModal
-      );
-
-      alert(res);
-      setIsButtonDisabled(false);
+      id: selectedRow.id,
     };
+
+    const res = await useGetResponse(
+      EditOrderType.user("/api/OrderTypeAdmin/Update", {
+        arg: parsedValues,
+      }),
+      mutate,
+      closeModal
+    );
+
+    alert(res);
+    setIsButtonDisabled(false);
+  };
 
   const deleteObject = async (deleteId: any) => {
     setIsButtonDisabled(true);
@@ -153,414 +152,413 @@ console.log(selectedRow, "selectedRow")
                         paymentType: "false",
                         prepaymentType: "-1",
                         priceType: "-1",
-                        fromPrice:0,
-                        toPrice:0,
-                        stable:0
+                        fromPrice: 0,
+                        toPrice: 0,
+                        stable: 0,
                       }}
                       onSubmit={handleSubmit}
                     >
-                   {(props) => (
+                      {(props) => (
                         <Form action="">
-                        <div className="flex flex-row items-center justify-between mt-10 font-bold font-inter text-16 leading-30 text-dark">
-                          <div className="w-1/2">
-                            <label
-                              htmlFor="name"
-                              className="inline-flex items-center w-1/2 justify-star"
-                            >
-                              Name
-                            </label>
-                            <Field
-                              name="name"
-                              type="text"
-                              className="mt-3 w-[95%] rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
-                              required
-                            />
-                          </div>
-                          <div className="w-1/2">
-                            <label
-                              htmlFor="paymentType"
-                              className="inline-flex items-center w-1/2 justify-star"
-                            >
-                              Payment Type
-                            </label>
-                            <Field
-                              as="select"
-                              name="paymentType"
-                              id="paymentType"
-                              onChange={(
-                                e: React.ChangeEvent<HTMLSelectElement>
-                              ) => {
-                                setPaymentType(e.target.value);
-                                props.setFieldValue(
-                                  "paymentType",
-                                  e.target.value
-                                );
-                              }}
-                              className="mt-3 w-[95%] rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
-                              required
-                            >
-                              <option value="-1">Choose</option>
-                              <option value="true">Odenisli</option>
-                              <option value="false">Odenissiz</option>
-                            </Field>
-                          </div>
-                        </div>
-                        {paymentType === "true" && (
-                          <>
-                            {" "}
-                            <div className="flex flex-row items-center justify-between mt-10 font-bold font-inter text-16 leading-30 text-dark">
-                              <div className="w-1/2">
-                                <label
-                                  htmlFor="prepaymentType"
-                                  className="inline-flex items-center w-1/2 justify-star"
-                                >
-                                  Prepayment
-                                </label>
-                                <Field
-                                  as="select"
-                                  name="prepaymentType"
-                                  id="prepaymentType"
-                                  
-                                  className="mt-3 w-[95%] rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
-                                  required
-                                >
-                                  <option value="-1">Choose</option>
-                                  <option value="1">
-                                    Advance payment required
-                                  </option>
-                                  <option value="0">
-                                    No advance payment is required
-                                  </option>
-                                </Field>
-                              </div>
-                              <div className="w-1/2">
-                                <label
-                                  htmlFor="priceType"
-                                  className="inline-flex items-center w-1/2 justify-star"
-                                >
-                                  Price Type
-                                </label>
-                                <Field
-                                  as="select"
-                                  name="priceType"
-                                  id="priceType"
-                                  onChange={(
-                                    e: React.ChangeEvent<HTMLSelectElement>
-                                  ) => {
-                                    setPriceType(e.target.value);
-                                    props.setFieldValue(
-                                      "priceType",
-                                      e.target.value
-                                    );
-                                  }}
-                                  className="mt-3 w-[95%] rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
-                                  required
-                                >
-                                  <option value="-1">Choose</option>
-                                  <option value="0">Stable</option>
-                                  <option value="1">From/To</option>
-                                  <option value="2">From</option>
-                                  <option value="3">Not mentioned</option>
-                                </Field>
-                              </div>
+                          <div className="flex flex-row items-center justify-between mt-10 font-bold font-inter text-16 leading-30 text-dark">
+                            <div className="w-1/2">
+                              <label
+                                htmlFor="name"
+                                className="inline-flex items-center w-1/2 justify-star"
+                              >
+                                Name
+                              </label>
+                              <Field
+                                name="name"
+                                type="text"
+                                className="mt-3 w-[95%] rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
+                                required
+                              />
                             </div>
-                            {priceType === "1" && (
-                              <>
-                                <div className="flex flex-row items-center justify-between mt-10 font-bold font-inter text-16 leading-30 text-dark">
-                                  <div className="w-1/2">
-                                    <label
-                                      htmlFor="fromPrice"
-                                      className="inline-flex items-center w-1/2 justify-star"
-                                    >
-                                      From
-                                    </label>
-                                    <Field
-                                      name="fromPrice"
-                                      type="number"
-                                      className="mt-3 w-[95%] rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
-                                      required
-                                    />
-                                  </div>
-                                  <div className="w-1/2">
-                                    <label
-                                      htmlFor="toPrice"
-                                      className="inline-flex items-center w-1/2 justify-star"
-                                    >
-                                      To
-                                    </label>
-                                    <Field
-                                      name="toPrice"
-                                      type="number"
-                                      className="mt-3 w-[95%] rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
-                                      required
-                                    />
-                                  </div>
+                            <div className="w-1/2">
+                              <label
+                                htmlFor="paymentType"
+                                className="inline-flex items-center w-1/2 justify-star"
+                              >
+                                Payment Type
+                              </label>
+                              <Field
+                                as="select"
+                                name="paymentType"
+                                id="paymentType"
+                                onChange={(
+                                  e: React.ChangeEvent<HTMLSelectElement>
+                                ) => {
+                                  setPaymentType(e.target.value);
+                                  props.setFieldValue(
+                                    "paymentType",
+                                    e.target.value
+                                  );
+                                }}
+                                className="mt-3 w-[95%] rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
+                                required
+                              >
+                                <option value="-1">Choose</option>
+                                <option value="true">Odenisli</option>
+                                <option value="false">Odenissiz</option>
+                              </Field>
+                            </div>
+                          </div>
+                          {paymentType === "true" && (
+                            <>
+                              {" "}
+                              <div className="flex flex-row items-center justify-between mt-10 font-bold font-inter text-16 leading-30 text-dark">
+                                <div className="w-1/2">
+                                  <label
+                                    htmlFor="prepaymentType"
+                                    className="inline-flex items-center w-1/2 justify-star"
+                                  >
+                                    Prepayment
+                                  </label>
+                                  <Field
+                                    as="select"
+                                    name="prepaymentType"
+                                    id="prepaymentType"
+                                    className="mt-3 w-[95%] rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
+                                    required
+                                  >
+                                    <option value="-1">Choose</option>
+                                    <option value="1">
+                                      Advance payment required
+                                    </option>
+                                    <option value="0">
+                                      No advance payment is required
+                                    </option>
+                                  </Field>
                                 </div>
-                              </>
-                            )}
-                            {priceType === "0" && (
-                              <>
-                                <div className="flex flex-row items-center justify-between mt-10 font-bold font-inter text-16 leading-30 text-dark">
-                                  <div className="w-1/2">
-                                    <label
-                                      htmlFor="stable"
-                                      className="inline-flex items-center w-1/2 justify-star"
-                                    >
-                                      Stable
-                                    </label>
-                                    <Field
-                                      name="stable"
-                                      type="number"
-                                      className="mt-3 w-[95%] rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
-                                      required
-                                    />
-                                  </div>
+                                <div className="w-1/2">
+                                  <label
+                                    htmlFor="priceType"
+                                    className="inline-flex items-center w-1/2 justify-star"
+                                  >
+                                    Price Type
+                                  </label>
+                                  <Field
+                                    as="select"
+                                    name="priceType"
+                                    id="priceType"
+                                    onChange={(
+                                      e: React.ChangeEvent<HTMLSelectElement>
+                                    ) => {
+                                      setPriceType(e.target.value);
+                                      props.setFieldValue(
+                                        "priceType",
+                                        e.target.value
+                                      );
+                                    }}
+                                    className="mt-3 w-[95%] rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
+                                    required
+                                  >
+                                    <option value="-1">Choose</option>
+                                    <option value="0">Stable</option>
+                                    <option value="1">From/To</option>
+                                    <option value="2">From</option>
+                                    <option value="3">Not mentioned</option>
+                                  </Field>
                                 </div>
-                              </>
-                            )}
-                            {priceType === "2" && (
-                              <>
-                                <div className="flex flex-row items-center justify-between mt-10 font-bold font-inter text-16 leading-30 text-dark">
-                                  <div className="w-1/2">
-                                    <label
-                                      htmlFor="fromPrice"
-                                      className="inline-flex items-center w-1/2 justify-star"
-                                    >
-                                      From
-                                    </label>
-                                    <Field
-                                      name="fromPrice"
-                                      type="number"
-                                      className="mt-3 w-[95%] rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
-                                      required
-                                    />
+                              </div>
+                              {priceType === "1" && (
+                                <>
+                                  <div className="flex flex-row items-center justify-between mt-10 font-bold font-inter text-16 leading-30 text-dark">
+                                    <div className="w-1/2">
+                                      <label
+                                        htmlFor="fromPrice"
+                                        className="inline-flex items-center w-1/2 justify-star"
+                                      >
+                                        From
+                                      </label>
+                                      <Field
+                                        name="fromPrice"
+                                        type="number"
+                                        className="mt-3 w-[95%] rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
+                                        required
+                                      />
+                                    </div>
+                                    <div className="w-1/2">
+                                      <label
+                                        htmlFor="toPrice"
+                                        className="inline-flex items-center w-1/2 justify-star"
+                                      >
+                                        To
+                                      </label>
+                                      <Field
+                                        name="toPrice"
+                                        type="number"
+                                        className="mt-3 w-[95%] rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
+                                        required
+                                      />
+                                    </div>
                                   </div>
-                                </div>
-                              </>
-                            )}
-                          </>
-                        )}
-                        <div className="flex items-center justify-around w-full mt-10 font-bold font-inter text-16 leading-30 text-dark">
-                          <button
-                            type="submit"
-                            disabled={isButtonDisabled}
-                            className="flex items-center justify-center w-1/4 px-2 py-4 text-sm font-medium text-white border border-transparent rounded-full bg-primary hover:bg-primary-200 focus:outline-none"
-                          >
-                            Əlavə et
-                          </button>
-                        </div>
-                      </Form>
-                   )}
+                                </>
+                              )}
+                              {priceType === "0" && (
+                                <>
+                                  <div className="flex flex-row items-center justify-between mt-10 font-bold font-inter text-16 leading-30 text-dark">
+                                    <div className="w-1/2">
+                                      <label
+                                        htmlFor="stable"
+                                        className="inline-flex items-center w-1/2 justify-star"
+                                      >
+                                        Stable
+                                      </label>
+                                      <Field
+                                        name="stable"
+                                        type="number"
+                                        className="mt-3 w-[95%] rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
+                                        required
+                                      />
+                                    </div>
+                                  </div>
+                                </>
+                              )}
+                              {priceType === "2" && (
+                                <>
+                                  <div className="flex flex-row items-center justify-between mt-10 font-bold font-inter text-16 leading-30 text-dark">
+                                    <div className="w-1/2">
+                                      <label
+                                        htmlFor="fromPrice"
+                                        className="inline-flex items-center w-1/2 justify-star"
+                                      >
+                                        From
+                                      </label>
+                                      <Field
+                                        name="fromPrice"
+                                        type="number"
+                                        className="mt-3 w-[95%] rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
+                                        required
+                                      />
+                                    </div>
+                                  </div>
+                                </>
+                              )}
+                            </>
+                          )}
+                          <div className="flex items-center justify-around w-full mt-10 font-bold font-inter text-16 leading-30 text-dark">
+                            <button
+                              type="submit"
+                              disabled={isButtonDisabled}
+                              className="flex items-center justify-center w-1/4 px-2 py-4 text-sm font-medium text-white border border-transparent rounded-full bg-primary hover:bg-primary-200 focus:outline-none"
+                            >
+                              Əlavə et
+                            </button>
+                          </div>
+                        </Form>
+                      )}
                     </Formik>
                   </Dialog.Panel>
-                ) : 
-               process === "Edit" ? (
-                <Dialog.Panel className="w-full max-w-xl p-6 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl rounded-2xl">
-                <Dialog.Title
-                  as="h3"
-                  className="flex items-center justify-between font-bold font-inter text-16 leading-30 text-dark"
-                >
-                  Add Order Type
-                  <XCircleIcon
-                    onClick={closeModal}
-                    className="w-6 h-6 cursor-pointer fill-icon"
-                  />
-                </Dialog.Title>
-                <Formik
-                  initialValues={{
-                    name:selectedRow.name || "",
-                    paymentType:selectedRow.paymentType || "false",
-                    prepaymentType:selectedRow.prepaymentType || "-1",
-                    priceType:selectedRow.priceType || "-1",
-                    fromPrice:selectedRow.fromPrice || 0,
-                    toPrice:selectedRow.toPrice || 0,
-                    stable:selectedRow.stable || 0
-                  }}
-                  onSubmit={handleEdit}
-                >
-               {(props) => (
-                    <Form action="">
-                    <div className="flex flex-row items-center justify-between mt-10 font-bold font-inter text-16 leading-30 text-dark">
-                      <div className="w-1/2">
-                        <label
-                          htmlFor="name"
-                          className="inline-flex items-center w-1/2 justify-star"
-                        >
-                          Name
-                        </label>
-                        <Field
-                          name="name"
-                          type="text"
-                          className="mt-3 w-[95%] rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
-                          required
-                        />
-                      </div>
-                      <div className="w-1/2">
-                        <label
-                          htmlFor="paymentType"
-                          className="inline-flex items-center w-1/2 justify-star"
-                        >
-                          Payment Type
-                        </label>
-                        <Field
-                          as="select"
-                          name="paymentType"
-                          id="paymentType"
-                          onChange={(
-                            e: React.ChangeEvent<HTMLSelectElement>
-                          ) => {
-                            setPaymentType(e.target.value);
-                            props.setFieldValue(
-                              "paymentType",
-                              e.target.value
-                            );
-                          }}
-                          className="mt-3 w-[95%] rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
-                          required
-                        >
-                          <option value="-1">Choose</option>
-                          <option value="true">Odenisli</option>
-                          <option value="false">Odenissiz</option>
-                        </Field>
-                      </div>
-                    </div>
-                    {selectedRow.paymentType === true || paymentType==="true" ? (
-                      <>
-                        {" "}
-                        <div className="flex flex-row items-center justify-between mt-10 font-bold font-inter text-16 leading-30 text-dark">
-                          <div className="w-1/2">
-                            <label
-                              htmlFor="prepaymentType"
-                              className="inline-flex items-center w-1/2 justify-star"
-                            >
-                              Prepayment
-                            </label>
-                            <Field
-                              as="select"
-                              name="prepaymentType"
-                              id="prepaymentType"
-                              
-                              className="mt-3 w-[95%] rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
-                              required
-                            >
-                              <option value="-1">Choose</option>
-                              <option value="1">
-                                Advance payment required
-                              </option>
-                              <option value="0">
-                                No advance payment is required
-                              </option>
-                            </Field>
+                ) : process === "Edit" ? (
+                  <Dialog.Panel className="w-full max-w-xl p-6 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl rounded-2xl">
+                    <Dialog.Title
+                      as="h3"
+                      className="flex items-center justify-between font-bold font-inter text-16 leading-30 text-dark"
+                    >
+                      Edit Order Type
+                      <XCircleIcon
+                        onClick={closeModal}
+                        className="w-6 h-6 cursor-pointer fill-icon"
+                      />
+                    </Dialog.Title>
+                    <Formik
+                      initialValues={{
+                        name: selectedRow.name || "",
+                        paymentType: selectedRow.paymentType || "false",
+                        prepaymentType: selectedRow.prepaymentType || "-1",
+                        priceType: selectedRow.priceType || "-1",
+                        fromPrice: selectedRow.fromPrice || 0,
+                        toPrice: selectedRow.toPrice || 0,
+                        stable: selectedRow.stable || 0,
+                      }}
+                      onSubmit={handleEdit}
+                    >
+                      {(props) => (
+                        <Form action="">
+                          <div className="flex flex-row items-center justify-between mt-10 font-bold font-inter text-16 leading-30 text-dark">
+                            <div className="w-1/2">
+                              <label
+                                htmlFor="name"
+                                className="inline-flex items-center w-1/2 justify-star"
+                              >
+                                Name
+                              </label>
+                              <Field
+                                name="name"
+                                type="text"
+                                className="mt-3 w-[95%] rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
+                                required
+                              />
+                            </div>
+                            <div className="w-1/2">
+                              <label
+                                htmlFor="paymentType"
+                                className="inline-flex items-center w-1/2 justify-star"
+                              >
+                                Payment Type
+                              </label>
+                              <Field
+                                as="select"
+                                name="paymentType"
+                                id="paymentType"
+                                onChange={(
+                                  e: React.ChangeEvent<HTMLSelectElement>
+                                ) => {
+                                  setPaymentType(e.target.value);
+                                  props.setFieldValue(
+                                    "paymentType",
+                                    e.target.value
+                                  );
+                                }}
+                                className="mt-3 w-[95%] rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
+                                required
+                              >
+                                <option value="-1">Choose</option>
+                                <option value="true">Odenisli</option>
+                                <option value="false">Odenissiz</option>
+                              </Field>
+                            </div>
                           </div>
-                          <div className="w-1/2">
-                            <label
-                              htmlFor="priceType"
-                              className="inline-flex items-center w-1/2 justify-star"
-                            >
-                              Price Type
-                            </label>
-                            <Field
-                              as="select"
-                              name="priceType"
-                              id="priceType"
-                              onChange={(
-                                e: React.ChangeEvent<HTMLSelectElement>
-                              ) => {
-                                setPriceType(e.target.value);
-                                props.setFieldValue(
-                                  "priceType",
-                                  e.target.value
-                                );
-                              }}
-                              className="mt-3 w-[95%] rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
-                              required
-                            >
-                              <option value="-1">Choose</option>
-                              <option value="0">Stable</option>
-                              <option value="1">From/To</option>
-                              <option value="2">From</option>
-                              <option value="3">Not mentioned</option>
-                            </Field>
-                          </div>
-                        </div>
-                        {selectedRow.priceType === 1 || priceType==="1" && (
-                          <>
-                            <div className="flex flex-row items-center justify-between mt-10 font-bold font-inter text-16 leading-30 text-dark">
-                              <div className="w-1/2">
-                                <label
-                                  htmlFor="fromPrice"
-                                  className="inline-flex items-center w-1/2 justify-star"
-                                >
-                                  From
-                                </label>
-                                <Field
-                                  name="fromPrice"
-                                  type="number"
-                                  className="mt-3 w-[95%] rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
-                                  required
-                                />
+                          {selectedRow.paymentType === true ||
+                          paymentType === "true" ? (
+                            <>
+                              {" "}
+                              <div className="flex flex-row items-center justify-between mt-10 font-bold font-inter text-16 leading-30 text-dark">
+                                <div className="w-1/2">
+                                  <label
+                                    htmlFor="prepaymentType"
+                                    className="inline-flex items-center w-1/2 justify-star"
+                                  >
+                                    Prepayment
+                                  </label>
+                                  <Field
+                                    as="select"
+                                    name="prepaymentType"
+                                    id="prepaymentType"
+                                    className="mt-3 w-[95%] rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
+                                    required
+                                  >
+                                    <option value="-1">Choose</option>
+                                    <option value="1">
+                                      Advance payment required
+                                    </option>
+                                    <option value="0">
+                                      No advance payment is required
+                                    </option>
+                                  </Field>
+                                </div>
+                                <div className="w-1/2">
+                                  <label
+                                    htmlFor="priceType"
+                                    className="inline-flex items-center w-1/2 justify-star"
+                                  >
+                                    Price Type
+                                  </label>
+                                  <Field
+                                    as="select"
+                                    name="priceType"
+                                    id="priceType"
+                                    onChange={(
+                                      e: React.ChangeEvent<HTMLSelectElement>
+                                    ) => {
+                                      setPriceType(e.target.value);
+                                      props.setFieldValue(
+                                        "priceType",
+                                        e.target.value
+                                      );
+                                    }}
+                                    className="mt-3 w-[95%] rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
+                                    required
+                                  >
+                                    <option value="-1">Choose</option>
+                                    <option value="0">Stable</option>
+                                    <option value="1">From/To</option>
+                                    <option value="2">From</option>
+                                    <option value="3">Not mentioned</option>
+                                  </Field>
+                                </div>
                               </div>
-                              <div className="w-1/2">
-                                <label
-                                  htmlFor="toPrice"
-                                  className="inline-flex items-center w-1/2 justify-star"
-                                >
-                                  To
-                                </label>
-                                <Field
-                                  name="toPrice"
-                                  type="number"
-                                  className="mt-3 w-[95%] rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
-                                  required
-                                />
-                              </div>
-                            </div>
-                          </>
-                        )}
-                        {selectedRow.priceType === 0 && (
-                          <>
-                            <div className="flex flex-row items-center justify-between mt-10 font-bold font-inter text-16 leading-30 text-dark">
-                              <div className="w-1/2">
-                                <label
-                                  htmlFor="stable"
-                                  className="inline-flex items-center w-1/2 justify-star"
-                                >
-                                  Stable
-                                </label>
-                                <Field
-                                  name="stable"
-                                  type="number"
-                                  className="mt-3 w-[95%] rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
-                                  required
-                                />
-                              </div>
-                            </div>
-                          </>
-                        )}
-                        {selectedRow.priceType === 2 && (
-                          <>
-                            <div className="flex flex-row items-center justify-between mt-10 font-bold font-inter text-16 leading-30 text-dark">
-                              <div className="w-1/2">
-                                <label
-                                  htmlFor="fromPrice"
-                                  className="inline-flex items-center w-1/2 justify-star"
-                                >
-                                  From
-                                </label>
-                                <Field
-                                  name="fromPrice"
-                                  type="number"
-                                  className="mt-3 w-[95%] rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
-                                  required
-                                />
-                              </div>
-                            </div>
-                          </>
-                        )}
-                      </>
-                    ):null}
-                    <div className="flex items-center justify-around w-full mt-10 font-bold font-inter text-16 leading-30 text-dark">
-                    <button
+                              {selectedRow.priceType === 1 ||
+                                (priceType === "1" && (
+                                  <>
+                                    <div className="flex flex-row items-center justify-between mt-10 font-bold font-inter text-16 leading-30 text-dark">
+                                      <div className="w-1/2">
+                                        <label
+                                          htmlFor="fromPrice"
+                                          className="inline-flex items-center w-1/2 justify-star"
+                                        >
+                                          From
+                                        </label>
+                                        <Field
+                                          name="fromPrice"
+                                          type="number"
+                                          className="mt-3 w-[95%] rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
+                                          required
+                                        />
+                                      </div>
+                                      <div className="w-1/2">
+                                        <label
+                                          htmlFor="toPrice"
+                                          className="inline-flex items-center w-1/2 justify-star"
+                                        >
+                                          To
+                                        </label>
+                                        <Field
+                                          name="toPrice"
+                                          type="number"
+                                          className="mt-3 w-[95%] rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
+                                          required
+                                        />
+                                      </div>
+                                    </div>
+                                  </>
+                                ))}
+                              {selectedRow.priceType === 0 && (
+                                <>
+                                  <div className="flex flex-row items-center justify-between mt-10 font-bold font-inter text-16 leading-30 text-dark">
+                                    <div className="w-1/2">
+                                      <label
+                                        htmlFor="stable"
+                                        className="inline-flex items-center w-1/2 justify-star"
+                                      >
+                                        Stable
+                                      </label>
+                                      <Field
+                                        name="stable"
+                                        type="number"
+                                        className="mt-3 w-[95%] rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
+                                        required
+                                      />
+                                    </div>
+                                  </div>
+                                </>
+                              )}
+                              {selectedRow.priceType === 2 && (
+                                <>
+                                  <div className="flex flex-row items-center justify-between mt-10 font-bold font-inter text-16 leading-30 text-dark">
+                                    <div className="w-1/2">
+                                      <label
+                                        htmlFor="fromPrice"
+                                        className="inline-flex items-center w-1/2 justify-star"
+                                      >
+                                        From
+                                      </label>
+                                      <Field
+                                        name="fromPrice"
+                                        type="number"
+                                        className="mt-3 w-[95%] rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
+                                        required
+                                      />
+                                    </div>
+                                  </div>
+                                </>
+                              )}
+                            </>
+                          ) : null}
+                          <div className="flex items-center justify-around w-full mt-10 font-bold font-inter text-16 leading-30 text-dark">
+                            <button
                               type="button"
                               className="inline-flex items-center justify-center w-1/4 px-2 py-4 text-sm font-medium text-red-400 rounded-full outline font-inter"
                               onClick={handleDelete}
@@ -574,15 +572,13 @@ console.log(selectedRow, "selectedRow")
                               className="flex items-center justify-center w-1/4 px-2 py-4 text-sm font-medium text-white border border-transparent rounded-full bg-primary hover:bg-primary-200 focus:outline-none"
                             >
                               Edit
-                           
                             </button>
-                    </div>
-                  </Form>
-               )}
-                </Formik>
-              </Dialog.Panel>
-                )
-                :null}
+                          </div>
+                        </Form>
+                      )}
+                    </Formik>
+                  </Dialog.Panel>
+                ) : null}
               </Transition.Child>
             </div>
           </div>

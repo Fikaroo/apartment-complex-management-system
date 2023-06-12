@@ -316,7 +316,7 @@ const ApartmentsModal: React.FC<Props> = ({
                       as="h3"
                       className="flex items-center justify-between font-bold font-inter text-16 leading-30 text-dark"
                     >
-                      Sifarişə düzəliş et
+                      Apartment edit
                       <XCircleIcon
                         onClick={closeModal}
                         className="w-6 h-6 cursor-pointer fill-icon"

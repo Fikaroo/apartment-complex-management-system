@@ -50,10 +50,10 @@ const VendorRoomsModal = ({
     isLoading: isLoadingCompany,
   } = useSWR("/api/VendorCompany/GetAllByVendorId", (key) => GetAll.user(key));
   console.log(selectedRow, "selectedRow");
-  const roomType=[
-    {vendorRoomTypeId:"1",roomTypeName:"Ofis"},
-    {vendorRoomTypeId:"2",roomTypeName:"Kladofka"},
-  ]
+  const roomType = [
+    { vendorRoomTypeId: "1", roomTypeName: "Ofis" },
+    { vendorRoomTypeId: "2", roomTypeName: "Kladofka" },
+  ];
   const handleSubmit = async (values: Values) => {
     const parsedValues = {
       ...values,
@@ -75,27 +75,27 @@ const VendorRoomsModal = ({
     alert(res);
   };
 
-    const handleEdit = async (values: Values) => {
-      console.log(values, "values");
-      const parsedValues = {
-        ...values,
-        vendorCompanyId: parseInt(values.vendorCompanyId),
-        regionId: parseInt(values.regionId),
-        vendorRoomTypeId: parseInt(values.vendorRoomTypeId),
-        isRentAviable: values.isRentAviable === "true",
-        id: selectedRow.id,
-      };
-
-      const res = await useGetResponse(
-        EditVendorRoom.user("/api/VendorRooms/Update", {
-          arg: parsedValues,
-        }),
-        mutate,
-        closeModal
-      );
-
-      alert(res);
+  const handleEdit = async (values: Values) => {
+    console.log(values, "values");
+    const parsedValues = {
+      ...values,
+      vendorCompanyId: parseInt(values.vendorCompanyId),
+      regionId: parseInt(values.regionId),
+      vendorRoomTypeId: parseInt(values.vendorRoomTypeId),
+      isRentAviable: values.isRentAviable === "true",
+      id: selectedRow.id,
     };
+
+    const res = await useGetResponse(
+      EditVendorRoom.user("/api/VendorRooms/Update", {
+        arg: parsedValues,
+      }),
+      mutate,
+      closeModal
+    );
+
+    alert(res);
+  };
 
   const deleteObject = async (deleteId: any) => {
     const res = await useGetResponse(
@@ -146,7 +146,7 @@ const VendorRoomsModal = ({
                       as="h3"
                       className="flex items-center justify-between font-bold font-inter text-16 leading-30 text-dark"
                     >
-                      Object əlavə et
+                      Vendor Room əlavə et
                       <XCircleIcon
                         onClick={closeModal}
                         className="w-6 h-6 cursor-pointer fill-icon"
@@ -195,7 +195,9 @@ const VendorRoomsModal = ({
                             >
                               <option value="-1">Choose</option>
                               {dataCompany?.data.map((item: any) => (
-                                <option value={item.id}>{item.companyName}</option>
+                                <option value={item.id}>
+                                  {item.companyName}
+                                </option>
                               ))}
                             </Field>
                           </div>
@@ -237,7 +239,7 @@ const VendorRoomsModal = ({
                           </div>
                         </div>
                         <div className="flex flex-row items-center justify-between mt-10 font-bold font-inter text-16 leading-30 text-dark">
-                        <div className="w-1/2">
+                          <div className="w-1/2">
                             <label
                               htmlFor="vendorRoomTypeId"
                               className="inline-flex items-center w-1/2 justify-star"
@@ -253,7 +255,9 @@ const VendorRoomsModal = ({
                             >
                               <option value="-1">Choose</option>
                               {roomType.map((item: any) => (
-                                <option value={item.vendorRoomTypeId}>{item.roomTypeName}</option>
+                                <option value={item.vendorRoomTypeId}>
+                                  {item.roomTypeName}
+                                </option>
                               ))}
                             </Field>
                           </div>
@@ -277,7 +281,7 @@ const VendorRoomsModal = ({
                             </Field>
                           </div>
                         </div>
-                        
+
                         <div className="flex items-center justify-around w-full mt-10 font-bold font-inter text-16 leading-30 text-dark">
                           <button
                             type="submit"
@@ -301,21 +305,27 @@ const VendorRoomsModal = ({
                         className="w-6 h-6 cursor-pointer fill-icon"
                       />
                     </Dialog.Title>
-               
+
                     <Formik
                       initialValues={{
-                        name:selectedRow.name|| "",
+                        name: selectedRow.name || "",
                         vendorCompanyId:
-                        dataCompany?.data.find(
-                          (item: any) => item.companyName === selectedRow?.companyName
-                        )?.id || "",
-                        regionId: dataRegions?.data.find(
-                          (item: any) => item.name === selectedRow?.regionName
-                        )?.id ||  "",
-                        vendorRoomTypeId:  roomType.find(
-                          (item: any) => item.roomTypeName === selectedRow?.roomTypeName
-                        )?.vendorRoomTypeId || "",
-                        isRentAviable:selectedRow.isRentAviable ? "true" : "false",
+                          dataCompany?.data.find(
+                            (item: any) =>
+                              item.companyName === selectedRow?.companyName
+                          )?.id || "",
+                        regionId:
+                          dataRegions?.data.find(
+                            (item: any) => item.name === selectedRow?.regionName
+                          )?.id || "",
+                        vendorRoomTypeId:
+                          roomType.find(
+                            (item: any) =>
+                              item.roomTypeName === selectedRow?.roomTypeName
+                          )?.vendorRoomTypeId || "",
+                        isRentAviable: selectedRow.isRentAviable
+                          ? "true"
+                          : "false",
                         rentPrice: selectedRow.rentPrice || 0,
                       }}
                       onSubmit={handleEdit}
@@ -352,7 +362,9 @@ const VendorRoomsModal = ({
                             >
                               <option value="-1">Choose</option>
                               {dataCompany?.data.map((item: any) => (
-                                <option value={item.id}>{item.companyName}</option>
+                                <option value={item.id}>
+                                  {item.companyName}
+                                </option>
                               ))}
                             </Field>
                           </div>
@@ -394,14 +406,14 @@ const VendorRoomsModal = ({
                           </div>
                         </div>
                         <div className="flex flex-row items-center justify-between mt-10 font-bold font-inter text-16 leading-30 text-dark">
-                        <div className="w-1/2">
-                        <label
+                          <div className="w-1/2">
+                            <label
                               htmlFor="vendorRoomTypeId"
                               className="inline-flex items-center w-1/2 justify-star"
                             >
                               Room Type
                             </label>
-                        <Field
+                            <Field
                               as="select"
                               name="vendorRoomTypeId"
                               id="vendorRoomTypeId"
@@ -410,7 +422,9 @@ const VendorRoomsModal = ({
                             >
                               <option value="-1">Choose</option>
                               {roomType.map((item: any) => (
-                                <option value={item.vendorRoomTypeId}>{item.roomTypeName}</option>
+                                <option value={item.vendorRoomTypeId}>
+                                  {item.roomTypeName}
+                                </option>
                               ))}
                             </Field>
                           </div>
@@ -434,7 +448,7 @@ const VendorRoomsModal = ({
                             </Field>
                           </div>
                         </div>
-                        
+
                         <div className="flex items-center justify-around w-full mt-10 font-bold font-inter text-16 leading-30 text-dark">
                           <button
                             type="button"

@@ -77,7 +77,8 @@ const VendorRooms = () => {
     {
       id: 7,
       title: "Rent Price",
-    },  {
+    },
+    {
       id: 8,
       title: "Edit",
     },
@@ -87,7 +88,7 @@ const VendorRooms = () => {
     <div>
       <div className="flex items-center justify-between">
         <p className="font-bold font-inter text-16 leading-30 text-dark">
-          Ümumi:
+          Ümumi: {data?.data?.length || 0} Vendor Room
         </p>{" "}
         <div className="flex items-center gap-4">
           <AddBtn
