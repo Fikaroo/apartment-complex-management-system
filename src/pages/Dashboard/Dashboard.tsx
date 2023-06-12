@@ -154,28 +154,33 @@ const Dashboard = () => {
             </div>
 
             <div className="flex flex-col justify-between h-full mt-6 pb-14">
-              {lastOrder?.map((item: any) => (
-                <div className="flex w-full gap-4" key={item?.id}>
-                  <div className="flex-1">
-                    <p className="font-bold">{item?.orderTypeName}</p>
-                    <p className="text-sm text-icon">{item?.orderSourceName}</p>
+              {Array.isArray(lastOrder) &&
+                lastOrder?.map((item: any) => (
+                  <div className="flex w-full gap-4" key={item?.id}>
+                    <div className="flex-1">
+                      <p className="font-bold">{item?.orderTypeName}</p>
+                      <p className="text-sm text-icon">
+                        {item?.orderSourceName}
+                      </p>
+                    </div>
+                    <div className="flex flex-col text-sm">
+                      <p className="font-bold text-end">
+                        {item?.orderClassName}
+                      </p>
+                      <p className="text-sm text-icon">
+                        {new Date(item?.actualDeadline)
+                          .toLocaleDateString("en-GB", {
+                            day: "2-digit",
+                            month: "2-digit",
+                            year: "numeric",
+                          })
+                          .split("/")
+                          .reverse()
+                          .join("-")}
+                      </p>
+                    </div>
                   </div>
-                  <div className="flex flex-col text-sm">
-                    <p className="font-bold text-end">{item?.orderClassName}</p>
-                    <p className="text-sm text-icon">
-                      {new Date(item?.actualDeadline)
-                        .toLocaleDateString("en-GB", {
-                          day: "2-digit",
-                          month: "2-digit",
-                          year: "numeric",
-                        })
-                        .split("/")
-                        .reverse()
-                        .join("-")}
-                    </p>
-                  </div>
-                </div>
-              ))}
+                ))}
               {/* {fakeOrder.map(({ img, title, fullname, status, time }) => (
                 <div className="flex w-full gap-4">
                   {img ? (
@@ -227,19 +232,20 @@ const Dashboard = () => {
             </div>
             <PencilIcon className="w-5" />
           </div> */}
-          {lastUser?.map((item: any) => (
-            <div key={item?.id} className="flex w-full gap-4">
-              <div className="rounded-full w-11 h-11 bg-icon"></div>
-              <div className="flex-1">
-                <p>
-                  {item?.name} {item?.surname}
-                </p>
-                <p>{item?.email}</p>
-              </div>
+          {Array.isArray(lastUser) &&
+            lastUser?.map((item: any) => (
+              <div key={item?.id} className="flex w-full gap-4">
+                <div className="rounded-full w-11 h-11 bg-icon"></div>
+                <div className="flex-1">
+                  <p>
+                    {item?.name} {item?.surname}
+                  </p>
+                  <p>{item?.email}</p>
+                </div>
 
-              {/* <PencilIcon className="w-5" /> */}
-            </div>
-          ))}
+                {/* <PencilIcon className="w-5" /> */}
+              </div>
+            ))}
         </div>
 
         <div className="w-full h-full p-2">
@@ -247,7 +253,7 @@ const Dashboard = () => {
             <div className="flex items-center justify-between p-6">
               <h2 className="text-lg font-bold">SOS bildirişləri</h2>
               <span className="text-sm text-primary">Hamsina bax</span>
-              {accidents}
+              {/* {accidents} */}
             </div>
           </div>
         </div>
