@@ -5,6 +5,10 @@ import {
   UsersIcon,
 } from "@heroicons/react/24/solid";
 
+import OrderAvatar1 from "../../assets/Image.png";
+import OrderAvatar2 from "../../assets/Image-1.png";
+import OrderAvatar3 from "../../assets/Image-2.png";
+
 const Dashboard = () => {
   const fakeNewsData = [
     {
@@ -30,24 +34,28 @@ const Dashboard = () => {
       fullname: "Nurlan Garash",
       status: "icrada",
       time: "30 Dek, 09:00",
+      img: "",
     },
     {
       title: "Usta xidməti",
       fullname: "Rustam Aziziov",
       status: "baxılır",
       time: "30 Dek, 08:00",
+      img: OrderAvatar1,
     },
     {
       title: "Usta xidməti",
       fullname: "Kanan İdayatov",
       status: "tamamlandı",
       time: "28 Dek, 09:00",
+      img: OrderAvatar2,
     },
     {
       title: "Usta xidməti",
       fullname: "Nihad Rasulzada",
       status: "tamamlandı",
       time: "17 Dek, 09:00",
+      img: OrderAvatar3,
     },
   ];
 
@@ -96,14 +104,22 @@ const Dashboard = () => {
         <div className="w-full space-y-6">
           <div className="w-full h-[400px] bg-white p-6 border rounded-xl border-line">
             <div className="flex justify-between">
-              <h2>Sonuncu sifarişlər</h2>
-              <span className="text-primary">Hamsina bax</span>
+              <h2 className="text-lg font-bold">Sonuncu sifarişlər</h2>
+              <span className="text-sm text-primary">Hamsina bax</span>
             </div>
 
             <div className="flex flex-col justify-between h-full mt-6 pb-14">
-              {fakeOrder.map(({ title, fullname, status, time }) => (
+              {fakeOrder.map(({ img, title, fullname, status, time }) => (
                 <div className="flex w-full gap-4">
-                  <div className="rounded-full w-11 h-11 bg-icon"></div>
+                  {img ? (
+                    <img
+                      className="object-cover w-12 h-12 rounded-full bg-icon"
+                      src={img}
+                      alt={title}
+                    />
+                  ) : (
+                    <div className="object-cover w-12 h-12 rounded-full bg-icon"></div>
+                  )}
                   <div className="flex-1">
                     <p className="font-bold">{title}</p>
                     <p className="text-sm text-icon">{fullname}</p>
@@ -119,7 +135,7 @@ const Dashboard = () => {
           <div className="w-full h-[343px]  bg-white border divide-y divide-icon/25 rounded-xl border-line">
             <div className="flex items-center justify-between p-6">
               <h2 className="font-bold">İcazə verilmişlər</h2>
-              <span className="px-5 py-2.5 rounded-full bg-primary/10 text-primary">
+              <span className="px-5 py-2.5 rounded-full bg-primary/10 text-primary uppercase text-xs font-medium">
                 Hamsina bax
               </span>
             </div>
@@ -128,7 +144,7 @@ const Dashboard = () => {
           </div>
         </div>
       </div>
-      <div className="w-2/6 p-6 rounded-xl bg-backgroundSecond">
+      <div className="flex flex-col w-2/6 gap-6 p-6 rounded-xl bg-backgroundSecond">
         <div className="grid gap-4">
           <div className="flex w-full gap-4">
             <div className="rounded-full w-11 h-11 bg-icon"></div>
@@ -153,6 +169,15 @@ const Dashboard = () => {
               <p>rustam@gmail.com</p>
             </div>
             <PencilIcon className="w-5" />
+          </div>
+        </div>
+
+        <div className="w-full h-full p-2">
+          <div className="w-full h-full bg-white rounded-xl">
+            <div className="flex items-center justify-between p-6">
+              <h2 className="text-lg font-bold">SOS bildirişləri</h2>
+              <span className="text-sm text-primary">Hamsina bax</span>
+            </div>
           </div>
         </div>
       </div>

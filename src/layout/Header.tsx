@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
-
+import Avatar from "../../public/Avatar.svg";
 const Header = () => {
   const [headerName, setHeaderName] = useState("");
   const { pathname } = useLocation();
@@ -29,11 +29,7 @@ const Header = () => {
     <div className="flex items-center justify-between w-full h-24 px-12 border-b border-line">
       <h1 className="text-2xl font-bold text-dark">{headerName}</h1>
       <div className="object-cover">
-        <img
-          src="/public/avatar.png"
-          className="w-12 h-12 rounded-full"
-          alt=""
-        />
+        <img src={Avatar} className="w-12 h-12 rounded-full" alt="" />
       </div>
     </div>
   );
