@@ -57,7 +57,6 @@ const BuildingsModal: React.FC<Props> = ({
       ...values,
       VendorObjectId: Number(values.VendorObjectId),
       RegionId: Number(values.RegionId),
-     
     };
     console.log(parsedValues, "parsedValues");
     const formData = new FormData();
@@ -122,7 +121,7 @@ const BuildingsModal: React.FC<Props> = ({
       RegionId: Number(values.RegionId),
       Id: selectedRow.id,
     };
-  
+
     const formData = new FormData();
     formData.append("Id", parsedValues.Id);
     formData.append("Name", parsedValues.Name);
@@ -131,23 +130,23 @@ const BuildingsModal: React.FC<Props> = ({
     formData.append("SecurityPhone", parsedValues.SecurityPhone);
     formData.append("Floor", String(parsedValues.Floor));
     formData.append("Entrance", String(parsedValues.Entrance));
-    
+
     // Check if a new image is selected, otherwise use the previous value as the default
     if (parsedValues.Image) {
       formData.append("Image", parsedValues.Image);
       console.log(parsedValues.Image, "parsedValues.Image");
     } else if (selectedRow.image) {
-      console.log("else if")
+      console.log("else if");
       const response = await fetch(selectedRow.image);
       console.log(response, "response");
       const imageBlob = await response.blob();
       console.log(imageBlob, "imageBlob");
-      formData.append("Image", imageBlob,"image.png");
+      formData.append("Image", imageBlob, "image.png");
     }
-  
+
     formData.append("VendorObjectId", String(parsedValues.VendorObjectId));
     formData.append("RegionId", String(parsedValues.RegionId));
-  
+
     const res = await useGetResponse(
       EditBuilding.user("/api/VendorResident/Update", {
         arg: formData,
@@ -155,10 +154,10 @@ const BuildingsModal: React.FC<Props> = ({
       mutate,
       closeModal
     );
-  
+
     alert(res);
   };
-  
+
   const deleteObject = async (deleteId: any) => {
     const res = await useGetResponse(
       Delete.user("/api/VendorBuildings/Delete", {
@@ -209,7 +208,7 @@ const BuildingsModal: React.FC<Props> = ({
                       as="h3"
                       className="flex items-center justify-between font-bold font-inter text-16 leading-30 text-dark"
                     >
-                      Add Apartment
+                      Add Building
                       <XCircleIcon
                         onClick={closeModal}
                         className="w-6 h-6 cursor-pointer fill-icon"
@@ -427,7 +426,7 @@ const BuildingsModal: React.FC<Props> = ({
                     </Dialog.Title>
                     <Formik
                       initialValues={{
-                        Image:null,
+                        Image: null,
                         Name: selectedRow.name || "",
                         RegionId:
                           dataRegions?.data.find(
@@ -613,13 +612,16 @@ const BuildingsModal: React.FC<Props> = ({
                                   formikProps.setFieldValue("Image", file);
                                 }}
                                 className="mt-3 w-[95%] rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
-                           
                               />
                             </div>
-                                 <div className="w-[48%] flex items-center justify-center">
-                            <div className="w-[140px] h-[100px] rounded-lg  object-cover object-center">
-                                <img className="w-full h-full" src={selectedRow.image} alt="" />
-                            </div>
+                            <div className="w-[48%] flex items-center justify-center">
+                              <div className="w-[140px] h-[100px] rounded-lg  object-cover object-center">
+                                <img
+                                  className="object-contain w-full h-full "
+                                  src={selectedRow.image}
+                                  alt=""
+                                />
+                              </div>
                             </div>
                           </div>
 
@@ -635,7 +637,7 @@ const BuildingsModal: React.FC<Props> = ({
                               type="submit"
                               className="flex items-center justify-center w-1/4 px-2 py-4 text-sm font-medium text-white border border-transparent rounded-full bg-primary hover:bg-primary-200 focus:outline-none"
                             >
-                         Edit
+                              Edit
                             </button>
                           </div>
                         </Form>

@@ -152,9 +152,9 @@ const EmployeesModal = ({
   );
 
   const vendorObjectsIds = dataVendorObjects?.data?.map(
-    ({ id, vendorName }: { id: number; vendorName: string }) => ({
+    ({ id, title }: { id: number; title: string }) => ({
       id,
-      vendorName,
+      title,
     })
   );
 
@@ -170,6 +170,9 @@ const EmployeesModal = ({
       name,
     })
   );
+  {
+    console.log(vendorObjectsIds);
+  }
 
   return (
     <div>
@@ -469,13 +472,13 @@ const EmployeesModal = ({
                                 {vendorObjectsIds?.map(
                                   ({
                                     id,
-                                    vendorName,
+                                    title,
                                   }: {
                                     id: number;
-                                    vendorName: string;
+                                    title: string;
                                   }) => (
                                     <option key={id} value={id}>
-                                      {vendorName}
+                                      {title}
                                     </option>
                                   )
                                 )}
@@ -827,13 +830,13 @@ const EmployeesModal = ({
                                 {vendorObjectsIds?.map(
                                   ({
                                     id,
-                                    vendorName,
+                                    title,
                                   }: {
                                     id: number;
-                                    vendorName: string;
+                                    title: string;
                                   }) => (
                                     <option key={id} value={id}>
-                                      {vendorName}
+                                      {title}
                                     </option>
                                   )
                                 )}

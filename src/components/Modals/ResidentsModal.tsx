@@ -1,4 +1,4 @@
-import { Fragment,useState} from "react";
+import { Fragment, useState } from "react";
 
 import { Dialog, Transition } from "@headlessui/react";
 import { XCircleIcon } from "@heroicons/react/24/solid";
@@ -40,14 +40,13 @@ const ResidentsModal = ({
   selectedRow,
   mutate,
 }: Props) => {
-
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const {
     data: dataCompany,
     error: errorCompany,
     isLoading: isLoadingCompany,
   } = useSWR("/api/VendorCompany/GetAllByVendorId", (key) => GetAll.user(key));
-console.log(selectedRow,"selectedRow")
+  console.log(selectedRow, "selectedRow");
   const handleSubmit = async (values: Values) => {
     console.log(values, "values");
     setIsButtonDisabled(true);
@@ -80,58 +79,56 @@ console.log(selectedRow,"selectedRow")
     setIsButtonDisabled(false);
   };
 
-    const handleEdit = async (values: Values) => {
-    
-      const parsedValues = {
-        ...values, 
-         VendorCompanyId: Number(values.VendorCompanyId),
-        id: selectedRow.id,
-      };
-      const formData = new FormData();
-      formData.append("Id", parsedValues.id);
-      formData.append("Name", parsedValues.Name);
-      formData.append("Surname", parsedValues.Surname);
-      formData.append("FatherName", parsedValues.FatherName);
-      formData.append("Phonenumber", parsedValues.Phonenumber);
-      formData.append("Email", parsedValues.Email);
-      if (parsedValues.Image) {
-        formData.append("Image", parsedValues.Image);
-      }
-      else if (selectedRow.image) {
-        const response = await fetch(selectedRow.image);
-        console.log(response, "response");
-        console.log(fetch(selectedRow.image), "fetchhh");
-        const imageBlob = await response.blob();
-        formData.append("Image", imageBlob,"image.png");
-      }
-      formData.append("VendorCompanyId", String(parsedValues.VendorCompanyId));
-      const res = await useGetResponse(
-        EditResidents.user("/api/VendorResident/Update", {
-          arg: formData,
-        }),
-        mutate,
-        closeModal
-      );
-
-      alert(res);
+  const handleEdit = async (values: Values) => {
+    const parsedValues = {
+      ...values,
+      VendorCompanyId: Number(values.VendorCompanyId),
+      id: selectedRow.id,
     };
+    const formData = new FormData();
+    formData.append("Id", parsedValues.id);
+    formData.append("Name", parsedValues.Name);
+    formData.append("Surname", parsedValues.Surname);
+    formData.append("FatherName", parsedValues.FatherName);
+    formData.append("Phonenumber", parsedValues.Phonenumber);
+    formData.append("Email", parsedValues.Email);
+    if (parsedValues.Image) {
+      formData.append("Image", parsedValues.Image);
+    } else if (selectedRow.image) {
+      const response = await fetch(selectedRow.image);
+      console.log(response, "response");
+      console.log(fetch(selectedRow.image), "fetchhh");
+      const imageBlob = await response.blob();
+      formData.append("Image", imageBlob, "image.png");
+    }
+    formData.append("VendorCompanyId", String(parsedValues.VendorCompanyId));
+    const res = await useGetResponse(
+      EditResidents.user("/api/VendorResident/Update", {
+        arg: formData,
+      }),
+      mutate,
+      closeModal
+    );
 
-    const deleteObject = async (deleteId: any) => {
-      const res = await useGetResponse(
-        Delete.user("/api/VendorResident/Delete", {
-          arg: { deleteId },
-        }),
-        mutate,
-        closeModal
-      );
+    alert(res);
+  };
 
-      alert(res);
-    };
+  const deleteObject = async (deleteId: any) => {
+    const res = await useGetResponse(
+      Delete.user("/api/VendorResident/Delete", {
+        arg: { deleteId },
+      }),
+      mutate,
+      closeModal
+    );
 
-    const handleDelete = () => {
-      console.log(deleteId, "deleteId");
-      deleteObject(deleteId);
-    };
+    alert(res);
+  };
+
+  const handleDelete = () => {
+    console.log(deleteId, "deleteId");
+    deleteObject(deleteId);
+  };
 
   return (
     <div>
@@ -207,7 +204,7 @@ console.log(selectedRow,"selectedRow")
                                 htmlFor="Surname"
                                 className="inline-flex items-center w-1/2 justify-star"
                               >
-                                Adress
+                                Surname
                               </label>
                               <Field
                                 type="text"
@@ -219,22 +216,7 @@ console.log(selectedRow,"selectedRow")
                             </div>
                           </div>
                           <div className="flex flex-row items-center justify-between mt-10 font-bold font-inter text-16 leading-30 text-dark">
-                            <div>
-                              <label
-                                htmlFor="FatherName"
-                                className="inline-flex items-center w-1/2 justify-star"
-                              >
-                                Father Name
-                              </label>
-                              <Field
-                                type="text"
-                                id="FatherName"
-                                name="FatherName"
-                                className="mt-3 w-[95%] rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
-                                required
-                              />
-                            </div>
-                            <div>
+                            <div className="whitespace-nowrap">
                               <label
                                 htmlFor="Phonenumber"
                                 className="inline-flex items-center w-1/2 justify-star"
@@ -349,12 +331,12 @@ console.log(selectedRow,"selectedRow")
                         Email: selectedRow.email,
                         Image: null,
                         VendorCompanyId:
-                        dataCompany?.data.find(
-                          (item: any) => item.companyName === selectedRow?.companyName
-                        )?.id || "",
+                          dataCompany?.data.find(
+                            (item: any) =>
+                              item.companyName === selectedRow?.companyName
+                          )?.id || "",
                       }}
                       onSubmit={handleEdit}
-                      
                     >
                       {(formikProps) => (
                         <Form action="" encType="multipart/form-data">
@@ -463,7 +445,6 @@ console.log(selectedRow,"selectedRow")
                           </div>
 
                           <div className="flex flex-row items-center justify-between mt-10 font-bold font-inter text-16 leading-30 text-dark">
-                           
                             <div className="w-1/2">
                               <label
                                 htmlFor="Image"
@@ -484,36 +465,37 @@ console.log(selectedRow,"selectedRow")
                                   formikProps.setFieldValue("Image", file);
                                 }}
                                 className="mt-3 w-[95%] rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
-                      
                               />
-                              
                             </div>
 
-                            <div className="w-1/2 flex items-center justify-center">
-                            <div className="w-[140px] h-[100px] rounded-lg  object-cover object-center">
-                                <img className="w-full h-full" src={selectedRow.image} alt="" />
-                            </div>
+                            <div className="flex items-center justify-center w-1/2">
+                              <div className="w-[140px] h-[100px] rounded-lg  object-cover object-center">
+                                <img
+                                  className="w-full h-full"
+                                  src={selectedRow.image}
+                                  alt=""
+                                />
+                              </div>
                             </div>
                           </div>
                           <div className="flex items-center justify-around w-full mt-10 font-bold font-inter text-16 leading-30 text-dark">
-                          <button
-                            type="button"
-                            className="inline-flex items-center justify-center w-1/4 px-2 py-4 text-sm font-medium text-red-400 rounded-full outline font-inter"
-                            onClick={handleDelete}
-                          >
-                            Delete
-                          </button>
-                          <button
-                            type="submit"
-                            className="flex items-center justify-center w-1/4 px-2 py-4 text-sm font-medium text-white border border-transparent rounded-full bg-primary hover:bg-primary-200 focus:outline-none"
-                          >
-                            Edit
-                          </button>
+                            <button
+                              type="button"
+                              className="inline-flex items-center justify-center w-1/4 px-2 py-4 text-sm font-medium text-red-400 rounded-full outline font-inter"
+                              onClick={handleDelete}
+                            >
+                              Delete
+                            </button>
+                            <button
+                              type="submit"
+                              className="flex items-center justify-center w-1/4 px-2 py-4 text-sm font-medium text-white border border-transparent rounded-full bg-primary hover:bg-primary-200 focus:outline-none"
+                            >
+                              Edit
+                            </button>
                           </div>
                         </Form>
                       )}
                     </Formik>
-
                   </Dialog.Panel>
                 ) : null}
               </Transition.Child>

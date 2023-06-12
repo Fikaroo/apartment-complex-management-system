@@ -138,7 +138,6 @@ const Navbar = () => {
         { name: "Residents", path: "/references/residents" },
         { name: "VendorRooms", path: "/references/vendorRooms" },
         { name: "Transport", path: "/references/transport" },
-        { name: "Accident", path: "/references/accident" },
       ],
     },
     {
@@ -153,6 +152,7 @@ const Navbar = () => {
       path: "/sos",
       icon: <ListBulletIcon className="w-5 h-5" />,
       iconSolid: <ListBulletIconSolid className="w-5 h-5 fill-white" />,
+      children: [{ name: "Accident", path: "/references/accident" }],
     },
     {
       name: "Blog",

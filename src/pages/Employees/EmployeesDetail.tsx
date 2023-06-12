@@ -366,7 +366,7 @@ const TransportItem = ({
           <button
             type="button"
             onClick={() => {
-              deleteTransportTrigger({ deleteId: id });
+              deleteTransportTrigger({ deleteId: employeesId });
               setEdit(false);
             }}
             className="w-full col-span-1 col-start-1 px-10 py-1 font-semibold text-white bg-red-500 rounded"

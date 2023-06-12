@@ -82,7 +82,7 @@ const Apartments = () => {
     <Fragment>
       <div className="flex items-center justify-between">
         <p className="font-bold font-inter text-16 leading-30 text-dark">
-          Ümumi: 178 Sakin
+          Ümumi: {data?.data?.length} Apartment
         </p>{" "}
         <div className="flex items-center gap-4">
           <AddBtn

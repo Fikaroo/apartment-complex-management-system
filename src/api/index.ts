@@ -145,7 +145,7 @@ export const Delete = {
       };
     }
   ) => {
-    const { data } = await admin.delete(`${path}${arg.deleteId}`, {
+    const { data } = await admin.delete(`${path}/${arg.deleteId}`, {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("user-token")}`,
       },

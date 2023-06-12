@@ -26,9 +26,15 @@ const Header = () => {
     getPathName(pathname);
   }, [pathname]);
   return (
-    <div className="flex items-center justify-between w-full p-6 border-b h-24x border-line">
+    <div className="flex items-center justify-between w-full h-24 px-12 border-b border-line">
       <h1 className="text-2xl font-bold text-dark">{headerName}</h1>
-      <div className="w-12 h-12 rounded-full bg-slate-200"></div>
+      <div className="object-cover">
+        <img
+          src="/public/avatar.png"
+          className="w-12 h-12 rounded-full"
+          alt=""
+        />
+      </div>
     </div>
   );
 };

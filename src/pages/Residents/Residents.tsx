@@ -77,7 +77,6 @@ const Residents = () => {
     {
       id: 7,
       title: "Company Name",
-    
     },
     {
       id: 8,
@@ -89,7 +88,7 @@ const Residents = () => {
     <div>
       <div className="flex items-center justify-between">
         <p className="font-bold font-inter text-16 leading-30 text-dark">
-          Ümumi: 2 Vendor
+          Ümumi: {data?.data?.length || "0"} Resident
         </p>{" "}
         <div className="flex items-center gap-4">
           <AddBtn
