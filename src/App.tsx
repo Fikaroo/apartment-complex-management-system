@@ -208,7 +208,7 @@ const App = () => {
         />
 
         <Route
-          path="/references/accident"
+          path="/sos/accident"
           element={
             <Layout>
               <Accident />

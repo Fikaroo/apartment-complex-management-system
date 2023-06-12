@@ -8,6 +8,9 @@ import {
 import OrderAvatar1 from "../../assets/Image.png";
 import OrderAvatar2 from "../../assets/Image-1.png";
 import OrderAvatar3 from "../../assets/Image-2.png";
+import useSWR from "swr";
+import { GetAll } from "../../api";
+import { Link } from "react-router-dom";
 
 const Dashboard = () => {
   const fakeNewsData = [
@@ -59,6 +62,38 @@ const Dashboard = () => {
     },
   ];
 
+  const {
+    data: orderData,
+    error: orderError,
+    isLoading: orderLoading,
+  } = useSWR("/api/OrderAdmin/GetAll", GetAll.user, {
+    revalidateIfStale: true,
+  });
+
+  const {
+    data: userData,
+    error: userError,
+    isLoading: userLoading,
+  } = useSWR("/api/Users/GetAllForAdmin", GetAll.user, {
+    revalidateIfStale: true,
+  });
+
+  const {
+    data: accidentData,
+    error: accidentError,
+    isLoading: accidentLoading,
+  } = useSWR("api/OrderAdmin/GetAccidentOrders", GetAll.user, {
+    revalidateIfStale: true,
+  });
+
+  const orderLength = orderData?.data?.length;
+  const lastOrder = orderData?.data?.slice(-4);
+  const userLength = userData?.data?.length;
+  const lastUser = userData?.data?.slice(-3);
+
+  const accidents = accidentData?.data;
+
+  console.log(accidents);
   return (
     <div className="relative flex gap-6 p-6 bg-transparent">
       <div className="flex w-4/6 gap-6">
@@ -97,19 +132,54 @@ const Dashboard = () => {
             </div>
           </div>
           <div className="w-full space-y-6">
-            <StatusBox type="USER" />
-            <StatusBox type="ORDER" />
+            <StatusBox length={userLength} type="USER" />
+            <StatusBox length={orderLength} type="ORDER" />
           </div>
         </div>
         <div className="w-full space-y-6">
           <div className="w-full h-[400px] bg-white p-6 border rounded-xl border-line">
             <div className="flex justify-between">
               <h2 className="text-lg font-bold">Sonuncu sifarişlər</h2>
-              <span className="text-sm text-primary">Hamsina bax</span>
+              <Link
+                to={"/control-panel/deals"}
+                className="text-sm text-primary"
+              >
+                Hamsina bax
+              </Link>
             </div>
 
             <div className="flex flex-col justify-between h-full mt-6 pb-14">
-              {fakeOrder.map(({ img, title, fullname, status, time }) => (
+              {lastOrder?.map(
+                ({
+                  id,
+                  orderTypeName,
+                  orderSourceName,
+                  orderClassName,
+                  actualDeadline,
+                }: any) => (
+                  <div className="flex w-full gap-4" key={id}>
+                    <div className="flex-1">
+                      <p className="font-bold">{orderTypeName}</p>
+                      <p className="text-sm text-icon">{orderSourceName}</p>
+                    </div>
+                    <div className="flex flex-col text-sm">
+                      <p className="font-bold text-end">{orderClassName}</p>
+                      <p className="text-sm text-icon">
+                        {new Date(actualDeadline)
+                          .toLocaleDateString("en-GB", {
+                            day: "2-digit",
+                            month: "2-digit",
+                            year: "numeric",
+                          })
+                          .split("/")
+                          .reverse()
+                          .join("-")}
+                      </p>
+                    </div>
+                  </div>
+                )
+              )}
+              {/* {fakeOrder.map(({ img, title, fullname, status, time }) => (
                 <div className="flex w-full gap-4">
                   {img ? (
                     <img
@@ -129,7 +199,7 @@ const Dashboard = () => {
                     <p className="text-sm text-icon">{time}</p>
                   </div>
                 </div>
-              ))}
+              ))} */}
             </div>
           </div>
           <div className="w-full h-[343px]  bg-white border divide-y divide-icon/25 rounded-xl border-line">
@@ -145,31 +215,34 @@ const Dashboard = () => {
         </div>
       </div>
       <div className="flex flex-col w-2/6 gap-6 p-6 rounded-xl bg-backgroundSecond">
+        <div className="flex items-center justify-between">
+          <h2 className="text-lg font-bold">Sakinlər</h2>
+          <Link to={"/references/users"} className="text-sm text-primary">
+            Hamsina bax
+          </Link>
+        </div>
         <div className="grid gap-4">
-          <div className="flex w-full gap-4">
+          {/* <div className="flex w-full gap-4">
             <div className="rounded-full w-11 h-11 bg-icon"></div>
             <div className="flex-1">
               <p>Nurlan Garash</p>
               <p>orgnu@icloud.com</p>
             </div>
             <PencilIcon className="w-5" />
-          </div>
-          <div className="flex w-full gap-4">
-            <div className="rounded-full w-11 h-11 bg-icon"></div>
-            <div className="flex-1">
-              <p>Kanan Idayatov</p>
-              <p>kanan@gmail.com</p>
+          </div> */}
+          {lastUser?.map(({ name, surname, email, id }: any) => (
+            <div key={id} className="flex w-full gap-4">
+              <div className="rounded-full w-11 h-11 bg-icon"></div>
+              <div className="flex-1">
+                <p>
+                  {name} {surname}
+                </p>
+                <p>{email}</p>
+              </div>
+
+              {/* <PencilIcon className="w-5" /> */}
             </div>
-            <PencilIcon className="w-5" />
-          </div>
-          <div className="flex w-full gap-4">
-            <div className="rounded-full w-11 h-11 bg-icon"></div>
-            <div className="flex-1">
-              <p>Rustam Azizov</p>
-              <p>rustam@gmail.com</p>
-            </div>
-            <PencilIcon className="w-5" />
-          </div>
+          ))}
         </div>
 
         <div className="w-full h-full p-2">
@@ -177,6 +250,7 @@ const Dashboard = () => {
             <div className="flex items-center justify-between p-6">
               <h2 className="text-lg font-bold">SOS bildirişləri</h2>
               <span className="text-sm text-primary">Hamsina bax</span>
+              {accidents}
             </div>
           </div>
         </div>
@@ -185,20 +259,26 @@ const Dashboard = () => {
   );
 };
 
-const StatusBox = ({ type }: { type: "USER" | "ORDER" }) => {
+const StatusBox = ({
+  type,
+  length,
+}: {
+  type: "USER" | "ORDER";
+  length: number;
+}) => {
   const getDetail = () => {
     switch (type) {
       case "USER":
         return {
           title: "Sakinlər",
-          count: 178,
+          count: length,
           icon: <UsersIcon className="w-8 h-8 fill-success" />,
         };
 
       case "ORDER":
         return {
           title: "Sifarişlər",
-          count: 136,
+          count: length,
           icon: <BriefcaseIcon className="w-8 h-8 fill-error" />,
         };
 

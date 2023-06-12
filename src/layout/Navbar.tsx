@@ -76,7 +76,6 @@ const NavItem = ({
             {pathname &&
               (pathname == "/" ? null : (
                 <div className="hidden group-hover:block">
-                  {" "}
                   {isExpanded && isExpanded ? (
                     <ChevronUpIcon className="w-[14px] text-cyan-50 translate-x-1" />
                   ) : (
@@ -149,10 +148,10 @@ const Navbar = () => {
     },
     {
       name: "Sos",
-      path: "/sos",
+      path: "",
       icon: <ListBulletIcon className="w-5 h-5" />,
       iconSolid: <ListBulletIconSolid className="w-5 h-5 fill-white" />,
-      children: [{ name: "Accident", path: "/references/accident" }],
+      children: [{ name: "Accident", path: "/sos/accident" }],
     },
     {
       name: "Blog",
