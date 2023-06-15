@@ -32,7 +32,7 @@ export type EmployeeValues = {
   name: string;
   surname: string;
   patrionimyc: string;
-  hasCompany: boolean | null;
+  hasCompany: string | null;
   jobPosition: string;
   vendorCompanyId: number | null;
   vendorObjectsId: number[];
@@ -385,8 +385,8 @@ const EmployeesModal = ({
                                 <option value="" selected disabled>
                                   Select
                                 </option>
-                                <option value="true">true</option>
-                                <option value="false">false</option>
+                                <option value={"true"}>true</option>
+                                <option value={"false"}>false</option>
                               </Field>
                             </div>
 
@@ -418,133 +418,136 @@ const EmployeesModal = ({
                             </div>
                           </div>
 
-                          <div className="grid items-center justify-between grid-cols-2 gap-4 mt-10 font-bold font-inter text-16 leading-30 text-dark">
-                            <div>
-                              <label
-                                htmlFor="vendorCompanyId"
-                                className="inline-flex items-center "
-                              >
-                                Vendor Company
-                              </label>
-                              <Field
-                                as="select"
-                                name="vendorCompanyId"
-                                id="vendorCompanyId"
-                                className="flex items-center justify-center px-5 py-2 mt-3 font-medium border rounded-lg border-line bg-background focus:outline-none text-md"
-                                // required
-                              >
-                                <option value="" selected disabled>
-                                  Choose
-                                </option>
-                                {vendorCompanyIds?.map(
-                                  ({
-                                    id,
-                                    companyName,
-                                  }: {
-                                    id: number;
-                                    companyName: string;
-                                  }) => (
-                                    <option key={id} value={id}>
-                                      {companyName}
-                                    </option>
-                                  )
-                                )}
-                              </Field>
-                            </div>
+                          {formikProps.values.hasCompany === "true" ? (
+                            <div className="grid items-center justify-between grid-cols-2 gap-4 mt-10 font-bold font-inter text-16 leading-30 text-dark">
+                              <div>
+                                <label
+                                  htmlFor="vendorCompanyId"
+                                  className="inline-flex items-center "
+                                >
+                                  Vendor Company
+                                </label>
+                                <Field
+                                  as="select"
+                                  name="vendorCompanyId"
+                                  id="vendorCompanyId"
+                                  className="flex items-center justify-center px-5 py-2 mt-3 font-medium border rounded-lg border-line bg-background focus:outline-none text-md"
+                                  // required
+                                >
+                                  <option value="" selected disabled>
+                                    Choose
+                                  </option>
+                                  {vendorCompanyIds?.map(
+                                    ({
+                                      id,
+                                      companyName,
+                                    }: {
+                                      id: number;
+                                      companyName: string;
+                                    }) => (
+                                      <option key={id} value={id}>
+                                        {companyName}
+                                      </option>
+                                    )
+                                  )}
+                                </Field>
+                              </div>
 
-                            <div>
-                              <label
-                                htmlFor="vendorObjectsId"
-                                className="inline-flex items-center "
-                              >
-                                Vendor Objects
-                              </label>
-                              <Field
-                                as="select"
-                                name="vendorObjectsId"
-                                id="vendorObjectsId"
-                                className="flex items-center justify-center px-5 py-2 mt-3 font-medium border rounded-lg border-line bg-background focus:outline-none text-md"
-                                required
-                              >
-                                <option value="" selected disabled>
-                                  Choose
-                                </option>
-                                {vendorObjectsIds?.map(
-                                  ({
-                                    id,
-                                    title,
-                                  }: {
-                                    id: number;
-                                    title: string;
-                                  }) => (
-                                    <option key={id} value={id}>
-                                      {title}
-                                    </option>
-                                  )
-                                )}
-                              </Field>
-                            </div>
+                              <div>
+                                <label
+                                  htmlFor="vendorObjectsId"
+                                  className="inline-flex items-center "
+                                >
+                                  Vendor Objects
+                                </label>
+                                <Field
+                                  as="select"
+                                  name="vendorObjectsId"
+                                  id="vendorObjectsId"
+                                  className="flex items-center justify-center px-5 py-2 mt-3 font-medium border rounded-lg border-line bg-background focus:outline-none text-md"
+                                  required
+                                >
+                                  <option value="" selected disabled>
+                                    Choose
+                                  </option>
+                                  {vendorObjectsIds?.map(
+                                    ({
+                                      id,
+                                      title,
+                                    }: {
+                                      id: number;
+                                      title: string;
+                                    }) => (
+                                      <option key={id} value={id}>
+                                        {title}
+                                      </option>
+                                    )
+                                  )}
+                                </Field>
+                              </div>
 
-                            <div>
-                              <label
-                                htmlFor="vendorBuildingsId"
-                                className="inline-flex items-center "
-                              >
-                                Vendor Building
-                              </label>
-                              <Field
-                                as="select"
-                                name="vendorBuildingsId"
-                                id="vendorBuildingsId"
-                                className="flex items-center justify-center px-5 py-2 mt-3 font-medium border rounded-lg border-line bg-background focus:outline-none text-md"
-                                required
-                              >
-                                <option value="" selected disabled>
-                                  Choose
-                                </option>
-                                {vendorBuildingsIds?.map(
-                                  ({ id }: { id: number }) => (
-                                    <option key={id} value={id}>
-                                      {id}
-                                    </option>
-                                  )
-                                )}
-                              </Field>
-                            </div>
+                              <div>
+                                <label
+                                  htmlFor="vendorBuildingsId"
+                                  className="inline-flex items-center "
+                                >
+                                  Vendor Building
+                                </label>
+                                <Field
+                                  as="select"
+                                  name="vendorBuildingsId"
+                                  id="vendorBuildingsId"
+                                  className="flex items-center justify-center px-5 py-2 mt-3 font-medium border rounded-lg border-line bg-background focus:outline-none text-md"
+                                  required
+                                >
+                                  <option value="" selected disabled>
+                                    Choose
+                                  </option>
+                                  {vendorBuildingsIds?.map(
+                                    ({ id }: { id: number }) => (
+                                      <option key={id} value={id}>
+                                        {id}
+                                      </option>
+                                    )
+                                  )}
+                                </Field>
+                              </div>
 
-                            <div>
-                              <label
-                                htmlFor="roleId"
-                                className="inline-flex items-center "
-                              >
-                                Role Name
-                              </label>
-                              <Field
-                                as="select"
-                                name="roleId"
-                                id="roleId"
-                                className="flex items-center justify-center px-5 py-2 mt-3 font-medium border rounded-lg border-line bg-background focus:outline-none text-md"
-                                required
-                              >
-                                <option value="" selected disabled>
-                                  Choose
-                                </option>
-                                {roleAdminIds?.map(
-                                  ({
-                                    id,
-                                    name,
-                                  }: {
-                                    id: string;
-                                    name: string;
-                                  }) => (
-                                    <option key={id} value={id}>
-                                      {name}
-                                    </option>
-                                  )
-                                )}
-                              </Field>
+                              <div>
+                                <label
+                                  htmlFor="roleId"
+                                  className="inline-flex items-center "
+                                >
+                                  Role Name
+                                </label>
+                                <Field
+                                  as="select"
+                                  name="roleId"
+                                  id="roleId"
+                                  className="flex items-center justify-center px-5 py-2 mt-3 font-medium border rounded-lg border-line bg-background focus:outline-none text-md"
+                                  required
+                                >
+                                  <option value="" selected disabled>
+                                    Choose
+                                  </option>
+                                  {roleAdminIds?.map(
+                                    ({
+                                      id,
+                                      name,
+                                    }: {
+                                      id: string;
+                                      name: string;
+                                    }) => (
+                                      <option key={id} value={id}>
+                                        {name}
+                                      </option>
+                                    )
+                                  )}
+                                </Field>
+                              </div>
                             </div>
-                          </div>
+                          ) : null}
+
                           <div className="flex items-center justify-around w-full mt-10 font-bold font-inter text-16 leading-30 text-dark">
                             <button
                               type="submit"
@@ -843,32 +846,135 @@ const EmployeesModal = ({
                               </Field>
                             </div>
 
-                            <div>
-                              <label
-                                htmlFor="vendorBuildingsId"
-                                className="inline-flex items-center "
-                              >
-                                Vendor Building
-                              </label>
-                              <Field
-                                as="select"
-                                name="vendorBuildingsId"
-                                id="vendorBuildingsId"
-                                className="flex items-center justify-center px-5 py-2 mt-3 font-medium border rounded-lg border-line bg-background focus:outline-none text-md"
-                                required
-                              >
-                                <option value="" selected disabled>
-                                  Choose
-                                </option>
-                                {vendorBuildingsIds?.map(
-                                  ({ id }: { id: number }) => (
-                                    <option key={id} value={id}>
-                                      {id}
+                            {formikProps.values.hasCompany === "true" ? (
+                              <div className="grid items-center justify-between grid-cols-2 gap-4 mt-10 font-bold font-inter text-16 leading-30 text-dark">
+                                <div>
+                                  <label
+                                    htmlFor="vendorCompanyId"
+                                    className="inline-flex items-center "
+                                  >
+                                    Vendor Company
+                                  </label>
+                                  <Field
+                                    as="select"
+                                    name="vendorCompanyId"
+                                    id="vendorCompanyId"
+                                    className="flex items-center justify-center px-5 py-2 mt-3 font-medium border rounded-lg border-line bg-background focus:outline-none text-md"
+                                    // required
+                                  >
+                                    <option value="" selected disabled>
+                                      Choose
                                     </option>
-                                  )
-                                )}
-                              </Field>
-                            </div>
+                                    {vendorCompanyIds?.map(
+                                      ({
+                                        id,
+                                        companyName,
+                                      }: {
+                                        id: number;
+                                        companyName: string;
+                                      }) => (
+                                        <option key={id} value={id}>
+                                          {companyName}
+                                        </option>
+                                      )
+                                    )}
+                                  </Field>
+                                </div>
+
+                                <div>
+                                  <label
+                                    htmlFor="vendorObjectsId"
+                                    className="inline-flex items-center "
+                                  >
+                                    Vendor Objects
+                                  </label>
+                                  <Field
+                                    as="select"
+                                    name="vendorObjectsId"
+                                    id="vendorObjectsId"
+                                    className="flex items-center justify-center px-5 py-2 mt-3 font-medium border rounded-lg border-line bg-background focus:outline-none text-md"
+                                    required
+                                  >
+                                    <option value="" selected disabled>
+                                      Choose
+                                    </option>
+                                    {vendorObjectsIds?.map(
+                                      ({
+                                        id,
+                                        title,
+                                      }: {
+                                        id: number;
+                                        title: string;
+                                      }) => (
+                                        <option key={id} value={id}>
+                                          {title}
+                                        </option>
+                                      )
+                                    )}
+                                  </Field>
+                                </div>
+
+                                <div>
+                                  <label
+                                    htmlFor="vendorBuildingsId"
+                                    className="inline-flex items-center "
+                                  >
+                                    Vendor Building
+                                  </label>
+                                  <Field
+                                    as="select"
+                                    name="vendorBuildingsId"
+                                    id="vendorBuildingsId"
+                                    className="flex items-center justify-center px-5 py-2 mt-3 font-medium border rounded-lg border-line bg-background focus:outline-none text-md"
+                                    required
+                                  >
+                                    <option value="" selected disabled>
+                                      Choose
+                                    </option>
+                                    {vendorBuildingsIds?.map(
+                                      ({ id }: { id: number }) => (
+                                        <option key={id} value={id}>
+                                          {id}
+                                        </option>
+                                      )
+                                    )}
+                                  </Field>
+                                </div>
+
+                                <div>
+                                  <label
+                                    htmlFor="roleId"
+                                    className="inline-flex items-center "
+                                  >
+                                    Role Name
+                                  </label>
+                                  <Field
+                                    as="select"
+                                    name="roleId"
+                                    id="roleId"
+                                    className="flex items-center justify-center px-5 py-2 mt-3 font-medium border rounded-lg border-line bg-background focus:outline-none text-md"
+                                    required
+                                  >
+                                    <option value="" selected disabled>
+                                      Choose
+                                    </option>
+                                    {roleAdminIds?.map(
+                                      ({
+                                        id,
+                                        name,
+                                      }: {
+                                        id: string;
+                                        name: string;
+                                      }) => (
+                                        <option key={id} value={id}>
+                                          {name}
+                                        </option>
+                                      )
+                                    )}
+                                  </Field>
+                                </div>
+                              </div>
+                            ) : null}
 
                             <div>
                               <label

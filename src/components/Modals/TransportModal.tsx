@@ -8,7 +8,7 @@ import useSWR from "swr";
 
 import useGetResponse from "../../hooks/useGetResponse";
 
-import { CreateTransport, Delete } from "../../api";
+import { CreateTransport, Delete, UpdateTransport } from "../../api";
 import { GetAll } from "../../api";
 
 type Props = {
@@ -36,13 +36,14 @@ const TransportModal = ({
   mutate,
 }: Props) => {
   const { data, isLoading, error } = useSWR(
-    "/api/Employees/GetAll",
+    "/api/Users/GetAllForAdmin",
     GetAll.user
   );
 
   const handleSubmit = async (values: TransportValues) => {
     const parsedValues = {
       ...values,
+      employeeOrUserId: values.id,
     };
 
     console.log("dataRegions", values);
@@ -67,7 +68,7 @@ const TransportModal = ({
     };
 
     const res = await useGetResponse(
-      CreateTransport.user("/api/Transport/Update", {
+      UpdateTransport.user("/api/Transport/Update", {
         arg: parsedValues,
       }),
       mutate,
@@ -96,7 +97,13 @@ const TransportModal = ({
   if (isLoading) <div>Loading...</div>;
   if (error) <div>error...</div>;
 
-  const employeeIds = data?.data?.map(({ id }: { id: string }) => id);
+  const usersDetail = data?.data?.map(
+    ({ id, name, surname }: { id: string; name: string; surname: string }) => ({
+      id,
+      name,
+      surname,
+    })
+  );
 
   return (
     <div>
@@ -131,7 +138,7 @@ const TransportModal = ({
                       as="h3"
                       className="flex items-center justify-between font-bold font-inter text-16 leading-30 text-dark"
                     >
-                   Add  Transport 
+                      Add Transport
                       <XCircleIcon
                         onClick={closeModal}
                         className="w-6 h-6 cursor-pointer fill-icon"
@@ -209,11 +216,21 @@ const TransportModal = ({
                                 required
                               >
                                 <option value="">Select</option>
-                                {employeeIds?.map((d: string) => (
-                                  <option key={d} value={d}>
-                                    {d}
-                                  </option>
-                                ))}
+                                {usersDetail?.map(
+                                  ({
+                                    id,
+                                    name,
+                                    surname,
+                                  }: {
+                                    id: string;
+                                    name: string;
+                                    surname: string;
+                                  }) => (
+                                    <option key={id} value={id}>
+                                      {name} {surname}
+                                    </option>
+                                  )
+                                )}
                               </Field>
                             </div>
                           </div>
