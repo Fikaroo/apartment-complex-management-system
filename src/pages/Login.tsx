@@ -39,10 +39,20 @@ const Login = () => {
   };
 
   useEffect(() => {
-    if (data?.statusCode === 202) {
+     if (data?.statusCode === 202) {
       openModal();
+    
+      alert (data?.message?.[0]);
+    } else if (data?.statusCode === 200) {
+      openModal();
+      
+      alert(data?.message?.[0]);
     } else if (data?.statusCode === 400) {
-      console.log(error, "error");
+      alert(data?.message?.[0]);
+    }
+    else if (data?.statusCode === 404) {
+   alert(data?.message?.[0]);
+    
     }
   }, [data]);
 

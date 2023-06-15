@@ -10,6 +10,7 @@ import useGetResponse from "../../hooks/useGetResponse";
 import { GetAll } from "../../api";
 import { EditUser } from "../../api";
 import { DeleteUser } from "../../api";
+import ProportionInput from "../ProportionInput ";
 type Props = {
   isOpen: boolean;
   closeModal: () => void;
@@ -48,6 +49,8 @@ const UserModal: React.FC<Props> = ({
   selectedRow,
   mutate,
 }) => {
+
+  
   const {
     data: dataPropertyTypes,
     error: errorPropertyTypes,
@@ -311,6 +314,7 @@ const UserModal: React.FC<Props> = ({
                               placeholder="/"
                               className="mt-3 w-[95%]  rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none  font-medium text-md"
                               required
+                              component={ProportionInput}
                             />
                           </div>
                         </div>
