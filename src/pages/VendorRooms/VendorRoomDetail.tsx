@@ -9,7 +9,6 @@ type Props = {};
 const VendorRoomDetail = (props: Props) => {
   const { vendorRoomId } = useParams();
 
-
   const { data, error, isLoading } = useSWR(
     `/api/VendorRooms/GetById?id=${vendorRoomId}`,
     GetbyId.user
@@ -26,20 +25,23 @@ const VendorRoomDetail = (props: Props) => {
   return (
     <React.Fragment>
       <Tab.Group>
-        <Tab.List className=" w-1/2 flex justify-between space-x-1 rounded-xl p-1 mb-5">
-        <Tab className={({selected})=>(
-    "w-1/2 rounded-lg py-2.5 text-sm font-medium leading-5 text-primary ring-white ring-opacity-60 ring-offset-2 ring-offset-primary focus:outline-none focus:ring-2 " +
-    (selected ? "bg-white shadow" : "text-blue-10")
-  )}>
-Vendor Room Detail
-</Tab>
-          <Tab className={({selected})=>(
-    "w-1/2 rounded-lg py-2.5 text-sm font-medium leading-5 text-primary ring-white ring-opacity-60 ring-offset-2 ring-offset-primary focus:outline-none focus:ring-2 " +
-    (selected ? "bg-white shadow" : "text-blue-10")
-  )}>
-  RentRoom
-</Tab>
-         
+        <Tab.List className="flex justify-between gap-1 p-1 mb-5 rounded-xl">
+          <Tab
+            className={({ selected }) =>
+              "rounded-lg w-full py-2.5 text-sm font-medium leading-5 text-primary ring-white ring-opacity-60 ring-offset-2 ring-offset-primary focus:outline-none focus:ring-2 " +
+              (selected ? "bg-white shadow" : "text-blue-10")
+            }
+          >
+            Vendor Room Detail
+          </Tab>
+          <Tab
+            className={({ selected }) =>
+              "w-full rounded-lg py-2.5 text-sm font-medium leading-5 text-primary ring-white ring-opacity-60 ring-offset-2 ring-offset-primary focus:outline-none focus:ring-2 " +
+              (selected ? "bg-white shadow" : "text-blue-10")
+            }
+          >
+            RentRoom
+          </Tab>
         </Tab.List>
         <Tab.Panels>
           <Tab.Panel>
@@ -51,7 +53,7 @@ Vendor Room Detail
                   </p>
                 </div>
               </div>
-              <div className="w-1/6 flex items-center justify-between">
+              <div className="flex items-center justify-between w-1/6">
                 <div className="w-[50px] h-[50px] border-[1px] border-slate-300 rounded-full flex items-center justify-center">
                   <img
                     src="/icons/edit.svg"
@@ -73,10 +75,10 @@ Vendor Room Detail
               </div>
             </div>
 
-            <div className="w-1/2 flex items-center justify-between">
+            <div className="flex items-center justify-between w-1/2">
               <div className="w-2/3 h-[300px] pr-10 ">
                 {" "}
-                <div className=" w-full flex items-center flex-row justify-between mt-5 p-5">
+                <div className="flex flex-row items-center justify-between w-full p-5 mt-5 ">
                   <div className="w-1/2">
                     <p className="font-inter text-[14px] leading-30 text-[#7E92A2]">
                       Company Name
@@ -94,7 +96,7 @@ Vendor Room Detail
                     </p>
                   </div>
                 </div>
-                <div className=" w-full flex items-center flex-row justify-between mt-5 p-5 font-bold font-inter text-16 leading-30 text-dark">
+                <div className="flex flex-row items-center justify-between w-full p-5 mt-5 font-bold font-inter text-16 leading-30 text-dark">
                   <div className="w-1/2">
                     <p className="font-inter text-[14px] leading-30 text-[#7E92A2]">
                       Region Name
@@ -112,7 +114,7 @@ Vendor Room Detail
                     </p>
                   </div>
                 </div>
-                <div className=" w-full flex items-center flex-row justify-between mt-5 p-5 font-bold font-inter text-16 leading-30 text-dark">
+                <div className="flex flex-row items-center justify-between w-full p-5 mt-5 font-bold font-inter text-16 leading-30 text-dark">
                   <div className="w-1/2">
                     <p className="font-inter text-[14px] leading-30 text-[#7E92A2]">
                       Room Type
@@ -125,7 +127,9 @@ Vendor Room Detail
               </div>
             </div>
           </Tab.Panel>
-          <Tab.Panel><RentRooms vendorRoomId={vendorRoomId} /></Tab.Panel>
+          <Tab.Panel>
+            <RentRooms vendorRoomId={vendorRoomId} />
+          </Tab.Panel>
         </Tab.Panels>
       </Tab.Group>
     </React.Fragment>

@@ -24,12 +24,12 @@ const Companies = () => {
     setIsOpen(true);
   };
 
-  const { data, error, isLoading ,mutate} = useSWR(
+  const { data, error, isLoading, mutate } = useSWR(
     "/api/VendorCompany/GetAllByVendorId",
     (key) => GetAll.user(key),
     { revalidateIfStale: true }
   );
- 
+
   const headers: IHeaders[] = [
     {
       id: 1,
@@ -49,7 +49,7 @@ const Companies = () => {
         </svg>
       ),
     },
-       
+
     {
       id: 2,
       title: "Company Name",
@@ -67,9 +67,9 @@ const Companies = () => {
       title: "Director Father Name",
     },
     {
-        id: 6,
-        title: "Phonenumber",
-      },
+      id: 6,
+      title: "Phonenumber",
+    },
     {
       id: 7,
       title: "Email",
@@ -77,7 +77,8 @@ const Companies = () => {
     {
       id: 8,
       title: "Object Name",
-    },    {
+    },
+    {
       id: 9,
       title: "Vendor Name",
     },
@@ -94,14 +95,13 @@ const Companies = () => {
       id: 12,
       title: "Edit",
     },
-   
   ];
 
   return (
     <Fragment>
       <div className="flex items-center justify-between">
         <p className="font-bold font-inter text-16 leading-30 text-dark">
-          Ümumi: 178 Companies
+          Ümumi: {data?.data?.length} Companies
         </p>{" "}
         <div className="flex items-center gap-4">
           <AddBtn
@@ -109,7 +109,7 @@ const Companies = () => {
             setProcess={setProcess}
             modal={
               <CompaniesModal
-              mutate={mutate}
+                mutate={mutate}
                 isOpen={isOpen}
                 closeModal={closeModal}
                 process={process}
@@ -128,7 +128,7 @@ const Companies = () => {
         openModal={openModal}
         modal={
           <CompaniesModal
-          mutate={mutate}
+            mutate={mutate}
             isOpen={isOpen}
             closeModal={closeModal}
             process={process}

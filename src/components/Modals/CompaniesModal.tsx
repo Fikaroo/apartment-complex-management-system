@@ -238,7 +238,7 @@ const CompaniesModal: React.FC<Props> = ({
                             </div>
                           </div>
 
-                          <div className="flex flex-row items-center justify-between w-full mt-5 font-bold  font-inter text-16 leading-30 text-dark">
+                          <div className="flex flex-row items-center justify-between w-full mt-5 font-bold font-inter text-16 leading-30 text-dark">
                             <div className="w-[48%]">
                               <label
                                 htmlFor="DirectorSurname"
@@ -270,7 +270,7 @@ const CompaniesModal: React.FC<Props> = ({
                             </div>
                           </div>
 
-                          <div className="flex flex-row items-center justify-between w-full mt-5 font-bold  font-inter text-16 leading-30 text-dark">
+                          <div className="flex flex-row items-center justify-between w-full mt-5 font-bold font-inter text-16 leading-30 text-dark">
                             <div className="w-[48%]">
                               <label
                                 htmlFor="CompanyName"
@@ -303,7 +303,7 @@ const CompaniesModal: React.FC<Props> = ({
                             </div>
                           </div>
 
-                          <div className="flex flex-row items-center justify-between w-full mt-5 font-bold  font-inter text-16 leading-30 text-dark">
+                          <div className="flex flex-row items-center justify-between w-full mt-5 font-bold font-inter text-16 leading-30 text-dark">
                             <div className="w-[48%]">
                               <label
                                 htmlFor="VIN"
@@ -335,7 +335,7 @@ const CompaniesModal: React.FC<Props> = ({
                               </div>
                             </div>
                           </div>
-                          <div className="flex flex-row items-center justify-between w-full mt-5 font-bold  font-inter text-16 leading-30 text-dark">
+                          <div className="flex flex-row items-center justify-between w-full mt-5 font-bold font-inter text-16 leading-30 text-dark">
                             <div className="w-[48%]">
                               <label
                                 htmlFor="email"
@@ -353,7 +353,7 @@ const CompaniesModal: React.FC<Props> = ({
                               </div>
                             </div>
                           </div>
-                          <div className="flex flex-row items-center justify-between w-full mt-5 font-bold  font-inter text-16 leading-30 text-dark">
+                          <div className="flex flex-row items-center justify-between w-full mt-5 font-bold font-inter text-16 leading-30 text-dark">
                             <div className="w-[48%]">
                               <label
                                 htmlFor="Logo"
@@ -533,7 +533,7 @@ const CompaniesModal: React.FC<Props> = ({
                             </div>
                           </div>
 
-                          <div className="flex flex-row items-center justify-between w-full mt-5 font-bold  font-inter text-16 leading-30 text-dark">
+                          <div className="flex flex-row items-center justify-between w-full mt-5 font-bold font-inter text-16 leading-30 text-dark">
                             <div className="w-[48%]">
                               <label
                                 htmlFor="VIN"
@@ -563,7 +563,7 @@ const CompaniesModal: React.FC<Props> = ({
                               </div>
                             </div>
                           </div>
-                          <div className="flex flex-row items-center justify-between w-full mt-5 font-bold  font-inter text-16 leading-30 text-dark">
+                          <div className="flex flex-row items-center justify-between w-full mt-5 font-bold font-inter text-16 leading-30 text-dark">
                             <div className="w-[48%]">
                               <label
                                 htmlFor="email"
@@ -580,7 +580,7 @@ const CompaniesModal: React.FC<Props> = ({
                               </div>
                             </div>
                           </div>
-                          <div className="flex flex-row items-center justify-between w-full mt-5 font-bold  font-inter text-16 leading-30 text-dark">
+                          <div className="flex flex-row items-center justify-between w-full mt-5 font-bold font-inter text-16 leading-30 text-dark">
                             <div className="w-[48%]">
                               <label
                                 htmlFor="Image"
