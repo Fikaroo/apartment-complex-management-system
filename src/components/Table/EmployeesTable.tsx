@@ -2,6 +2,8 @@ import { Dialog, Transition } from "@headlessui/react";
 import { Fragment, useState } from "react";
 import SosModal from "../Modals/SosModal";
 import { Link, useNavigate } from "react-router-dom";
+import useSWRMutation from "swr/mutation";
+import { GetbyId } from "../../api";
 export interface IHeaders {
   isStatus?: boolean;
   isAvatar?: boolean;
@@ -33,6 +35,12 @@ const Tables = ({
   const nav = useNavigate();
 
   const handleTableRow = ({ id }: any) => nav(`${id}`);
+
+  const {
+    data: EmployeesById,
+    error,
+    trigger,
+  } = useSWRMutation(`api/Employees/GetDetail`, GetbyId.user);
 
   return (
     <div className="w-full mt-8 overflow-x-auto">
@@ -96,14 +104,17 @@ const Tables = ({
 
               <td
                 className="px-6 py-4 text-sm font-medium leading-5 text-right whitespace-no-wrap border-b border-gray-200"
-                onClick={(e) => e.stopPropagation()}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  trigger(item.id);
+                  setSelectedRow(EmployeesById?.data);
+                }}
               >
                 <img
                   onClick={() => {
                     openModal();
                     setProcess("Edit");
                     setEmployeeId(item.id);
-                    setSelectedRow(item);
                   }}
                   className="cursor-pointer"
                   src="/icons/edit.svg"

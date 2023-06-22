@@ -57,7 +57,7 @@ const VendorRoomsModal = ({
   const handleSubmit = async (values: Values) => {
     const parsedValues = {
       ...values,
-      vendorCompanyId: parseInt(values.vendorCompanyId),
+      vendorCompanyId: values.vendorCompanyId,
       regionId: parseInt(values.regionId),
       vendorRoomTypeId: parseInt(values.vendorRoomTypeId),
       isRentAviable: values.isRentAviable === "true",

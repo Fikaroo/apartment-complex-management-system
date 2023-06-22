@@ -112,7 +112,7 @@ export const CreateDeal = {
     {
       arg,
     }: {
-      arg:FormData
+      arg: FormData;
     }
   ) => {
     const { data } = await company.post(path, arg, {
@@ -169,7 +169,7 @@ export const EditDeal = {
     {
       arg,
     }: {
-      arg: FormData
+      arg: FormData;
     }
   ) => {
     const { data } = await company.put(path, arg, {
@@ -182,8 +182,8 @@ export const EditDeal = {
 };
 
 export const GetbyId = {
-  user: async (path: string) => {
-    const { data } = await admin.get(path, {
+  user: async (path: string, { arg }: { arg: string }) => {
+    const { data } = await admin.get(`${path}/${arg}`, {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("user-token")}`,
       },
@@ -445,7 +445,9 @@ export const CreateTransport = {
     {
       arg,
     }: {
-      arg: TransportValues & { EmployeeOrUserId?: string };
+      arg: TransportValues & { EmployeeOrUserId?: string } & {
+        vendorCompanyId?: string;
+      };
     }
   ) => {
     const { data } = await admin.post(path, arg, {
@@ -512,20 +514,24 @@ export const EditBuilding = {
   },
 };
 
+export interface IVendorRoomArgs {
+  name: string;
+  vendorCompanyId?: string;
+  regionId: number;
+  area?: string;
+  floor?: string;
+  vendorRoomTypeId: number;
+  isRentAviable: boolean;
+  rentPrice: number;
+}
+
 export const AddVendorRooms = {
   user: async (
     path: string,
     {
       arg,
     }: {
-      arg: {
-        name: string;
-        vendorCompanyId: number;
-        regionId: number;
-        vendorRoomTypeId: number;
-        isRentAviable: boolean;
-        rentPrice: number;
-      };
+      arg: IVendorRoomArgs;
     }
   ) => {
     const { data } = await admin.post(path, arg, {

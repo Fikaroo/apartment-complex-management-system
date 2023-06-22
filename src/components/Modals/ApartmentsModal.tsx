@@ -64,7 +64,8 @@ const ApartmentsModal: React.FC<Props> = ({
             dataBuilding?.data.find(
               (item: any) => item.name === selectedRow?.buildingName
             )?.id
-          }`
+          }`,
+          { arg: "" }
         );
         setEditData(resp);
         console.log("resp!!!", resp);

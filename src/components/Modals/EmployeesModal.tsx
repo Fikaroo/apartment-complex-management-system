@@ -1,4 +1,4 @@
-import { Fragment } from "react";
+import { Fragment, useEffect } from "react";
 
 import { Dialog, Transition } from "@headlessui/react";
 import { XCircleIcon } from "@heroicons/react/24/solid";
@@ -174,6 +174,7 @@ const EmployeesModal = ({
     console.log(vendorObjectsIds);
   }
 
+  console.log(selectedRow);
   return (
     <div>
       <Transition appear show={isOpen} as={Fragment}>
