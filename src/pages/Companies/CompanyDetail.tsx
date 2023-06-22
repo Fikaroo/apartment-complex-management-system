@@ -30,7 +30,7 @@ const CompanyDetail = (props: Props) => {
     },
     { id: 2, name: "Transport", component: <TransportTab /> },
 
-    { id: 3, name: "Vendor Room", component: <VendorRoomTab /> },
+    { id: 3, name: "Vendor Room", component: <></> },
   ]);
 
   return (
