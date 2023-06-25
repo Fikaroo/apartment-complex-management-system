@@ -422,7 +422,7 @@ const TransportItem = ({
     </form>
   );
 };
-
+{/**\}
 const VendorRoomTab = () => {
   const { companyId } = useParams();
   const [addVendorRoom, setAddVendorRoom] = useState(false);
@@ -676,4 +676,4 @@ const VendorRoomItem = ({
       </p>
     </form>
   );
-};
+};*/}
