@@ -146,7 +146,7 @@ const CompaniesModal: React.FC<Props> = ({
   return (
     <div>
       <Transition appear show={isOpen} as={Fragment}>
-        <Dialog as="div" className="relative z-10" onClose={closeModal}>
+        <Dialog as="div" className="relative z-10" onClose={()=>{closeModal();setSelectedImage(null)}}>
           <Transition.Child
             as={Fragment}
             enter="ease-out duration-300"
@@ -178,7 +178,7 @@ const CompaniesModal: React.FC<Props> = ({
                     >
                       Add Company
                       <XCircleIcon
-                        onClick={closeModal}
+                        onClick={()=>{closeModal();setSelectedImage(null)}}
                         className="w-6 h-6 cursor-pointer fill-icon"
                       />
                     </Dialog.Title>
@@ -191,7 +191,7 @@ const CompaniesModal: React.FC<Props> = ({
                         Email: "",
                         Logo: null,
                         ObjectId: "",
-                        CompanyName: "-1",
+                        CompanyName: "",
                         VOEN: "",
                         VIN: "",
                       }}
@@ -406,7 +406,7 @@ const CompaniesModal: React.FC<Props> = ({
                     >
                       Edit Company
                       <XCircleIcon
-                        onClick={closeModal}
+                        onClick={()=>{closeModal();setSelectedImage(null)}}
                         className="w-6 h-6 cursor-pointer fill-icon"
                       />
                     </Dialog.Title>

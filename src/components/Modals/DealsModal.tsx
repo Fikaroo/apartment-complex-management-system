@@ -225,7 +225,7 @@ const DealsModal: React.FC<Props> = ({
   return (
     <div>
       <Transition appear show={isOpen} as={Fragment}>
-        <Dialog as="div" className="relative z-10" onClose={closeModal}>
+        <Dialog as="div" className="relative z-10" onClose={()=>{closeModal();setSelectedImage(null)}}>
           <Transition.Child
             as={Fragment}
             enter="ease-out duration-300"
@@ -257,7 +257,7 @@ const DealsModal: React.FC<Props> = ({
                     >
                       Add Deal
                       <XCircleIcon
-                        onClick={closeModal}
+                        onClick={()=>{closeModal();setSelectedImage(null)}}
                         className="w-6 h-6 cursor-pointer fill-icon"
                       />
                     </Dialog.Title>
@@ -511,7 +511,7 @@ const DealsModal: React.FC<Props> = ({
                                 <img
                                   src={URL.createObjectURL(selectedImage)}
                                   alt="Selected Image"
-                                  className="object-contain w-full h-full "
+                                  className="object-cover object-center w-full h-full "
                                 />
                               )}
                             </div>
@@ -536,7 +536,7 @@ const DealsModal: React.FC<Props> = ({
                     >
                       Edit Order
                       <XCircleIcon
-                        onClick={closeModal}
+                        onClick={()=>{closeModal();setSelectedImage(null)}}
                         className="w-6 h-6 cursor-pointer fill-icon"
                       />
                     </Dialog.Title>
@@ -817,7 +817,8 @@ const DealsModal: React.FC<Props> = ({
                                 />
                               ) : (
                                 <img
-                                  className="w-full h-full"
+                                  className="
+                                 object-cover object-center w-full h-full"
                                   src={selectedRow.image}
                                   alt=""
                                 />

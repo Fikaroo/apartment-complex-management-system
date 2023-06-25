@@ -531,7 +531,17 @@ export const AddVendorRooms = {
     {
       arg,
     }: {
-      arg: IVendorRoomArgs;
+      arg: {
+        name: string;
+        // vendorCompanyId: null;
+        vendorBuildingId: number;
+        floor:string;
+        area:string;
+        regionId: number;
+        vendorRoomTypeId: number;
+        isRentAviable: boolean;
+        rentPrice: number;
+      };
     }
   ) => {
     const { data } = await admin.post(path, arg, {
@@ -551,7 +561,10 @@ export const EditVendorRoom = {
       arg: {
         id: number;
         name: string;
-        vendorCompanyId: number;
+        // vendorCompanyId: number;
+        vendorBuildingId: number;
+        floor:string;
+        area:string;
         regionId: number;
         vendorRoomTypeId: number;
         isRentAviable: boolean;

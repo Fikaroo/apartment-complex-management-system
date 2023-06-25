@@ -188,7 +188,7 @@ const BuildingsModal: React.FC<Props> = ({
   return (
     <div>
       <Transition appear show={isOpen} as={Fragment}>
-        <Dialog as="div" className="relative z-10" onClose={closeModal}>
+        <Dialog as="div" className="relative z-10" onClose={()=>{closeModal();setSelectedImage(null)}}>
           <Transition.Child
             as={Fragment}
             enter="ease-out duration-300"
@@ -220,7 +220,7 @@ const BuildingsModal: React.FC<Props> = ({
                     >
                       Add Building
                       <XCircleIcon
-                        onClick={closeModal}
+                        onClick={()=>{closeModal();setSelectedImage(null)}}
                         className="w-6 h-6 cursor-pointer fill-icon"
                       />
                     </Dialog.Title>
@@ -436,7 +436,7 @@ const BuildingsModal: React.FC<Props> = ({
                     >
                       Edit Buildings
                       <XCircleIcon
-                        onClick={closeModal}
+                        onClick={()=>{closeModal();setSelectedImage(null)}}
                         className="w-6 h-6 cursor-pointer fill-icon"
                       />
                     </Dialog.Title>

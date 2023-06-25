@@ -37,110 +37,322 @@ const ApartmentsModal: React.FC<Props> = ({
   mutate,
 }) => {
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
-  const [buildingId, setBuildingId] = useState(-1);
+//   const [selectedBuildingId, setSelectedBuildingId] = useState("");
+//   const [selectedObjectId, setSelectedObjectId] = useState("");
+//   const [floorNumbers, setFloorNumbers] = useState(0);
+//   const [entrance, setEntrance] = useState(0);
 
-  console.log(buildingId, "buildingId");
+  
+//   const {
+//     data: dataBuilding,
+//     error: errorBuilding,
+//     isLoading: isLoadingBuilding,
+//   } = useSWR("/api/VendorBuildings/GetAll", (key) => GetAll.user(key));
+//   const {
+//     data: dataObjects,
+//     error: errorObjects,
+//     isLoading: isLoadingObjects,
+//   } = useSWR("/api/VendorObjects/GetAll", (key) => GetAll.user(key));
+//   const {
+//     data: dataBuildingofObjects,
+//     error: errorBuildingofObject,
+//     isLoading: isLoadingBuildingofObject,
+//   } = useSWR(`/api/VendorBuildings/GetAllByObjectId?objectId=${selectedObjectId}`, (key) => GetAll.user(key));
+  
+// const handleObjectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+//   setFloorNumbers(0);
+//       setEntrance(0);
+//   const objectId = e.target.value;
+//   setSelectedObjectId(objectId);
+// }
 
-  const {
-    data: dataBuildingId,
-    error: errorBuildingId,
-    isLoading: isLoadingBuildingId,
-  } = useSWR(`/api/VendorBuildings/GetById?id=${buildingId}`, GetbyId.user);
+// useEffect(() => {
+//   if (selectedRow) {
+//     setSelectedObjectId(dataObjects?.data?.find(
+//       (item: any) =>
+//         item.title === selectedRow?.objectName
+//     )?.id )
+//     setSelectedBuildingId(selectedRow.vendorBuildingId);
+//     setFloorNumbers(selectedRow.buildingFloor);
+//     setEntrance(selectedRow.buildingEntrance);
+//   } else {
+//     setSelectedObjectId("");
+//     setSelectedBuildingId("");
+//     setFloorNumbers(0);
+//     setEntrance(0);
+//   }
+// }, [selectedRow]);
+//   const handleBuildingChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    
+//     const buildingId = e.target.value;
+//     setSelectedBuildingId(buildingId);
+ 
+//     const selectedBuilding =dataBuildingofObjects?.data?.find(
+//       (item: any) => item.id === parseInt(buildingId)
+//     );
+//     if (selectedBuilding) {
+//       setFloorNumbers(selectedBuilding?.floor);
+//       setEntrance(selectedBuilding?.entrance);
+//     } else {
+//       setFloorNumbers(0);
+//       setEntrance(0);
+//     }
 
-  const {
-    data: dataBuilding,
-    error: errorBuilding,
-    isLoading: isLoadingBuilding,
-  } = useSWR("/api/VendorBuildings/GetAll", (key) => GetAll.user(key));
+//   };
+  
 
-  const [editBuildingId, setEditBuildingId] = useState(-1);
-  const [editData, setEditData] = useState(dataBuilding);
 
-  const fetchData = async () => {
-    if (selectedRow) {
-      try {
-        const resp = await GetbyId.user(
-          `/api/VendorBuildings/GetById?id=${
-            dataBuilding?.data.find(
-              (item: any) => item.name === selectedRow?.buildingName
-            )?.id
-          }`,
-          { arg: "" }
-        );
-        setEditData(resp);
-        console.log("resp!!!", resp);
-      } catch (error) {
-        console.log("error", error);
-      }
-    } else {
-      console.log("fff");
-    }
-  };
+//   const handleSubmit = async (values: Values) => {
+//     setIsButtonDisabled(true);
+//     const parsedValues = {
+//       ...values,
+//       vendorBuildingId: parseInt(selectedBuildingId),
+//       floorNo: parseInt(values.floorNo),
+//     };
+//     const res = await useGetResponse(
+//       CreateApartment.user("/api/VendorApartment/Create", {
+//         arg: parsedValues,
+//       }),
+//       mutate,
+//       closeModal
+//     );
+//     alert(res);
+//     setSelectedObjectId("");
+//     setSelectedBuildingId("");
+//     setFloorNumbers(0);
+//     setEntrance(0);
+//     setIsButtonDisabled(false);
+//   };
 
-  useEffect(() => {
-    fetchData();
-  }, [selectedRow]);
-  console.log(editData, "value");
-  const handleSubmit = async (values: Values) => {
-    setIsButtonDisabled(true);
-    const parsedValues = {
-      ...values,
-      vendorBuildingId: dataBuildingId?.data?.id,
-      floorNo: parseInt(values.floorNo),
-    };
-    const res = await useGetResponse(
-      CreateApartment.user("/api/VendorApartment/Create", {
-        arg: parsedValues,
-      }),
-      mutate,
-      closeModal
+//   const handleEdit = async (values: Values) => {
+//     setIsButtonDisabled(true);
+//     const parsedValues = {
+//       ...values,
+//       vendorBuildingId: parseInt(selectedBuildingId),
+//       floorNo: parseInt(values.floorNo),
+//       id: selectedRow.id,
+//     };
+
+//     const res = await useGetResponse(
+//       EditApartment.user("/api/VendorApartment/Update", {
+//         arg: parsedValues,
+//       }),
+//       mutate,
+//       closeModal
+//     );
+
+//     alert(res);
+//     setSelectedObjectId("");
+//     setSelectedBuildingId("");
+//     setFloorNumbers(0);
+//     setEntrance(0);
+//     setIsButtonDisabled(false);
+   
+//   };
+
+//   const deleteObject = async (deleteId: any) => {
+//     const res = await useGetResponse(
+//       Delete.user("/api/VendorApartment/Delete", {
+//         arg: { deleteId },
+//       }),
+//       mutate,
+//       closeModal
+//     );
+
+//     alert(res);
+//   };
+
+//   const handleDelete = () => {
+//     deleteObject(deleteId);
+//   };
+//   const handleCloseModal = () => {
+//     setSelectedObjectId("");
+//     setSelectedBuildingId("");
+//     setFloorNumbers(0);
+//     setEntrance(0);
+    
+//     closeModal();
+//   };
+
+const [formData, setFormData] = useState({
+  selectedBuildingId: "",
+  selectedObjectId: "",
+  floorNumbers: 0,
+  entrance: 0,
+});
+
+
+
+const {
+  data: dataObjects,
+  error: errorObjects,
+  isLoading: isLoadingObjects,
+} = useSWR("/api/VendorObjects/GetAll", (key) => GetAll.user(key));
+
+const {
+  data: dataBuildingofObjects,
+  error: errorBuildingofObject,
+  isLoading: isLoadingBuildingofObject,
+  mutate: mutateBuildingofObjects,
+} = useSWR(
+  `/api/VendorBuildings/GetAllByObjectId?objectId=${formData.selectedObjectId}`,
+  (key) => GetAll.user(key)
+);
+
+const handleObjectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+  const objectId = e.target.value;
+  setFormData((prevFormData) => ({
+    ...prevFormData,
+    selectedObjectId: objectId,
+    floorNumbers: 0,
+    entrance: 0,
+  }));
+};
+
+useEffect(() => {
+  if (selectedRow) {
+    const selectedObject = dataObjects?.data?.find(
+      (item: any) => item.title === selectedRow?.objectName
     );
-    alert(res);
-    setBuildingId(-1);
-    setIsButtonDisabled(false);
+    const selectedBuildingId = selectedRow.vendorBuildingId;
+    const floorNumbers = selectedRow.buildingFloor;
+    const entrance = selectedRow.buildingEntrance;
+
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      selectedObjectId: selectedObject?.id || "",
+      selectedBuildingId,
+      floorNumbers,
+      entrance,
+    }));
+  } else {
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      selectedObjectId: "",
+      selectedBuildingId: "",
+      floorNumbers: 0,
+      entrance: 0,
+    }));
+  }
+}, [selectedRow]);
+
+const handleBuildingChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+  const buildingId = e.target.value;
+  setFormData((prevFormData) => ({
+    ...prevFormData,
+    selectedBuildingId: buildingId,
+    
+  }));
+
+  const selectedBuilding = dataBuildingofObjects?.data?.find(
+    (item: any) => item.id === parseInt(buildingId)
+  );
+
+  if (selectedBuilding) {
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      floorNumbers: selectedBuilding.floor,
+      entrance: selectedBuilding.entrance,
+    }));
+  } else {
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      floorNumbers: 0,
+      entrance: 0,
+    }));
+  }
+};
+
+const handleSubmit = async (values: Values) => {
+  setIsButtonDisabled(true);
+
+  const parsedValues = {
+    ...values,
+    vendorBuildingId: parseInt(formData.selectedBuildingId),
+    floorNo: parseInt(values.floorNo),
   };
 
-  const handleEdit = async (values: Values) => {
-    setIsButtonDisabled(true);
-    const parsedValues = {
-      ...values,
-      vendorBuildingId: dataBuildingId?.data?.id,
-      floorNo: parseInt(values.floorNo),
-      id: selectedRow.id,
-    };
+  const res = await useGetResponse(
+    CreateApartment.user("/api/VendorApartment/Create", {
+      arg: parsedValues,
+    }),
+    mutate,
+    closeModal
+  );
 
-    const res = await useGetResponse(
-      EditApartment.user("/api/VendorApartment/Update", {
-        arg: parsedValues,
-      }),
-      mutate,
-      closeModal
-    );
+  alert(res);
 
-    alert(res);
-    setIsButtonDisabled(false);
+  setFormData({
+    selectedBuildingId: "",
+    selectedObjectId: "",
+    floorNumbers: 0,
+    entrance: 0,
+  });
+
+  setIsButtonDisabled(false);
+};
+
+const handleEdit = async (values: Values) => {
+  setIsButtonDisabled(true);
+
+  const parsedValues = {
+    ...values,
+    vendorBuildingId: parseInt(formData.selectedBuildingId),
+    floorNo: parseInt(values.floorNo),
+    id: selectedRow.id,
   };
 
-  const deleteObject = async (deleteId: any) => {
-    const res = await useGetResponse(
-      Delete.user("/api/VendorApartment/Delete", {
-        arg: { deleteId },
-      }),
-      mutate,
-      closeModal
-    );
+  const res = await useGetResponse(
+    EditApartment.user("/api/VendorApartment/Update", {
+      arg: parsedValues,
+    }),
+    mutate,
+    closeModal
+  );
 
-    alert(res);
-  };
+  alert(res);
 
-  const handleDelete = () => {
-    deleteObject(deleteId);
-  };
+  setFormData({
+    selectedBuildingId: "",
+    selectedObjectId: "",
+    floorNumbers: 0,
+    entrance: 0,
+  });
+
+  setIsButtonDisabled(false);
+};
+
+const deleteObject = async (deleteId: any) => {
+  const res = await useGetResponse(
+    Delete.user("/api/VendorApartment/Delete", {
+      arg: { deleteId },
+    }),
+    mutate,
+    closeModal
+  );
+
+  alert(res);
+};
+
+const handleDelete = () => {
+  deleteObject(deleteId);
+};
+
+const handleCloseModal = () => {
+  setFormData({
+    selectedBuildingId: "",
+    selectedObjectId: "",
+    floorNumbers: 0,
+    entrance: 0,
+  });
+
+  closeModal();
+};
 
   return (
     <div>
       <Transition appear show={isOpen} as={Fragment}>
-        <Dialog as="div" className="relative z-10" onClose={closeModal}>
+        <Dialog as="div" className="relative z-10" onClose={handleCloseModal}>
           <Transition.Child
             as={Fragment}
             enter="ease-out duration-300"
@@ -172,7 +384,7 @@ const ApartmentsModal: React.FC<Props> = ({
                     >
                       Add Apartment
                       <XCircleIcon
-                        onClick={closeModal}
+                        onClick={handleCloseModal}
                         className="w-6 h-6 cursor-pointer fill-icon"
                       />
                     </Dialog.Title>
@@ -188,6 +400,31 @@ const ApartmentsModal: React.FC<Props> = ({
                     >
                       <Form>
                         <div className="flex flex-row items-center justify-between w-full mt-5 font-bold font-inter text-16 leading-30 text-dark">
+                        <div className="w-[48%]">
+                            {" "}
+                            <label
+                              htmlFor="vendorObjectId"
+                              className="flex items-center justify-between mt-10 font-bold font-inter text-16 leading-30 text-dark"
+                            >
+                              Object Name
+                            </label>
+                            <Field
+                              as="select"
+                              id="vendorObjectId"
+                              className="flex items-center justify-center w-full px-5 py-2 mt-3 font-medium border rounded-lg border-line bg-background focus:outline-none text-md hover:outline-none"
+                              name="vendorBuildingId"
+                              onChange={handleObjectChange}
+                              value={formData.selectedObjectId}
+                              required
+                            >
+                              <option value="-1">Choose</option>
+                              {dataObjects?.data.map((item: any) => (
+                                <option key={item.id} value={item.id}>
+                                  {item.title}
+                                </option>
+                              ))}
+                            </Field>
+                          </div>
                           <div className="w-[48%]">
                             {" "}
                             <label
@@ -201,33 +438,20 @@ const ApartmentsModal: React.FC<Props> = ({
                               id="vendorBuildingId"
                               className="flex items-center justify-center w-full px-5 py-2 mt-3 font-medium border rounded-lg border-line bg-background focus:outline-none text-md hover:outline-none"
                               name="vendorBuildingId"
-                              onChange={(
-                                e: React.ChangeEvent<HTMLSelectElement>
-                              ) => setBuildingId(parseInt(e.target.value))}
-                              value={dataBuildingId?.data?.id}
+                              onChange={handleBuildingChange}
+                              value={formData.selectedBuildingId}
                               required
                             >
                               <option value="-1">Choose</option>
-                              {dataBuilding?.data.map((item: any) => (
-                                <option value={item.id}>{item.name}</option>
+                              {dataBuildingofObjects?.data?.map((item: any) => (
+                                <option key={item.id} value={item.id}>
+                                  {item.name}
+                                </option>
                               ))}
                             </Field>
                           </div>
-                          <div className="w-[48%]">
-                            {" "}
-                            <label
-                              htmlFor="apartmentNo"
-                              className="flex items-center justify-between mt-10 font-bold font-inter text-16 leading-30 text-dark"
-                            >
-                              Apartment No
-                            </label>
-                            <Field
-                              type="text"
-                              className="flex items-center justify-center w-full px-5 py-2 mt-3 font-medium border rounded-lg border-line bg-background focus:outline-none text-md"
-                              name="apartmentNo"
-                              required
-                            />
-                          </div>
+                        
+                       
                         </div>
 
                         <div className="flex flex-row items-center justify-between w-full mt-5 font-bold font-inter text-16 leading-30 text-dark">
@@ -247,9 +471,9 @@ const ApartmentsModal: React.FC<Props> = ({
                                 required
                               >
                                 <option value="-1">Choose</option>
-                                {dataBuildingId?.data?.entrance &&
+                                {formData.entrance &&
                                   Array.from(
-                                    { length: dataBuildingId.data.entrance },
+                                    { length: formData.entrance },
                                     (_, index) => (
                                       <option key={index + 1} value={index + 1}>
                                         {index + 1}
@@ -291,9 +515,9 @@ const ApartmentsModal: React.FC<Props> = ({
                                 required
                               >
                                 <option value="-1">Choose</option>
-                                {dataBuildingId?.data?.floor &&
+                                {formData.floorNumbers &&
                                   Array.from(
-                                    { length: dataBuildingId.data.floor },
+                                    { length: formData.floorNumbers },
                                     (_, index) => (
                                       <option key={index + 1} value={index + 1}>
                                         {index + 1}
@@ -302,6 +526,21 @@ const ApartmentsModal: React.FC<Props> = ({
                                   )}
                               </Field>
                             </div>
+                          </div>
+                          <div className="w-[48%]">
+                            {" "}
+                            <label
+                              htmlFor="apartmentNo"
+                              className="inline-flex items-center w-1/2 justify-star"
+                            >
+                              Apartment No
+                            </label>
+                            <Field
+                              type="text"
+                              className="flex items-center justify-center w-full px-5 py-2 mt-3 font-medium border rounded-lg border-line bg-background focus:outline-none text-md"
+                              name="apartmentNo"
+                              required
+                            />
                           </div>
                         </div>
 
@@ -332,7 +571,7 @@ const ApartmentsModal: React.FC<Props> = ({
                     <Formik
                       initialValues={{
                         vendorBuildingId:
-                          dataBuilding?.data.find(
+                          dataBuildingofObjects?.data?.find(
                             (item: any) =>
                               item.name === selectedRow?.buildingName
                           )?.id || "",
@@ -346,51 +585,57 @@ const ApartmentsModal: React.FC<Props> = ({
                       {(props) => (
                         <Form>
                           <div className="flex flex-row items-center justify-between w-full mt-5 font-bold font-inter text-16 leading-30 text-dark">
-                            <div className="w-[48%]">
-                              {" "}
-                              <label
-                                htmlFor="vendorBuildingId"
-                                className="flex items-center justify-between mt-10 font-bold font-inter text-16 leading-30 text-dark"
-                              >
-                                Building Name
-                              </label>
-                              <Field
-                                as="select"
-                                id="vendorBuildingId"
-                                className="flex items-center justify-center w-full px-5 py-2 mt-3 font-medium border rounded-lg border-line bg-background focus:outline-none text-md hover:outline-none"
-                                name="vendorBuildingId"
-                                onChange={(
-                                  e: React.ChangeEvent<HTMLSelectElement>
-                                ) => {
-                                  setBuildingId(parseInt(e.target.value));
-                                  props.setFieldValue(
-                                    "vendorBuildingId",
-                                    e.target.value
-                                  );
-                                }}
-                                required
-                              >
-                                <option value="-1">Choose</option>
-                                {dataBuilding?.data.map((item: any) => (
-                                  <option value={item.id}>{item.name}</option>
-                                ))}
-                              </Field>
-                            </div>
-                            <div className="w-[48%]">
-                              {" "}
-                              <label
-                                htmlFor="apartmentNo"
-                                className="flex items-center justify-between mt-10 font-bold font-inter text-16 leading-30 text-dark"
-                              >
-                                Apartment No
-                              </label>
-                              <Field
-                                type="text"
-                                className="flex items-center justify-center w-full px-5 py-2 mt-3 font-medium border rounded-lg border-line bg-background focus:outline-none text-md"
-                                name="apartmentNo"
-                                required
-                              />
-                            </div>
+                          <div className="w-[48%]">
+                            {" "}
+                            <label
+                              htmlFor="vendorObjectId"
+                              className="flex items-center justify-between mt-10 font-bold font-inter text-16 leading-30 text-dark"
+                            >
+                              Object Name
+                            </label>
+                            <Field
+                              as="select"
+                              id="vendorObjectId"
+                              className="flex items-center justify-center w-full px-5 py-2 mt-3 font-medium border rounded-lg border-line bg-background focus:outline-none text-md hover:outline-none"
+                              name="vendorBuildingId"
+                              onChange={handleObjectChange}
+                              value={formData.selectedObjectId}
+                              required
+                            >
+                              <option value="-1">Choose</option>
+                              {dataObjects?.data.map((item: any) => (
+                                <option key={item.id} value={item.id}>
+                                  {item.title}
+                                </option>
+                              ))}
+                            </Field>
+                          </div>
+                          <div className="w-[48%]">
+                            {" "}
+                            <label
+                              htmlFor="vendorBuildingId"
+                              className="flex items-center justify-between mt-10 font-bold font-inter text-16 leading-30 text-dark"
+                            >
+                              Building Name
+                            </label>
+                            <Field
+                              as="select"
+                              id="vendorBuildingId"
+                              className="flex items-center justify-center w-full px-5 py-2 mt-3 font-medium border rounded-lg border-line bg-background focus:outline-none text-md hover:outline-none"
+                              name="vendorBuildingId"
+                              onChange={handleBuildingChange}
+                              value={formData.selectedBuildingId}
+                              required
+                            >
+                              <option value="-1">Choose</option>
+                              {dataBuildingofObjects?.data?.map((item: any) => (
+                                <option key={item.id} value={item.id}>
+                                  {item.name}
+                                </option>
+                              ))}
+                            </Field>
+                          </div>
+                          
                           </div>
 
                           <div className="flex flex-row items-center justify-between w-full mt-5 font-bold font-inter text-16 leading-30 text-dark">
@@ -410,9 +655,9 @@ const ApartmentsModal: React.FC<Props> = ({
                                   required
                                 >
                                   <option value="-1">Choose</option>
-                                  {editData?.data?.entrance &&
+                                  {formData.entrance &&
                                     Array.from(
-                                      { length: editData.data.entrance },
+                                      { length: formData.entrance },
                                       (_, index) => (
                                         <option
                                           key={index + 1}
@@ -457,9 +702,9 @@ const ApartmentsModal: React.FC<Props> = ({
                                   required
                                 >
                                   <option value="-1">Choose</option>
-                                  {editData?.data?.floor &&
+                                  {formData.floorNumbers &&
                                     Array.from(
-                                      { length: editData.data.floor },
+                                      { length: formData.floorNumbers },
                                       (_, index) => (
                                         <option
                                           key={index + 1}
@@ -471,6 +716,21 @@ const ApartmentsModal: React.FC<Props> = ({
                                     )}
                                 </Field>
                               </div>
+                            </div>
+                            <div className="w-[48%]">
+                              {" "}
+                              <label
+                                htmlFor="apartmentNo"
+                                className="inline-flex items-center w-1/2 justify-star"
+                              >
+                                Apartment No
+                              </label>
+                              <Field
+                                type="text"
+                                className="flex items-center justify-center w-full px-5 py-2 mt-3 font-medium border rounded-lg border-line bg-background focus:outline-none text-md"
+                                name="apartmentNo"
+                                required
+                              />
                             </div>
                           </div>
 

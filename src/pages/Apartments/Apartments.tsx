@@ -19,6 +19,7 @@ const Apartments = () => {
 
   const closeModal = (): void => {
     setIsOpen(false);
+    setSelectedRow(null);
   };
 
   console.log(selectedRow, "selectedRow");
