@@ -520,7 +520,10 @@ export const AddVendorRooms = {
     }: {
       arg: {
         name: string;
-        vendorCompanyId: number;
+        // vendorCompanyId: null;
+        vendorBuildingId: number;
+        floor:string;
+        area:string;
         regionId: number;
         vendorRoomTypeId: number;
         isRentAviable: boolean;
@@ -545,7 +548,10 @@ export const EditVendorRoom = {
       arg: {
         id: number;
         name: string;
-        vendorCompanyId: number;
+        // vendorCompanyId: number;
+        vendorBuildingId: number;
+        floor:string;
+        area:string;
         regionId: number;
         vendorRoomTypeId: number;
         isRentAviable: boolean;

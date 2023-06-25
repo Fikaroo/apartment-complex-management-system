@@ -17,6 +17,7 @@ const OrderType = () => {
 
   const closeModal = (): void => {
     setIsOpen(false);
+  
   };
 
   const closeModalAdd = (): void => {

@@ -50,6 +50,10 @@ const UserModal: React.FC<Props> = ({
   mutate,
 }) => {
 
+  const [formData, setFormData] = useState({
+    selectedBuildingId: "",
+    selectedObjectId: "",
+  });
   
   const {
     data: dataPropertyTypes,
@@ -65,9 +69,74 @@ const UserModal: React.FC<Props> = ({
     data: dataApartment,
     error: errorApartment,
     isLoading: isLoadingApartment,
-  } = useSWR("/api/VendorApartment/GetAll", (key) => GetAll.user(key));
+  } = useSWR(`/api/VendorApartment/GetAllByBuildingId?buildingId=${formData.selectedBuildingId}`, (key) => GetAll.user(key));
   console.log(selectedRow,"selectedRow");
 
+  const {
+    data: dataBuilding,
+    error: errorBuilding,
+    isLoading: isLoadingBuilding,
+  } = useSWR("/api/VendorBuildings/GetAll", (key) => GetAll.user(key));
+  
+  const {
+    data: dataObjects,
+    error: errorObjects,
+    isLoading: isLoadingObjects,
+  } = useSWR("/api/VendorObjects/GetAll", (key) => GetAll.user(key));
+  
+  const {
+    data: dataBuildingofObjects,
+    error: errorBuildingofObject,
+    isLoading: isLoadingBuildingofObject,
+    mutate: mutateBuildingofObjects,
+  } = useSWR(
+    `/api/VendorBuildings/GetAllByObjectId?objectId=${formData.selectedObjectId}`,
+    (key) => GetAll.user(key)
+  );
+  
+  const handleObjectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const objectId = e.target.value;
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      selectedObjectId: objectId,
+    }));
+  };
+
+  useEffect(() => {
+    if (selectedRow) {
+      const selectedObject = dataObjects?.data?.find(
+        (item: any) => item.title === selectedRow?.objectName
+      );
+      const selectedBuildingId = selectedRow.vendorBuildingId;
+
+  
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        selectedObjectId: selectedObject?.id || "",
+        selectedBuildingId
+      }));
+    } else {
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        selectedObjectId: "",
+        selectedBuildingId: ""
+      }));
+    }
+  }, [selectedRow]);
+
+  const handleBuildingChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const buildingId = e.target.value;
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      selectedBuildingId: buildingId,
+      
+    }));
+  
+  
+  
+ 
+  };
+  
   const handleSubmit = async (values: Values) => {
     console.log(values,"values");
     const parsedValues = {
@@ -120,7 +189,9 @@ const UserModal: React.FC<Props> = ({
     deleteObject(deleteId);
   };
  
-
+  console.log(dataObjects, "dataObjects");
+console.log(dataBuildingofObjects, "dataBuildingofObjects");
+console.log(dataApartment,"dataApartment");
   return (
     <div>
       <Transition appear show={isOpen} as={Fragment}>
@@ -273,7 +344,7 @@ const UserModal: React.FC<Props> = ({
                               required
                             >
                               <option  value="-1">Choose</option>
-                              {dataPropertyTypes?.data.map((item:any) => (
+                              {dataPropertyTypes?.data?.map((item:any) => (
                                 <option value={item.id}>{item.name}</option>
                               ))}
                             </Field>
@@ -296,8 +367,8 @@ const UserModal: React.FC<Props> = ({
                               required
                             >
                               <option value="-1">Choose</option>
-                              {dataStatus?.data.map((item:any) => (
-                                <option value={item.id}>{item.name}</option>
+                              {dataStatus?.data?.map((item:any) => (
+                                <option key={item.id} value={item.id}>{item.name}</option>
                               ))}
                             </Field>
                           </div>
@@ -318,6 +389,60 @@ const UserModal: React.FC<Props> = ({
                             />
                           </div>
                         </div>
+                        <div className="flex flex-row items-center justify-between w-full mt-5 font-bold font-inter text-16 leading-30 text-dark">
+                        <div className="w-[48%]">
+                            {" "}
+                            <label
+                              htmlFor="vendorObjectId"
+                              className="flex items-center justify-between mt-10 font-bold font-inter text-16 leading-30 text-dark"
+                            >
+                              Object Name
+                            </label>
+                            <Field
+                              as="select"
+                              id="vendorObjectId"
+                              className="flex items-center justify-center w-full px-5 py-2 mt-3 font-medium border rounded-lg border-line bg-background focus:outline-none text-md hover:outline-none"
+                              name="vendorBuildingId"
+                              onChange={handleObjectChange}
+                              value={formData.selectedObjectId}
+                              required
+                            >
+                              <option value="-1">Choose</option>
+                              {dataObjects?.data?.map((item: any) => (
+                                <option key={item.id} value={item.id}>
+                                  {item.title}
+                                </option>
+                              ))}
+                            </Field>
+                          </div>
+                          <div className="w-[48%]">
+                            {" "}
+                            <label
+                              htmlFor="vendorBuildingId"
+                              className="flex items-center justify-between mt-10 font-bold font-inter text-16 leading-30 text-dark"
+                            >
+                              Building Name
+                            </label>
+                            <Field
+                              as="select"
+                              id="vendorBuildingId"
+                              className="flex items-center justify-center w-full px-5 py-2 mt-3 font-medium border rounded-lg border-line bg-background focus:outline-none text-md hover:outline-none"
+                              name="vendorBuildingId"
+                              onChange={handleBuildingChange}
+                              value={formData.selectedBuildingId}
+                              required
+                            >
+                              <option value="-1">Choose</option>
+                              {dataBuildingofObjects?.data?.map((item: any) => (
+                                <option key={item.id} value={item.id}>
+                                  {item.name}
+                                </option>
+                              ))}
+                            </Field>
+                          </div>
+                        
+                       
+                        </div>
                         <div className="flex items-center flex-row justify-between mt-10 font-bold font-inter text-16 leading-30 text-dark">
                           <div className="w-1/2">
                             <label
@@ -334,8 +459,8 @@ const UserModal: React.FC<Props> = ({
                               required
                             >
                               <option value="-1">Choose</option>
-                              {dataApartment?.data.map((item:any) => (
-                                <option value={item.id}>{item.buildingName}</option>
+                              {dataApartment?.data?.map((item:any) => (
+                                <option value={item.id}>{item.apartmentNo}</option>
                               ))}
                             </Field>
                           </div>
@@ -483,8 +608,8 @@ const UserModal: React.FC<Props> = ({
                               required
                             >
                               <option value="-1">Choose</option>
-                              {dataPropertyTypes?.data.map((item:any) => (
-                                <option value={item.id}>{item.name}</option>
+                              {dataPropertyTypes?.data?.map((item:any) => (
+                                <option key={item.id} value={item.id}>{item.name}</option>
                               ))}
                             </Field>
                           </div>
@@ -506,8 +631,8 @@ const UserModal: React.FC<Props> = ({
                               required
                             >
                               <option value="-1">Choose</option>
-                              {dataStatus?.data.map((item:any) => (
-                                <option value={item.id}>{item.name}</option>
+                              {dataStatus?.data?.map((item:any) => (
+                                <option key={item.id} value={item.id}>{item.name}</option>
                               ))}
                             </Field>
                           </div>
@@ -543,7 +668,7 @@ const UserModal: React.FC<Props> = ({
                             >
                               <option value="-1">Choose</option>
                               {dataApartment?.data.map((item:any) => (
-                                <option value={item.id}>{item.buildingName}</option>
+                                <option value={item.id}>{item.apartmentNo}</option>
                               ))}
                             </Field>
                           </div>

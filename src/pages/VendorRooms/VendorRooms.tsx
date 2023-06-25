@@ -16,6 +16,7 @@ const VendorRooms = () => {
 
   const closeModal = (): void => {
     setIsOpen(false);
+    setSelectedRow(null);
   };
 
   const closeModalAdd = (): void => {
@@ -64,7 +65,7 @@ const VendorRooms = () => {
     },
     {
       id: 4,
-      title: "Region Name",
+      title: "Building Adress",
     },
     {
       id: 5,
@@ -101,6 +102,7 @@ const VendorRooms = () => {
                 process={process}
                 deleteId={roomId}
                 selectedRow={selectedRow}
+                setSelectedRow={setSelectedRow}
               />
             }
             setProcess={setProcess}
@@ -127,6 +129,7 @@ const VendorRooms = () => {
               process={process}
               deleteId={roomId}
               selectedRow={selectedRow}
+              setSelectedRow={setSelectedRow}
             />
           }
           headers={headers}

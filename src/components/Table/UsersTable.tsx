@@ -32,22 +32,6 @@ const Tables = ({
 }: PropsType) => {
   const nav = useNavigate();
 
-  const userStatus = [
-    { id: 1, name: "Landlord" },
-    { id: 2, name: "Resident" },
-    { id: 3, name: "Tenant" },
-    { id: 4, name: "Family member" },
-    { id: 5, name: "Child" },
-  ];
-  const propertyType = [
-    { id: 1, name: "Apartment" },
-    { id: 2, name: "Office" },
-  ];
-  const atHome = [
-    { id: 0, name: "NoSelect" },
-    { id: 1, name: "Yes" },
-    { id: 2, name: "No" },
-  ];
 
   //   const handleTableRow = ({id}:any) => nav(`/control-panel/deals/${id}`);
 

@@ -1,4 +1,4 @@
-import { Fragment, useState } from "react";
+import { Fragment, useState,useEffect } from "react";
 
 import { Dialog, Transition } from "@headlessui/react";
 import { XCircleIcon } from "@heroicons/react/24/solid";
@@ -42,9 +42,10 @@ const OrderTypeModal = ({
 }: Props) => {
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const [paymentType, setPaymentType] = useState("false");
-  const [priceType, setPriceType] = useState("false");
+  const [priceType, setPriceType] = useState("");
   console.log(selectedRow, "selectedRow");
   const handleSubmit = async (values: Values) => {
+    console.log(values, "values");
     setIsButtonDisabled(true);
     const parsedValues = {
       ...values,
@@ -63,17 +64,45 @@ const OrderTypeModal = ({
 
     alert(res);
     setPaymentType("false");
-    setPriceType("false");
+    setPriceType("");
     setIsButtonDisabled(false);
   };
 
+  useEffect(() => {
+    if (selectedRow) {
+      setPaymentType(selectedRow.paymentType.toString());
+      setPriceType(selectedRow.priceType.toString());
+    } else {
+      setPaymentType("false");
+      setPriceType("");
+    }
+  }, [selectedRow]);
+  
+useEffect(() => {
+  if(isOpen){
+    if(process==="Add"){
+      setPaymentType("false");
+      setPriceType("");
+      
+    }
+    else{
+      setPaymentType(selectedRow.paymentType.toString());
+      setPriceType(selectedRow.priceType.toString());
+    }
+  }
+ 
+},[isOpen])
   const handleEdit = async (values: Values) => {
     setIsButtonDisabled(true);
     const parsedValues = {
       ...values,
       paymentType: values.paymentType === "true",
-      prepaymentType: parseInt(values.prepaymentType),
-      priceType: parseInt(values.priceType),
+      prepaymentType: values.paymentType==="true" ? parseInt(values.prepaymentType):-1,
+      priceType:  values.paymentType==="true" ? parseInt(values.priceType) :-1,
+      
+      fromPrice:values.paymentType==="true" && (values.priceType==="1" || values.priceType==="2") ? values.fromPrice: -1,
+      toPrice:values.paymentType==="true" && values.priceType==="1" ? values.toPrice : -1,
+      stable:values.paymentType==="true" && values.priceType==="0" ? values.stable : -1,
       id: selectedRow.id,
     };
 
@@ -86,6 +115,8 @@ const OrderTypeModal = ({
     );
 
     alert(res);
+    setPaymentType("false");
+    setPriceType("");
     setIsButtonDisabled(false);
   };
 
@@ -100,17 +131,26 @@ const OrderTypeModal = ({
     );
 
     alert(res);
+    setPaymentType("false");
+    setPriceType("");
     setIsButtonDisabled(false);
+
   };
 
   const handleDelete = () => {
     deleteObject(deleteId);
   };
+const handleCloseModal=()=>{
+closeModal();
+setIsButtonDisabled(false);
+
+}
+
 
   return (
     <div>
       <Transition appear show={isOpen} as={Fragment}>
-        <Dialog as="div" className="relative z-10" onClose={closeModal}>
+        <Dialog as="div" className="relative z-10" onClose={handleCloseModal}>
           <Transition.Child
             as={Fragment}
             enter="ease-out duration-300"
@@ -142,7 +182,7 @@ const OrderTypeModal = ({
                     >
                       Add Order Type
                       <XCircleIcon
-                        onClick={closeModal}
+                        onClick={handleCloseModal}
                         className="w-6 h-6 cursor-pointer fill-icon"
                       />
                     </Dialog.Title>
@@ -152,9 +192,9 @@ const OrderTypeModal = ({
                         paymentType: "false",
                         prepaymentType: "-1",
                         priceType: "-1",
-                        fromPrice: 0,
-                        toPrice: 0,
-                        stable: 0,
+                        fromPrice: -1,
+                        toPrice: -1,
+                        stable: -1,
                       }}
                       onSubmit={handleSubmit}
                     >
@@ -359,19 +399,19 @@ const OrderTypeModal = ({
                     >
                       Edit Order Type
                       <XCircleIcon
-                        onClick={closeModal}
+                        onClick={handleCloseModal}
                         className="w-6 h-6 cursor-pointer fill-icon"
                       />
                     </Dialog.Title>
                     <Formik
                       initialValues={{
-                        name: selectedRow.name || "",
-                        paymentType: selectedRow.paymentType || "false",
-                        prepaymentType: selectedRow.prepaymentType || "-1",
-                        priceType: selectedRow.priceType || "-1",
-                        fromPrice: selectedRow.fromPrice || 0,
-                        toPrice: selectedRow.toPrice || 0,
-                        stable: selectedRow.stable || 0,
+                        name: selectedRow?.name || "",
+                        paymentType: selectedRow.paymentType.toString() || "false",
+                        prepaymentType: selectedRow.prepaymentType.toString() || "-1",
+                        priceType: selectedRow.priceType.toString() || "-1",
+                        fromPrice: selectedRow.fromPrice || -1,
+                        toPrice: selectedRow.toPrice || -1,
+                        stable: selectedRow.stable || -1,
                       }}
                       onSubmit={handleEdit}
                     >
@@ -421,10 +461,10 @@ const OrderTypeModal = ({
                               </Field>
                             </div>
                           </div>
-                          {selectedRow.paymentType === true ||
-                          paymentType === "true" ? (
+                          {paymentType === "true" &&
+                           (
                             <>
-                              {" "}
+                              
                               <div className="flex flex-row items-center justify-between mt-10 font-bold font-inter text-16 leading-30 text-dark">
                                 <div className="w-1/2">
                                   <label
@@ -480,8 +520,8 @@ const OrderTypeModal = ({
                                   </Field>
                                 </div>
                               </div>
-                              {selectedRow.priceType === 1 ||
-                                (priceType === "1" && (
+                              {
+                                priceType === "1" && (
                                   <>
                                     <div className="flex flex-row items-center justify-between mt-10 font-bold font-inter text-16 leading-30 text-dark">
                                       <div className="w-1/2">
@@ -514,8 +554,8 @@ const OrderTypeModal = ({
                                       </div>
                                     </div>
                                   </>
-                                ))}
-                              {selectedRow.priceType === 0 && (
+                                )}
+                              {priceType === "0" && (
                                 <>
                                   <div className="flex flex-row items-center justify-between mt-10 font-bold font-inter text-16 leading-30 text-dark">
                                     <div className="w-1/2">
@@ -535,7 +575,7 @@ const OrderTypeModal = ({
                                   </div>
                                 </>
                               )}
-                              {selectedRow.priceType === 2 && (
+                              {priceType === "2" && (
                                 <>
                                   <div className="flex flex-row items-center justify-between mt-10 font-bold font-inter text-16 leading-30 text-dark">
                                     <div className="w-1/2">
@@ -556,7 +596,7 @@ const OrderTypeModal = ({
                                 </>
                               )}
                             </>
-                          ) : null}
+                          )}
                           <div className="flex items-center justify-around w-full mt-10 font-bold font-inter text-16 leading-30 text-dark">
                             <button
                               type="button"

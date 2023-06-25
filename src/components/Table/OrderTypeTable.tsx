@@ -81,11 +81,11 @@ const Tables = ({
                 </div>
               </td>
               <td className="px-6 py-4 text-sm leading-5 text-gray-500 whitespace-no-wrap border-b border-gray-200">
-                {item.priceType===0 ? "Stable":item.priceType===1 ? "From/To" :item.priceType===2 ?"From":"-"}
+                {item.priceType===0 ? "Stable":item.priceType===1 ? "From/To" :item.priceType===2 ?"From":item.priceType===-1 ?"-":"-"}
               </td>
-              <td className="px-6 py-4 text-sm leading-5 text-gray-500 whitespace-no-wrap border-b border-gray-200">{item.fromPrice ? item.fromPrice :"-"}</td>
-              <td className="px-6 py-4 text-sm leading-5 text-gray-500 whitespace-no-wrap border-b border-gray-200">{item.toPrice ? item.toPrice:"-"}</td>
-              <td className="px-6 py-4 text-sm leading-5 text-gray-500 whitespace-no-wrap border-b border-gray-200">{item.stable ? item.stable:"-"}</td>
+              <td className="px-6 py-4 text-sm leading-5 text-gray-500 whitespace-no-wrap border-b border-gray-200">{item.fromPrice===-1 ? "-":item.fromPrice}</td>
+              <td className="px-6 py-4 text-sm leading-5 text-gray-500 whitespace-no-wrap border-b border-gray-200">{item.toPrice===-1 ?"-": item.toPrice}</td>
+              <td className="px-6 py-4 text-sm leading-5 text-gray-500 whitespace-no-wrap border-b border-gray-200">{item.stable===-1 ? "-": item.stable}</td>
               <td
                 className="px-6 py-4 text-sm font-medium leading-5 text-right whitespace-no-wrap border-b border-gray-200"
                 onClick={(e) => e.stopPropagation()}
