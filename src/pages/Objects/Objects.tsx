@@ -80,9 +80,9 @@ const Objects = () => {
   return (
     <Fragment>
       <div className="flex items-center justify-between">
-        <p className="font-bold font-inter text-16 leading-30 text-dark">
-      
-        </p>{" "}
+      <p className="font-bold font-inter text-16 leading-30 text-dark">
+          Ümumi: {data?.data?.length} YK
+        </p>
         <div className="flex items-center gap-4">
           <AddBtn
             openModal={openModalAdd}

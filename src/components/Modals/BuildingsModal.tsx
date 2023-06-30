@@ -92,37 +92,7 @@ const BuildingsModal: React.FC<Props> = ({
     alert(res);
     setSelectedImage(null);
   };
-  // const handleEdit = async (values: Values) => {
-  //   const parsedValues = {
-  //     ...values,
-  //     VendorObjectId: Number(values.VendorObjectId),
-  //     RegionId: Number(values.RegionId),
-  //     Id:selectedRow.id
-  //   };
-  //   console.log(parsedValues, "parsedValues");
-  //   const formData = new FormData();
-  //   formData.append("Id",parsedValues.Id)
-  //   formData.append("Name", parsedValues.Name);
-  //   formData.append("Street", parsedValues.Street);
-  //   formData.append("BuildingNo", parsedValues.BuildingNo);
-  //   formData.append("SecurityPhone", parsedValues.SecurityPhone);
-  //   formData.append("Floor", String(parsedValues.Floor));
-  //   formData.append("Entrance", String(parsedValues.Entrance));
-  //   if (parsedValues.Image) {
-  //     formData.append("Image", parsedValues.Image);
-  //   }
-  //   formData.append("VendorObjectId", String(parsedValues.VendorObjectId));
-  //   formData.append("RegionId", String(parsedValues.RegionId));
-  //   const res = await useGetResponse(
-  //     EditBuilding.user("/api/VendorResident/Update", {
-  //       arg: formData,
-  //     }),
-  //     mutate,
-  //     closeModal
-  //   );
-
-  //   alert(res);
-  // };
+ 
 
   const handleEdit = async (values: Values) => {
     const parsedValues = {
@@ -228,7 +198,7 @@ const BuildingsModal: React.FC<Props> = ({
                       initialValues={{
                         Image: null,
                         Name: "",
-                        RegionId: "-1",
+                        RegionId: "",
                         Street: "",
                         BuildingNo: "",
                         SecurityPhone: "",

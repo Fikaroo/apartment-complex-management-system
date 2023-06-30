@@ -1,9 +1,9 @@
-import { Fragment, useEffect } from "react";
+import { Fragment, useEffect, useState } from "react";
 
 import { Dialog, Transition } from "@headlessui/react";
 import { XCircleIcon } from "@heroicons/react/24/solid";
 
-import { Formik, Field, Form } from "formik";
+import { Formik, Field, Form, useFormikContext } from "formik";
 import useSWR from "swr";
 
 import useGetResponse from "../../hooks/useGetResponse";
@@ -51,17 +51,70 @@ const EmployeesModal = ({
   selectedRow,
   mutate,
 }: Props) => {
+  const [selectedValues, setSelectedValues] = useState<string[]>([]);
+
+  const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedOptions = Array.from(
+      event.target.selectedOptions,
+      (option) => option.value
+    );
+    setSelectedValues(selectedOptions);
+  };
+
+  const handleRemoveValue = (value: string) => {
+    const updatedValues = selectedValues.filter((val) => val !== value);
+    setSelectedValues(updatedValues);
+  };
+
   const {
     data: dataVendorCompany,
     error: errVendorCompany,
     isLoading: isLoadingVendorCompany,
   } = useSWR("/api/VendorCompany/GetAllByVendorId", (key) => GetAll.user(key));
-
+  const [formData, setFormData] = useState({
+    selectedObjectId: "",
+  });
   const {
     data: dataVendorObjects,
     error: errVendorObjects,
     isLoading: isLoadingVendorObjects,
   } = useSWR("/api/VendorObjects/GetAll", (key) => GetAll.user(key));
+  const {
+    data: dataBuildingofObjects,
+    error: errorBuildingofObject,
+    isLoading: isLoadingBuildingofObject,
+    mutate: mutateBuildingofObjects,
+  } = useSWR(
+    `/api/VendorBuildings/GetAllByObjectId?objectId=${formData.selectedObjectId}`,
+    (key) => GetAll.user(key)
+  );
+  console.log(formData.selectedObjectId, "mjj");
+  const handleObjectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const objectId = e.target.value;
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      selectedObjectId: objectId,
+    }));
+    console.log(objectId, "objectId");
+  };
+
+  useEffect(() => {
+    if (selectedRow) {
+      const selectedObject = dataVendorObjects?.data?.find(
+        (item: any) => item.title === selectedRow?.objectName
+      );
+
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        selectedObjectId: selectedObject?.id || "",
+      }));
+    } else {
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        selectedObjectId: "",
+      }));
+    }
+  }, [selectedRow]);
 
   const {
     data: dataVendorBuildingsId,
@@ -75,12 +128,18 @@ const EmployeesModal = ({
     isLoading: isLoadingRoleAdmin,
   } = useSWR("/api/RoleAdmin/GetAll", (key) => GetAll.user(key));
 
+  const [hasCompanyBoolean, setHasCompanyBoolean] = useState("false");
+
+  const [selectedImage, setSelectedImage] = useState(null);
+  const handleChange = (event: any) => {
+    const file = event.target.files[0];
+    setSelectedImage(file);
+  };
   const handleSubmit = async (values: EmployeeValues) => {
     const parsedValues = {
       ...values,
+      ProfilImage: selectedImage,
     };
-
-    console.log("dataRegions", values);
 
     const res = await useGetResponse(
       CreateEmployees.user("/api/Employess/Create", {
@@ -91,6 +150,7 @@ const EmployeesModal = ({
     );
 
     alert(res);
+    setSelectedImage(null);
   };
 
   const handleEdit = async (values: EmployeeValues) => {
@@ -178,7 +238,14 @@ const EmployeesModal = ({
   return (
     <div>
       <Transition appear show={isOpen} as={Fragment}>
-        <Dialog as="div" className="relative z-10" onClose={closeModal}>
+        <Dialog
+          as="div"
+          className="relative z-10"
+          onClose={() => {
+            closeModal();
+            setSelectedImage(null);
+          }}
+        >
           <Transition.Child
             as={Fragment}
             enter="ease-out duration-300"
@@ -210,7 +277,10 @@ const EmployeesModal = ({
                     >
                       Add Employee
                       <XCircleIcon
-                        onClick={closeModal}
+                        onClick={() => {
+                          closeModal();
+                          setSelectedImage(null);
+                        }}
                         className="w-6 h-6 cursor-pointer fill-icon"
                       />
                     </Dialog.Title>
@@ -264,17 +334,16 @@ const EmployeesModal = ({
                                 required
                               />
                             </div>
-
                             <div>
                               <label
-                                htmlFor="email"
+                                htmlFor="patrionimyc"
                                 className="inline-flex items-center w-1/2 justify-star"
                               >
-                                Email
+                                Patrionimyc
                               </label>
                               <Field
-                                name="email"
-                                type="email"
+                                name="patrionimyc"
+                                type="text"
                                 className="mt-3 w-[95%] rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
                                 required
                               />
@@ -312,14 +381,14 @@ const EmployeesModal = ({
 
                             <div>
                               <label
-                                htmlFor="patrionimyc"
+                                htmlFor="email"
                                 className="inline-flex items-center w-1/2 justify-star"
                               >
-                                Patrionimyc
+                                Email
                               </label>
                               <Field
-                                name="patrionimyc"
-                                type="text"
+                                name="email"
+                                type="email"
                                 className="mt-3 w-[95%] rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
                                 required
                               />
@@ -381,6 +450,31 @@ const EmployeesModal = ({
                                 name="hasCompany"
                                 as="select"
                                 className="mt-3 w-[95%] rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
+                                onChange={(
+                                  e: React.ChangeEvent<HTMLSelectElement>
+                                ) => {
+                                  setHasCompanyBoolean(e.target.value);
+                                  formikProps.setFieldValue(
+                                    "hasCompany",
+                                    e.target.value
+                                  );
+                                  if (e.target.value === "true") {
+                                    // Reset the values of building, company, and object fields
+                                    formikProps.setFieldValue(
+                                      "vendorCompanyId",
+                                      null
+                                    );
+                                    formikProps.setFieldValue(
+                                      "vendorObjectsId",
+                                      []
+                                    );
+                                    formikProps.setFieldValue(
+                                      "vendorBuildingsId",
+                                      []
+                                    );
+                                    formikProps.setFieldValue("roleId", "");
+                                  }
+                                }}
                                 required
                               >
                                 <option value="" selected disabled>
@@ -404,22 +498,25 @@ const EmployeesModal = ({
                                 id="ProfileImage"
                                 name="ProfileImage"
                                 accept="ProfileImage/*"
-                                onChange={(event) => {
-                                  const file = (
-                                    event.currentTarget as HTMLInputElement
-                                  ).files?.[0];
-                                  formikProps.setFieldValue(
-                                    "ProfileImage",
-                                    file
-                                  );
-                                }}
+                                onChange={handleChange}
                                 className="mt-3 w-[95%] rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
                                 required
                               />
                             </div>
+                            <div className="w-[48%] flex items-center justify-center">
+                              <div className="w-[140px] h-[100px] rounded-lg  object-cover object-center">
+                                {selectedImage && (
+                                  <img
+                                    src={URL.createObjectURL(selectedImage)}
+                                    alt="Selected Image"
+                                    className="object-contain w-full h-full "
+                                  />
+                                )}
+                              </div>
+                            </div>
                           </div>
 
-                          {formikProps.values.hasCompany === "true" ? (
+                          {hasCompanyBoolean === "true" ? (
                             <div className="grid items-center justify-between grid-cols-2 gap-4 mt-10 font-bold font-inter text-16 leading-30 text-dark">
                               <div>
                                 <label
@@ -433,6 +530,7 @@ const EmployeesModal = ({
                                   name="vendorCompanyId"
                                   id="vendorCompanyId"
                                   className="flex items-center justify-center px-5 py-2 mt-3 font-medium border rounded-lg border-line bg-background focus:outline-none text-md"
+
                                   // required
                                 >
                                   <option value="" selected disabled>
@@ -465,6 +563,8 @@ const EmployeesModal = ({
                                   as="select"
                                   name="vendorObjectsId"
                                   id="vendorObjectsId"
+                                  onChange={handleObjectChange}
+                                  value={formData.selectedObjectId}
                                   className="flex items-center justify-center px-5 py-2 mt-3 font-medium border rounded-lg border-line bg-background focus:outline-none text-md"
                                   required
                                 >
@@ -498,20 +598,43 @@ const EmployeesModal = ({
                                   as="select"
                                   name="vendorBuildingsId"
                                   id="vendorBuildingsId"
+                                  multiple
+                                  value={selectedValues}
+                                  onChange={handleSelectChange}
                                   className="flex items-center justify-center px-5 py-2 mt-3 font-medium border rounded-lg border-line bg-background focus:outline-none text-md"
                                   required
                                 >
                                   <option value="" selected disabled>
                                     Choose
                                   </option>
-                                  {vendorBuildingsIds?.map(
-                                    ({ id }: { id: number }) => (
-                                      <option key={id} value={id}>
-                                        {id}
+                                  {dataBuildingofObjects?.data?.map(
+                                    (item: any) => (
+                                      <option key={item.id} value={item.id}>
+                                        {item.name}
                                       </option>
                                     )
                                   )}
                                 </Field>
+                                {selectedValues.length > 0 && (
+                                  <div>
+                                    <h4>Selected Values:</h4>
+                                    <ol>
+                                      {selectedValues.map((value, index) => (
+                                        <li key={value}>
+                                          {value}
+                                          <button
+                                            type="button"
+                                            onClick={() =>
+                                              handleRemoveValue(value)
+                                            }
+                                          >
+                                            Remove
+                                          </button>
+                                        </li>
+                                      ))}
+                                    </ol>
+                                  </div>
+                                )}
                               </div>
 
                               <div>
@@ -625,17 +748,16 @@ const EmployeesModal = ({
                                 required
                               />
                             </div>
-
                             <div>
                               <label
-                                htmlFor="email"
+                                htmlFor="patrionimyc"
                                 className="inline-flex items-center w-1/2 justify-star"
                               >
-                                Email
+                                Patrionimyc
                               </label>
                               <Field
-                                name="email"
-                                type="email"
+                                name="patrionimyc"
+                                type="text"
                                 className="mt-3 w-[95%] rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
                                 required
                               />
@@ -673,19 +795,18 @@ const EmployeesModal = ({
 
                             <div>
                               <label
-                                htmlFor="patrionimyc"
+                                htmlFor="email"
                                 className="inline-flex items-center w-1/2 justify-star"
                               >
-                                Patrionimyc
+                                Email
                               </label>
                               <Field
-                                name="patrionimyc"
-                                type="text"
+                                name="email"
+                                type="email"
                                 className="mt-3 w-[95%] rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
                                 required
                               />
                             </div>
-
                             <div>
                               <label
                                 htmlFor="jobPosition"
