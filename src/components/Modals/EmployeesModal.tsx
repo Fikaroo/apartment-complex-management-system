@@ -5,7 +5,7 @@ import { XCircleIcon } from "@heroicons/react/24/solid";
 
 import { Formik, Field, Form, useFormikContext } from "formik";
 import useSWR from "swr";
-
+import Multiselect from "multiselect-react-dropdown";
 import useGetResponse from "../../hooks/useGetResponse";
 
 import {
@@ -26,7 +26,10 @@ type Props = {
   selectedRow: any;
   mutate: any;
 };
-
+interface BuildingObject {
+  id: number;
+  name: string;
+}
 export type EmployeeValues = {
   ProfileImage: string;
   name: string;
@@ -51,20 +54,7 @@ const EmployeesModal = ({
   selectedRow,
   mutate,
 }: Props) => {
-  const [selectedValues, setSelectedValues] = useState<string[]>([]);
-
-  const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    const selectedOptions = Array.from(
-      event.target.selectedOptions,
-      (option) => option.value
-    );
-    setSelectedValues(selectedOptions);
-  };
-
-  const handleRemoveValue = (value: string) => {
-    const updatedValues = selectedValues.filter((val) => val !== value);
-    setSelectedValues(updatedValues);
-  };
+  // const [selectedValues, setSelectedValues] = useState<string[]>([]);
 
   const {
     data: dataVendorCompany,
@@ -88,7 +78,46 @@ const EmployeesModal = ({
     `/api/VendorBuildings/GetAllByObjectId?objectId=${formData.selectedObjectId}`,
     (key) => GetAll.user(key)
   );
-  console.log(formData.selectedObjectId, "mjj");
+  const [options, setOptions] = useState<Array<{ value: any; label: string }>>(
+    []
+  );
+
+
+  
+  const [selectedValues, setSelectedValues] = useState<{ value: any; label: string }[]>([]);
+const [removedOptions, setRemovedOptions] = useState<{ value: any; label: string }[]>([]);
+
+
+const handleSelectChange = (selectedList: any, selectedItem: any) => {
+  const isAlreadySelected = selectedValues.some((item) => item.value === selectedItem.value);
+  if (!isAlreadySelected) {
+    setSelectedValues([...selectedValues, selectedItem]);
+  }
+};
+  console.log(selectedValues, "selectedValues");
+  const handleSelectRemove = (selectedList:any,removedItem:any) => {
+    console.log(selectedList, "selectedList");
+    setSelectedValues(selectedList);
+    // const selectedValues = selectedList.filter((option: any) => option !== null && option !== undefined).map((option: any)=> option.id);
+    setRemovedOptions((prevRemovedOptions) => [...prevRemovedOptions, removedItem]);
+
+    console.log(selectedValues, "selectedValues");
+  };
+  
+
+  useEffect(() => {
+    if (dataBuildingofObjects && dataBuildingofObjects.data) {
+      const extractedOptions: { value: any; label: string }[] =
+        dataBuildingofObjects.data.map((item: BuildingObject) => ({
+          label: item.name,
+        value: item.id,
+      
+        }));
+      setOptions(extractedOptions);
+    }
+  }, [dataBuildingofObjects]);
+  console.log(options, "options");
+  console.log(dataBuildingofObjects?.data, "options1");
   const handleObjectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const objectId = e.target.value;
     setFormData((prevFormData) => ({
@@ -126,7 +155,7 @@ const EmployeesModal = ({
     data: dataRoleAdmin,
     error: errRoleAdmin,
     isLoading: isLoadingRoleAdmin,
-  } = useSWR("/api/RoleAdmin/GetAll", (key) => GetAll.user(key));
+  } = useSWR("/api/Role/GetAll", (key) => GetAll.user(key));
 
   const [hasCompanyBoolean, setHasCompanyBoolean] = useState("false");
 
@@ -136,6 +165,7 @@ const EmployeesModal = ({
     setSelectedImage(file);
   };
   const handleSubmit = async (values: EmployeeValues) => {
+    console.log(values, "values");
     const parsedValues = {
       ...values,
       ProfilImage: selectedImage,
@@ -186,6 +216,11 @@ const EmployeesModal = ({
 
   const handleDelete = () => {
     deleteObject(deleteId);
+  };
+  const handleClose = () => {
+    closeModal();
+    setSelectedImage(null);
+    setHasCompanyBoolean("false");
   };
 
   if (
@@ -238,14 +273,7 @@ const EmployeesModal = ({
   return (
     <div>
       <Transition appear show={isOpen} as={Fragment}>
-        <Dialog
-          as="div"
-          className="relative z-10"
-          onClose={() => {
-            closeModal();
-            setSelectedImage(null);
-          }}
-        >
+        <Dialog as="div" className="relative z-10" onClose={handleClose}>
           <Transition.Child
             as={Fragment}
             enter="ease-out duration-300"
@@ -270,17 +298,14 @@ const EmployeesModal = ({
                 leaveTo="opacity-0 scale-95"
               >
                 {process === "Add" ? (
-                  <Dialog.Panel className="w-full max-w-xl p-6 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl rounded-2xl">
+                  <Dialog.Panel className="w-full h-[80vh] max-w-xl p-6 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl rounded-2xl overflow-y-auto">
                     <Dialog.Title
                       as="h3"
                       className="flex items-center justify-between font-bold font-inter text-16 leading-30 text-dark"
                     >
                       Add Employee
                       <XCircleIcon
-                        onClick={() => {
-                          closeModal();
-                          setSelectedImage(null);
-                        }}
+                        onClick={handleClose}
                         className="w-6 h-6 cursor-pointer fill-icon"
                       />
                     </Dialog.Title>
@@ -459,6 +484,10 @@ const EmployeesModal = ({
                                     e.target.value
                                   );
                                   if (e.target.value === "true") {
+                                    console.log(
+                                      e.target.value === "true",
+                                      "bn"
+                                    );
                                     // Reset the values of building, company, and object fields
                                     formikProps.setFieldValue(
                                       "vendorCompanyId",
@@ -594,7 +623,7 @@ const EmployeesModal = ({
                                 >
                                   Vendor Building
                                 </label>
-                                <Field
+                                {/* <Field
                                   as="select"
                                   name="vendorBuildingsId"
                                   id="vendorBuildingsId"
@@ -614,27 +643,27 @@ const EmployeesModal = ({
                                       </option>
                                     )
                                   )}
-                                </Field>
-                                {selectedValues.length > 0 && (
-                                  <div>
-                                    <h4>Selected Values:</h4>
-                                    <ol>
-                                      {selectedValues.map((value, index) => (
-                                        <li key={value}>
-                                          {value}
-                                          <button
-                                            type="button"
-                                            onClick={() =>
-                                              handleRemoveValue(value)
-                                            }
-                                          >
-                                            Remove
-                                          </button>
-                                        </li>
-                                      ))}
-                                    </ol>
-                                  </div>
-                                )}
+                                </Field> */}
+                                <Multiselect
+                                  // isObject={false}
+                                  // options={options}
+                                  // selectedValues={selectedValues}
+                                  // onSelect={handleSelectChange}
+                                  // onRemove={handleSelectRemove}
+                                  // displayValue="label"
+                                  // placeholder="Select options"
+                                  // showCheckbox
+
+                                  options={options}
+                                  // isObject={false}
+                                  onSelect={handleSelectChange}
+                                  onRemove={handleSelectRemove}
+                                  displayValue="label"
+                                  closeIcon="cancel"
+                                  placeholder="Select Options"
+                                  selectedValues={selectedValues}
+                                  className="multiSelectContainer"
+                                />
                               </div>
 
                               <div>
@@ -649,7 +678,7 @@ const EmployeesModal = ({
                                   name="roleId"
                                   id="roleId"
                                   className="flex items-center justify-center px-5 py-2 mt-3 font-medium border rounded-lg border-line bg-background focus:outline-none text-md"
-                                  required
+                                  // required
                                 >
                                   <option value="" selected disabled>
                                     Choose
