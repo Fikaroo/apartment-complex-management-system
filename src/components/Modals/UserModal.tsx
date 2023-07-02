@@ -343,7 +343,7 @@ console.log(dataApartment,"dataApartment");
                               className="mt-3 w-[95%]  rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none  font-medium text-md"
                               required
                             >
-                              <option  value="-1">Choose</option>
+                              <option  value="" selected disabled>Choose</option>
                               {dataPropertyTypes?.data?.map((item:any) => (
                                 <option value={item.id}>{item.name}</option>
                               ))}
@@ -366,7 +366,7 @@ console.log(dataApartment,"dataApartment");
                               className="mt-3 w-[95%] rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
                               required
                             >
-                              <option value="-1">Choose</option>
+                              <option value="" selected disabled>Choose</option>
                               {dataStatus?.data?.map((item:any) => (
                                 <option key={item.id} value={item.id}>{item.name}</option>
                               ))}
@@ -407,7 +407,7 @@ console.log(dataApartment,"dataApartment");
                               value={formData.selectedObjectId}
                               required
                             >
-                              <option value="-1">Choose</option>
+                              <option value="" selected disabled>Choose</option>
                               {dataObjects?.data?.map((item: any) => (
                                 <option key={item.id} value={item.id}>
                                   {item.title}
@@ -432,7 +432,7 @@ console.log(dataApartment,"dataApartment");
                               value={formData.selectedBuildingId}
                               required
                             >
-                              <option value="-1">Choose</option>
+                              <option value="" selected disabled>Choose</option>
                               {dataBuildingofObjects?.data?.map((item: any) => (
                                 <option key={item.id} value={item.id}>
                                   {item.name}
@@ -458,7 +458,7 @@ console.log(dataApartment,"dataApartment");
                               className="mt-3 w-[95%]  rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none  font-medium text-md"
                               required
                             >
-                              <option value="-1">Choose</option>
+                              <option value="" selected disabled>Choose</option>
                               {dataApartment?.data?.map((item:any) => (
                                 <option value={item.id}>{item.apartmentNo}</option>
                               ))}
@@ -607,7 +607,7 @@ console.log(dataApartment,"dataApartment");
                               className="mt-3 w-[95%]  rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none  font-medium text-md"
                               required
                             >
-                              <option value="-1">Choose</option>
+                              <option value="" selected disabled>Choose</option>
                               {dataPropertyTypes?.data?.map((item:any) => (
                                 <option key={item.id} value={item.id}>{item.name}</option>
                               ))}
@@ -630,7 +630,7 @@ console.log(dataApartment,"dataApartment");
                               className="mt-3 w-[95%] rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
                               required
                             >
-                              <option value="-1">Choose</option>
+                              <option value="" selected disabled>Choose</option>
                               {dataStatus?.data?.map((item:any) => (
                                 <option key={item.id} value={item.id}>{item.name}</option>
                               ))}

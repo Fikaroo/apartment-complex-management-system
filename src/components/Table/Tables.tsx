@@ -32,19 +32,7 @@ const Tables = ({
 }: PropsType) => {
   const nav = useNavigate();
 
-  const optionsStatus = [
-    { id: 0, name: "NewOrder+" },
-    { id: 1, name: "Appointed" },
-    { id: 2, name: "Inprogress" },
-    { id: 3, name: "OnPause" },
-    { id: 4, name: "OnConfirmation" },
-    { id: 5, name: "Completed" },
-    { id: 6, name: "Rejected" },
-    { id: 7, name: "Returned" },
-    { id: 8, name: "Cancelled" },
-    { id: 9, name: "Closed" },
-    { id: 10, name: "EnteredIncorrectly" },
-  ];
+  
 
   function isValidDate(dateString: any) {
     const date = new Date(dateString);
@@ -84,6 +72,30 @@ const [tableId,setTableId]=useState<number>(0);
                   />
                 </div>
               </td>
+             
+              <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
+                <div className="text-sm leading-5 text-gray-900">
+                  {item.description}
+                </div>
+              </td>
+              <td className="px-6 py-4 text-sm leading-5 text-gray-500 whitespace-no-wrap border-b border-gray-200">
+                {item?.orderClassName}
+              </td>
+              <td className="px-6 py-4 text-sm leading-5 text-gray-500 whitespace-no-wrap border-b border-gray-200">
+                {item?.orderSourceName}
+              </td>
+              <td className="px-6 py-4 text-sm leading-5 text-gray-500 whitespace-no-wrap border-b border-gray-200">
+                {item?.orderTypeName}
+              </td>
+              <td className="px-6 py-4 text-sm leading-5 text-gray-500 whitespace-no-wrap border-b border-gray-200">
+                {item?.phoneNumber}
+              </td>
+              <td className="px-6 py-4 text-sm leading-5 text-gray-500 whitespace-no-wrap border-b border-gray-200">
+                {
+                  item?.orderStatusName
+                }
+              </td>
+              <td className="px-6 py-4 text-sm leading-5 text-gray-500 whitespace-no-wrap border-b border-gray-200">{item.appUserName}</td>
               <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
                 <div className="ml-4">
                   <div className="text-sm font-medium leading-5 text-gray-900">
@@ -110,29 +122,6 @@ const [tableId,setTableId]=useState<number>(0);
                   .reverse()
                   .join("-")}
               </td>
-              <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-                <div className="text-sm leading-5 text-gray-900">
-                  {item.description}
-                </div>
-              </td>
-              <td className="px-6 py-4 text-sm leading-5 text-gray-500 whitespace-no-wrap border-b border-gray-200">
-                {item?.orderClassName}
-              </td>
-              <td className="px-6 py-4 text-sm leading-5 text-gray-500 whitespace-no-wrap border-b border-gray-200">
-                {item?.orderSourceName}
-              </td>
-              <td className="px-6 py-4 text-sm leading-5 text-gray-500 whitespace-no-wrap border-b border-gray-200">
-                {item?.orderTypeName}
-              </td>
-              <td className="px-6 py-4 text-sm leading-5 text-gray-500 whitespace-no-wrap border-b border-gray-200">
-                {item?.phoneNumber}
-              </td>
-              <td className="px-6 py-4 text-sm leading-5 text-gray-500 whitespace-no-wrap border-b border-gray-200">
-                {
-                  item?.orderStatusName
-                }
-              </td>
-              <td className="px-6 py-4 text-sm leading-5 text-gray-500 whitespace-no-wrap border-b border-gray-200">{item.appUserName}</td>
               <td
                 className="px-6 py-4 text-sm font-medium leading-5 text-right whitespace-no-wrap border-b border-gray-200"
                 onClick={(e) => e.stopPropagation()}

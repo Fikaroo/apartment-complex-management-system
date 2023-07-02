@@ -278,38 +278,7 @@ const DealsModal: React.FC<Props> = ({
                       onSubmit={handleSubmit}
                     >
                       <Form>
-                        <div className="flex flex-row items-center justify-between w-full mt-5 font-bold font-inter text-16 leading-30 text-dark">
-                          <div className="w-[48%]">
-                            {" "}
-                            <label
-                              htmlFor="ActualDeadline"
-                              className="flex items-center justify-between mt-10 font-bold font-inter text-16 leading-30 text-dark"
-                            >
-                              Actual Deadline
-                            </label>
-                            <Field
-                              type="date"
-                              className="flex items-center justify-center w-full px-5 py-2 mt-3 font-medium border rounded-lg border-line bg-background focus:outline-none text-md"
-                              name="ActualDeadline"
-                              required
-                            />
-                          </div>
-                          <div className="w-[48%]">
-                            {" "}
-                            <label
-                              htmlFor="NormativeDeadline"
-                              className="flex items-center justify-between mt-10 font-bold font-inter text-16 leading-30 text-dark"
-                            >
-                              Normative Deadline
-                            </label>
-                            <Field
-                              type="date"
-                              className="flex items-center justify-center w-full px-5 py-2 mt-3 font-medium border rounded-lg border-line bg-background focus:outline-none text-md"
-                              name="NormativeDeadline"
-                              required
-                            />
-                          </div>
-                        </div>
+                        
 
                         <div className="flex flex-row items-center justify-between w-full mt-5 font-bold font-inter text-16 leading-30 text-dark">
                           <div className="w-[48%]">
@@ -444,7 +413,38 @@ const DealsModal: React.FC<Props> = ({
                             </Field>
                           </div>
                         </div>
-
+                        <div className="flex flex-row items-center justify-between w-full mt-5 font-bold font-inter text-16 leading-30 text-dark">
+                          <div className="w-[48%]">
+                            {" "}
+                            <label
+                              htmlFor="ActualDeadline"
+                              className="flex items-center justify-between mt-10 font-bold font-inter text-16 leading-30 text-dark"
+                            >
+                              Actual Deadline
+                            </label>
+                            <Field
+                              type="date"
+                              className="flex items-center justify-center w-full px-5 py-2 mt-3 font-medium border rounded-lg border-line bg-background focus:outline-none text-md"
+                              name="ActualDeadline"
+                              required
+                            />
+                          </div>
+                          <div className="w-[48%]">
+                            {" "}
+                            <label
+                              htmlFor="NormativeDeadline"
+                              className="flex items-center justify-between mt-10 font-bold font-inter text-16 leading-30 text-dark"
+                            >
+                              Normative Deadline
+                            </label>
+                            <Field
+                              type="date"
+                              className="flex items-center justify-center w-full px-5 py-2 mt-3 font-medium border rounded-lg border-line bg-background focus:outline-none text-md"
+                              name="NormativeDeadline"
+                              required
+                            />
+                          </div>
+                        </div>
                         <div className="flex items-start justify-between w-full mt-5 font-bold font-inter text-16 leading-30 text-dark">
                           <div className="w-[48%]">
                             <label
@@ -577,38 +577,7 @@ const DealsModal: React.FC<Props> = ({
                       onSubmit={handleEdit}
                     >
                       <Form>
-                        <div className="flex flex-row items-center justify-between w-full mt-5 font-bold font-inter text-16 leading-30 text-dark">
-                          <div className="w-[48%]">
-                            {" "}
-                            <label
-                              htmlFor="ActualDeadline"
-                              className="flex items-center justify-between mt-10 font-bold font-inter text-16 leading-30 text-dark"
-                            >
-                              Actual Deadline
-                            </label>
-                            <Field
-                              type="date"
-                              className="flex items-center justify-center w-full px-5 py-2 mt-3 font-medium border rounded-lg border-line bg-background focus:outline-none text-md"
-                              name="ActualDeadline"
-                              required
-                            />
-                          </div>
-                          <div className="w-[48%]">
-                            {" "}
-                            <label
-                              htmlFor="NormativeDeadline"
-                              className="flex items-center justify-between mt-10 font-bold font-inter text-16 leading-30 text-dark"
-                            >
-                              Normative Deadline
-                            </label>
-                            <Field
-                              type="date"
-                              className="flex items-center justify-center w-full px-5 py-2 mt-3 font-medium border rounded-lg border-line bg-background focus:outline-none text-md"
-                              name="NormativeDeadline"
-                              required
-                            />
-                          </div>
-                        </div>
+                      
 
                         <div className="flex flex-row items-center justify-between w-full mt-5 font-bold font-inter text-16 leading-30 text-dark">
                           <div className="w-[48%]">
@@ -747,7 +716,38 @@ const DealsModal: React.FC<Props> = ({
                             </Field>
                           </div>
                         </div>
-
+                        <div className="flex flex-row items-center justify-between w-full mt-5 font-bold font-inter text-16 leading-30 text-dark">
+                          <div className="w-[48%]">
+                            {" "}
+                            <label
+                              htmlFor="ActualDeadline"
+                              className="flex items-center justify-between mt-10 font-bold font-inter text-16 leading-30 text-dark"
+                            >
+                              Actual Deadline
+                            </label>
+                            <Field
+                              type="date"
+                              className="flex items-center justify-center w-full px-5 py-2 mt-3 font-medium border rounded-lg border-line bg-background focus:outline-none text-md"
+                              name="ActualDeadline"
+                              required
+                            />
+                          </div>
+                          <div className="w-[48%]">
+                            {" "}
+                            <label
+                              htmlFor="NormativeDeadline"
+                              className="flex items-center justify-between mt-10 font-bold font-inter text-16 leading-30 text-dark"
+                            >
+                              Normative Deadline
+                            </label>
+                            <Field
+                              type="date"
+                              className="flex items-center justify-center w-full px-5 py-2 mt-3 font-medium border rounded-lg border-line bg-background focus:outline-none text-md"
+                              name="NormativeDeadline"
+                              required
+                            />
+                          </div>
+                        </div>
                         <div className="flex items-start justify-between w-full mt-5 font-bold font-inter text-16 leading-30 text-dark">
                           <div className="w-[48%]">
                             <label

@@ -50,45 +50,46 @@ const Deals = () => {
         </svg>
       ),
     },
+    
     {
       id: 2,
-      title: "Normative Deadline",
-    },
-    {
-      id: 3,
-      title: "Actual Deadline",
-    },
-    {
-      id: 4,
       title: "Description",
     },
     {
-      id: 5,
+      id: 3,
       title: "Order Class",
     },
     {
-      id: 6,
+      id: 4,
       title: "Order Source",
     },
     {
-      id: 7,
+      id: 5,
       title: "Order Type",
     },
     {
-      id: 8,
+      id: 6,
       title: "Phone Number",
     },
     {
-      id: 9,
+      id: 7,
       title: "Status",
     },
     {
-      id: 10,
+      id: 8,
       title: "Executor",
     },
     {
-      id: 11,
+      id: 9,
       title: "Edit",
+    },
+    {
+      id: 10,
+      title: "Normative Deadline",
+    },
+    {
+      id: 11,
+      title: "Actual Deadline",
     },
   ];
 
