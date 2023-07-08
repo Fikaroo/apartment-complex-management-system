@@ -29,6 +29,8 @@ import OrderType from "./pages/OrderType/OrderType";
 import Parking from "./pages/Parking/Parking";
 import ParkingDetail from "./pages/Parking/ParkingDetail";
 import Accident from "./pages/Accident/Accident";
+import RoomType from "./pages/RoomType/RoomType";
+import UserDetail from "./pages/Users/UserDetail";
 const App = () => {
   return (
     <div className="w-full min-h-screen overflow-hidden bg-background/90 text-dark">
@@ -80,7 +82,7 @@ const App = () => {
           path="/references/users/:userId"
           element={
             <Layout>
-              <CustomerDetail />
+              <UserDetail />
             </Layout>
           }
         />
@@ -245,6 +247,14 @@ const App = () => {
           element={
             <Layout>
               <OrderType />
+            </Layout>
+          }
+        />
+          <Route
+          path="/settings/roomtype"
+          element={
+            <Layout>
+              <RoomType />
             </Layout>
           }
         />

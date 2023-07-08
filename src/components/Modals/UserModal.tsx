@@ -11,6 +11,8 @@ import { GetAll } from "../../api";
 import { EditUser } from "../../api";
 import { DeleteUser } from "../../api";
 import ProportionInput from "../ProportionInput ";
+import Swal from "sweetalert2";
+import { useTranslation } from "react-i18next";
 type Props = {
   isOpen: boolean;
   closeModal: () => void;
@@ -49,7 +51,7 @@ const UserModal: React.FC<Props> = ({
   selectedRow,
   mutate,
 }) => {
-
+  const {t}= useTranslation();
   const [formData, setFormData] = useState({
     selectedBuildingId: "",
     selectedObjectId: "",
@@ -153,7 +155,7 @@ const UserModal: React.FC<Props> = ({
       closeModal
     );
 
-    alert(res);
+    res;
   };
   const handleEdit = async (values: ValuesEdit) => {
     const parsedValues = {
@@ -172,7 +174,7 @@ const UserModal: React.FC<Props> = ({
       closeModal
     );
 
-    alert(res);
+    res;
   };
   const deleteObject = async (deleteId: any) => {
     const res = await useGetResponse(
@@ -183,15 +185,26 @@ const UserModal: React.FC<Props> = ({
       closeModal
     );
 
-    alert(res);
+  res
   };
   const handleDelete = async () => {
-    deleteObject(deleteId);
+    
+    Swal.fire({
+      title: t("confirm"),
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#7066e0',
+      cancelButtonColor: '#d33',
+      confirmButtonText: t('yes'),
+      cancelButtonText: t('cancel'),
+    }).then((result) => {
+      if (result.isConfirmed) {
+        deleteObject(deleteId);
+      }
+    })
   };
  
-  console.log(dataObjects, "dataObjects");
-console.log(dataBuildingofObjects, "dataBuildingofObjects");
-console.log(dataApartment,"dataApartment");
+
   return (
     <div>
       <Transition appear show={isOpen} as={Fragment}>

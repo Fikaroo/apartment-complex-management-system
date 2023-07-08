@@ -70,7 +70,7 @@ const ResidentsModal = ({
       closeModal
     );
 
-    alert(res);
+    res;
   };
 
   return (

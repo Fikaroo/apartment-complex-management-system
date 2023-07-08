@@ -1,0 +1,16 @@
+{
+    "users":"Users",
+    "add":"Add",
+    "roomType":"Room Types",
+    "addRoomType":"Add Room Type",
+    "editRoomType":"Edit Room Type",
+    "name":"Name",
+    "general":"General",
+    "employee":"Employees",
+    "employees":"Employees",
+    "transport":"Transport",
+    "companies":"Companies",
+    "confirm":"Are you sure?",
+    "yes":"Yes",
+    "cancel":"Cancel"
+}

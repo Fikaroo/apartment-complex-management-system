@@ -1,0 +1,16 @@
+{
+    "users":"İstifadəçilər",
+    "add":"Əlavə et",
+    "roomType":"Otaq tipləri",
+    "addRoomType":"Otaq tipi əlavə et",
+    "editRoomType":"Otaq tipi yenilə",
+    "name":"Ad",
+    "general":"Ümumi",
+    "employee":"İşçi",
+    "employees":"İşçilər",
+    "transport":"Nəqliyyat",
+    "companies":"Kompaniya",
+    "confirm":"Əminsinizmi?",
+    "yes":"Bəli",
+    "cancel":"Ləğv et"
+}

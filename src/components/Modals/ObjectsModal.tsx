@@ -56,7 +56,7 @@ const ObjectsModal = ({
       closeModal
     );
 
-    alert(res);
+    res;
   };
 
   const handleEdit = async (values: Values) => {
@@ -74,7 +74,7 @@ const ObjectsModal = ({
       closeModal
     );
 
-    alert(res);
+    res;
   };
 
   const deleteObject = async (deleteId: any) => {
@@ -86,7 +86,7 @@ const ObjectsModal = ({
       closeModal
     );
 
-    alert(res);
+    res;
   };
 
   const handleDelete = () => {

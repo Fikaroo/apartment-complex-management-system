@@ -2,7 +2,7 @@ import { Menu, Transition } from "@headlessui/react";
 import { Fragment, useEffect, useRef, useState } from "react";
 import { ChevronDownIcon } from "@heroicons/react/20/solid";
 import { PlusIcon } from "@heroicons/react/24/outline";
-
+import {useTranslation} from "react-i18next";
 type Props = {
   modal: JSX.Element;
   openModal: () => void;
@@ -10,6 +10,7 @@ type Props = {
 };
 
 const AddBtn = ({ modal, openModal, setProcess }: Props) => {
+  const { t,i18n } = useTranslation();
   return (
     <Menu>
       <Menu.Button
@@ -19,7 +20,7 @@ const AddBtn = ({ modal, openModal, setProcess }: Props) => {
           setProcess("Add");
         }}
       >
-        Əlavə et
+      {t("add")}
         <PlusIcon className="w-5 h-5 stroke-white" />
       </Menu.Button>
       {modal}

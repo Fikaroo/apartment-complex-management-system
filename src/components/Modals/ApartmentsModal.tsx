@@ -11,6 +11,8 @@ import { GetAll } from "../../api";
 import { EditApartment } from "../../api";
 import { GetbyId } from "../../api";
 import useGetResponse from "../../hooks/useGetResponse";
+import Swal from "sweetalert2";
+import { toast } from "react-toastify";
 
 type Props = {
   isOpen: boolean;
@@ -280,7 +282,7 @@ const handleSubmit = async (values: Values) => {
     closeModal
   );
 
-  alert(res);
+  res
 
   setFormData({
     selectedBuildingId: "",
@@ -310,7 +312,7 @@ const handleEdit = async (values: Values) => {
     closeModal
   );
 
-  alert(res);
+res
 
   setFormData({
     selectedBuildingId: "",
@@ -331,12 +333,25 @@ const deleteObject = async (deleteId: any) => {
     closeModal
   );
 
-  alert(res);
+  res
 };
 
 const handleDelete = () => {
-  deleteObject(deleteId);
+  Swal.fire({
+    title: 'Are you sure?',
+    text: "You won't be able to revert this!",
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    confirmButtonText: 'Yes, delete it!'
+  }).then((result) => {
+    if (result.isConfirmed) {
+      deleteObject(deleteId);
+    }
+  })
 };
+
 
 const handleCloseModal = () => {
   setFormData({

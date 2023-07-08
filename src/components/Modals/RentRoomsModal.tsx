@@ -10,6 +10,8 @@ import { Delete } from "../../api";
 import { AddRentRooms } from "../../api";
 import { EditRentRoom } from "../../api";
 import useGetResponse from "../../hooks/useGetResponse";
+import { useTranslation } from "react-i18next";
+import Swal from "sweetalert2";
 
 type Props = {
   isOpen: boolean;
@@ -37,7 +39,7 @@ const RentRoomsModal: React.FC<Props> = ({
   mutate,
   vendorRoomId,
 }) => {
-
+const {t}= useTranslation();
   const {
     data: dataCompany,
     error: errorCompany,
@@ -78,7 +80,7 @@ const RentRoomsModal: React.FC<Props> = ({
       closeModal
     );
 
-    alert(res);
+    res;
   };
   const handleEdit = async (values: Values) => {
     const parsedValues = {
@@ -113,7 +115,7 @@ const RentRoomsModal: React.FC<Props> = ({
       closeModal
     );
 
-    alert(res);
+    res;
   };
   const deleteObject = async (deleteId: any) => {
     const res = await useGetResponse(
@@ -124,11 +126,23 @@ const RentRoomsModal: React.FC<Props> = ({
       closeModal
     );
 
-    alert(res);
+    res;
   };
 
   const handleDelete = () => {
-    deleteObject(deleteId);
+    Swal.fire({
+      title: t("confirm"),
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#7066e0',
+      cancelButtonColor: '#d33',
+      confirmButtonText: t('yes'),
+      cancelButtonText: t('cancel'),
+    }).then((result) => {
+      if (result.isConfirmed) {
+        deleteObject(deleteId);
+      }
+    })
   };
 
   return (

@@ -1,4 +1,4 @@
-import { Fragment } from "react";
+import { Fragment,useState } from "react";
 
 import { Dialog, Transition } from "@headlessui/react";
 import { XCircleIcon } from "@heroicons/react/24/solid";
@@ -10,7 +10,9 @@ import useGetResponse from "../../hooks/useGetResponse";
 
 import { CreateTransport, Delete, UpdateTransport } from "../../api";
 import { GetAll } from "../../api";
-
+import Tabs, { ITabs } from "../../components/Tabs";
+import { useTranslation } from "react-i18next";
+import Swal from "sweetalert2";
 type Props = {
   isOpen: boolean;
   closeModal: () => void;
@@ -35,11 +37,16 @@ const TransportModal = ({
   selectedRow,
   mutate,
 }: Props) => {
+    const {t}=useTranslation();
   const { data, isLoading, error } = useSWR(
     "/api/Users/GetAllForAdmin",
     GetAll.user
   );
-
+  const {
+    data: dataOrderStatus,
+    error: errorOrderStatus,
+    isLoading: isLoadingOrderStatus,
+  } = useSWR("/api/OrderStatus/GetAll", (key) => GetAll.user(key));
   const handleSubmit = async (values: TransportValues) => {
     const parsedValues = {
       ...values,
@@ -56,7 +63,7 @@ const TransportModal = ({
       closeModal
     );
 
-    alert(res);
+    res;
   };
 
   const handleEdit = async (values: TransportValues) => {
@@ -75,7 +82,7 @@ const TransportModal = ({
       closeModal
     );
 
-    alert(res);
+    res;
   };
 
   const deleteObject = async (deleteId: any) => {
@@ -87,11 +94,23 @@ const TransportModal = ({
       closeModal
     );
 
-    alert(res);
+    res;
   };
 
   const handleDelete = () => {
-    deleteObject(deleteId);
+    Swal.fire({
+      title: t("confirm"),
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#7066e0',
+      cancelButtonColor: '#d33',
+      confirmButtonText: t('yes'),
+      cancelButtonText: t('cancel'),
+    }).then((result) => {
+      if (result.isConfirmed) {
+        deleteObject(deleteId);
+      }
+    })
   };
 
   if (isLoading) <div>Loading...</div>;
