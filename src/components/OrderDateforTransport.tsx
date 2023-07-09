@@ -6,7 +6,7 @@ import {
   ChevronUpDownIcon,
   ChevronDownIcon,
 } from "@heroicons/react/20/solid";
-import { type } from "os";
+
 
 type orderType = {
   transportOf: { value: number; label: string }[];
