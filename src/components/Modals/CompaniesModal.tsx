@@ -11,6 +11,8 @@ import { EditApartment } from "../../api";
 import { CreateCompany } from "../../api";
 import { EditCompany } from "../../api";
 import useGetResponse from "../../hooks/useGetResponse";
+import { useTranslation } from "react-i18next";
+import Swal from "sweetalert2";
 type Props = {
   isOpen: boolean;
   closeModal: () => void;
@@ -40,6 +42,7 @@ const CompaniesModal: React.FC<Props> = ({
   selectedRow,
   mutate,
 }) => {
+  const {t}= useTranslation();
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
   const handleChange = (event: any) => {
@@ -83,7 +86,7 @@ const CompaniesModal: React.FC<Props> = ({
       closeModal
     );
 
-    alert(res);
+    res;
     setIsButtonDisabled(false);
   };
   const handleEdit = async (values: Values) => {
@@ -123,7 +126,7 @@ const CompaniesModal: React.FC<Props> = ({
       closeModal
     );
 
-    alert(res);
+  res;
     setIsButtonDisabled(false);
   };
 
@@ -136,11 +139,24 @@ const CompaniesModal: React.FC<Props> = ({
       closeModal
     );
 
-    alert(res);
+    res;
   };
 
   const handleDelete = () => {
-    deleteObject(deleteId);
+    Swal.fire({
+      title: t("confirm"),
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#7066e0',
+      cancelButtonColor: '#d33',
+      confirmButtonText: t('yes'),
+      cancelButtonText: t('cancel'),
+    }).then((result) => {
+      if (result.isConfirmed) {
+        deleteObject(deleteId);
+      }
+    })
+  
   };
 
   return (
@@ -369,7 +385,7 @@ const CompaniesModal: React.FC<Props> = ({
                                 accept="image/*"
                                 onChange={handleChange}
                                 className="mt-3 w-[95%] rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
-                                required
+                           
                               />
                             </div>
                             <div className="w-[48%] flex items-center justify-center">

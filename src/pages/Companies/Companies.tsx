@@ -7,13 +7,14 @@ import AddBtn from "../../components/AddBtn";
 import useSWR from "swr";
 import { GetAll } from "../../api";
 import CompaniesModal from "../../components/Modals/CompaniesModal";
+import { useTranslation } from "react-i18next";
 
 const Companies = () => {
   let [isOpen, setIsOpen] = useState<boolean>(false);
   const [process, setProcess] = useState("");
   const [companyId, setCompanyId] = useState<number>(0);
   const [selectedRow, setSelectedRow] = useState(null);
-
+const {t}=useTranslation();
   const closeModal = (): void => {
     setIsOpen(false);
   };
@@ -101,7 +102,7 @@ const Companies = () => {
     <Fragment>
       <div className="flex items-center justify-between">
         <p className="font-bold font-inter text-16 leading-30 text-dark">
-          Ümumi: {data?.data?.length} Companies
+          {t("general")}: {data?.data?.length} {t("companies")}
         </p>{" "}
         <div className="flex items-center gap-4">
           <AddBtn

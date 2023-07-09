@@ -9,6 +9,8 @@ import { GetAll } from "../../api";
 import { EditBuilding } from "../../api";
 import { Delete } from "../../api";
 import useGetResponse from "../../hooks/useGetResponse";
+import { useTranslation } from "react-i18next";
+import Swal from "sweetalert2";
 
 type Props = {
   isOpen: boolean;
@@ -38,6 +40,7 @@ const BuildingsModal: React.FC<Props> = ({
   selectedRow,
   mutate,
 }) => {
+  const {t}=useTranslation();
   const [selectedImage, setSelectedImage] = useState(null);
   const handleChange = (event: any) => {
     const file = event.target.files[0];
@@ -89,7 +92,7 @@ const BuildingsModal: React.FC<Props> = ({
       closeModal
     );
 
-    alert(res);
+    res;
     setSelectedImage(null);
   };
  
@@ -134,7 +137,7 @@ const BuildingsModal: React.FC<Props> = ({
       closeModal
     );
 
-    alert(res);
+    res;
     setSelectedImage(null);
   };
 
@@ -147,12 +150,24 @@ const BuildingsModal: React.FC<Props> = ({
       closeModal
     );
 
-    alert(res);
+    res;
   };
 
   const handleDelete = () => {
-    console.log(deleteId, "deleteId");
-    deleteObject(deleteId);
+    Swal.fire({
+      title: t("confirm"),
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#7066e0',
+      cancelButtonColor: '#d33',
+      confirmButtonText: t('yes'),
+      cancelButtonText: t('cancel'),
+    }).then((result) => {
+      if (result.isConfirmed) {
+        deleteObject(deleteId);
+      }
+    })
+  
   };
 
   return (
@@ -243,7 +258,7 @@ const BuildingsModal: React.FC<Props> = ({
                                 required
                               >
                                 <option value="-1">Choose</option>
-                                {dataRegions?.data.map((item: any) => (
+                                {dataRegions?.Data?.map((item: any) => (
                                   <option value={item.id}>{item.name}</option>
                                 ))}
                               </Field>
@@ -415,7 +430,7 @@ const BuildingsModal: React.FC<Props> = ({
                         Image: null,
                         Name: selectedRow.name || "",
                         RegionId:
-                          dataRegions?.data.find(
+                          dataRegions?.data?.find(
                             (item: any) => item.name === selectedRow?.regionName
                           )?.id || "",
                         Street: selectedRow.street || "",
@@ -424,7 +439,7 @@ const BuildingsModal: React.FC<Props> = ({
                         Floor: selectedRow.floor || -1,
                         Entrance: selectedRow.entrance || -1,
                         VendorObjectId:
-                          dataObjects?.data.find(
+                          dataObjects?.data?.find(
                             (item: any) =>
                               item.title === selectedRow?.vendorObjectName
                           )?.id || "",
@@ -466,9 +481,9 @@ const BuildingsModal: React.FC<Props> = ({
                                 required
                               >
                                 <option value="-1">Choose</option>
-                                {dataRegions?.data.map((item: any) => (
+                                {/* {dataRegions?.data.map((item: any) => (
                                   <option value={item.id}>{item.name}</option>
-                                ))}
+                                ))} */}
                               </Field>
                             </div>
                           </div>

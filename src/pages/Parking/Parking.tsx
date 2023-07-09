@@ -38,13 +38,13 @@ const Parking = () => {
     <Fragment>
       <div className="flex items-center justify-between">
         {
-            data?.data.map((item:any)=>(
+            data?.data?.map((item:any)=>(
                 <div key={item.id} className="w-full p-4 shadow-md lg:max-w-lg cursor-pointer"  onClick={() => handleCard({ id: item.id })}>
                 <div className="space-y-2">
                     <h3 className="text-2xl font-semibold">
                         {item.name}
                     </h3>
-                    {item?.objectNames.map((objectName:any,id:any)=>(
+                    {item?.objectNames?.map((objectName:any,id:any)=>(
                         <p key={id} className="text-gray-600">
                             {objectName}
                         </p>

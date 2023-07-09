@@ -1,19 +1,21 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import useSWR from "swr";
 import { GetAll } from "../api";
 import AddBtn from "../components/AddBtn";
-import OrderDate from "../components/OrderDate";
+import OrderDate from "../components/OrderDateforTransport";
 import Filter from "../components/Filter";
 import Tables, { IHeaders } from "../components/Table/TransportTable";
 import TransportModal from "../components/Modals/TransportModal";
-
+import { useTranslation } from "react-i18next";
+import Tabs, { ITabs } from "../components/Tabs";
 const Transport = () => {
   let [isOpen, setIsOpen] = useState<boolean>(false);
   let [isOpenAdd, setIsOpenAdd] = useState<boolean>(false);
   const [process, setProcess] = useState("");
-  const [orderId, setOrderId] = useState<number>(0);
+  const [transportId, setTransportId] = useState<number>(0);
   const [selectedRow, setSelectedRow] = useState(null);
-
+  const [transportData1,setTransportData] = useState();
+const {t}=useTranslation();
   const closeModal = (): void => {
     setIsOpen(false);
   };
@@ -34,7 +36,34 @@ const Transport = () => {
     "api/Transport/GetAllWithPagination",
     (key) => GetAll.user(key)
   );
+  const transportOf = [
+    { value:1, label:'All' },
+    { value:2, label:'User' },
+    { value:3, label:'Employee' },
+    { value:4, label:'Company' },
+  
+  ]
+  const transportData = data?.data?.items;
+  const [selected, setSelected] = useState(transportOf.find(item => item.value === 1)||transportOf[0]);
+  console.log(selected.value, "transportOf");
+useEffect(() => {
+  const fetchData = async () => {
+    try {
+      const response = await GetAll.user(`/api/Transport/GetAllByFilter?PageNumber=1&PageSize=10&filter=${selected?.value}`);
+      console.log(response,"response");
+      const responseData = response.data;
+      // Assuming your API response contains the data in a 'data' property
+      const apiTransportData = responseData?.data?.items;
+      // Assign the fetched data to transportData state
+      setTransportData(apiTransportData);
+    } catch (error) {
+      // Handle the error
+    }
+  };
 
+  fetchData();
+},[selected])
+console.log(transportData1, "transportData11");
   const headers: IHeaders[] = [
     {
       id: 1,
@@ -89,52 +118,59 @@ const Transport = () => {
   if (isLoading) <div>Loading...</div>;
   if (error) <div>error</div>;
 
-  const transportData = data?.data?.items;
+
+
+  
+
+
+
   return (
     <Fragment>
-      <div className="flex items-center justify-between">
-        <p className="font-bold font-inter text-16 leading-30 text-dark">
-          Ümumi: {transportData?.length || 0} Transport
-        </p>
-        <div className="flex items-center gap-4">
-          <AddBtn
-            openModal={openModalAdd}
-            modal={
-              <TransportModal
-                mutate={mutate}
-                isOpen={isOpenAdd}
-                closeModal={closeModalAdd}
-                process={process}
-                deleteId={orderId}
-                selectedRow={selectedRow}
-              />
-            }
-            setProcess={setProcess}
-          />
-          <OrderDate />
-          <Filter />
-        </div>
+   
+    <div className="flex items-center justify-between">
+      <p className="font-bold font-inter text-16 leading-30 text-dark">
+       {t("general")} : {transportData?.length || 0} {t("transport")}
+      </p>
+      <div className="flex items-center gap-4">
+        {/* <AddBtn
+          openModal={openModalAdd}
+          modal={
+            <TransportModal
+              mutate={mutate}
+              isOpen={isOpenAdd}
+              closeModal={closeModalAdd}
+              process={process}
+              deleteId={orderId}
+              selectedRow={selectedRow}
+            />
+          }
+          setProcess={setProcess}
+        /> */}
+        <OrderDate transportOf={transportOf} setSelected={setSelected} selected={selected} />
+        <Filter />
       </div>
-      <Tables
-        openModal={openModal}
-        modal={
-          <TransportModal
-            mutate={mutate}
-            isOpen={isOpen}
-            closeModal={closeModal}
-            process={process}
-            deleteId={orderId}
-            selectedRow={selectedRow}
-          />
-        }
-        headers={headers}
-        data={transportData}
-        setProcess={setProcess}
-        setOrderId={setOrderId}
-        setSelectedRow={setSelectedRow}
-      />
-    </Fragment>
+    </div>
+    <Tables
+      openModal={openModal}
+      modal={
+        <TransportModal
+          mutate={mutate}
+          isOpen={isOpen}
+          closeModal={closeModal}
+          process={process}
+          deleteId={transportId}
+          selectedRow={selectedRow}
+        />
+      }
+      headers={headers}
+      data={transportData}
+      setProcess={setProcess}
+      setTransportId={setTransportId}
+      setSelectedRow={setSelectedRow}
+    />
+  </Fragment>
   );
 };
 
 export default Transport;
+

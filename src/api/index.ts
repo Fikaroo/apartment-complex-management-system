@@ -392,7 +392,7 @@ export const CreateEmployees = {
     {
       arg,
     }: {
-      arg: EmployeeValues;
+      arg: FormData;
     }
   ) => {
     const { data } = await company.post(path, arg, {
@@ -409,7 +409,7 @@ export const EditEmployees = {
     {
       arg,
     }: {
-      arg: EmployeeValues;
+      arg: FormData;
     }
   ) => {
     const { data } = await company.put(path, arg, {
@@ -675,6 +675,23 @@ export const EditOrderType = {
     }
   ) => {
     const { data } = await admin.put(path, arg, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("user-token")}`,
+      },
+    });
+    return data;
+  },
+};
+export const CreateRoomType = {
+  user: async (
+    path: string,
+    {
+      arg,
+    }: {
+      arg: any[];
+    }
+  ) => {
+    const { data } = await admin.post(path, arg, {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("user-token")}`,
       },

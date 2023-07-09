@@ -13,6 +13,9 @@ import { AddOrderType } from "../../api";
 import { EditOrderType } from "../../api";
 import { GetAll } from "../../api";
 
+import { useTranslation } from "react-i18next";
+import Swal from "sweetalert2";
+
 type Props = {
   isOpen: boolean;
   closeModal: () => void;
@@ -40,6 +43,7 @@ const OrderTypeModal = ({
   selectedRow,
   mutate,
 }: Props) => {
+  const {t}= useTranslation();
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const [paymentType, setPaymentType] = useState("false");
   const [priceType, setPriceType] = useState("");
@@ -62,7 +66,7 @@ const OrderTypeModal = ({
       closeModal
     );
 
-    alert(res);
+    res;
     setPaymentType("false");
     setPriceType("");
     setIsButtonDisabled(false);
@@ -114,7 +118,7 @@ useEffect(() => {
       closeModal
     );
 
-    alert(res);
+    res;
     setPaymentType("false");
     setPriceType("");
     setIsButtonDisabled(false);
@@ -130,7 +134,7 @@ useEffect(() => {
       closeModal
     );
 
-    alert(res);
+    res;
     setPaymentType("false");
     setPriceType("");
     setIsButtonDisabled(false);
@@ -138,7 +142,19 @@ useEffect(() => {
   };
 
   const handleDelete = () => {
-    deleteObject(deleteId);
+    Swal.fire({
+      title: t("confirm"),
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#7066e0',
+      cancelButtonColor: '#d33',
+      confirmButtonText: t('yes'),
+      cancelButtonText: t('cancel'),
+    }).then((result) => {
+      if (result.isConfirmed) {
+        deleteObject(deleteId);
+      }
+    })
   };
 const handleCloseModal=()=>{
 closeModal();

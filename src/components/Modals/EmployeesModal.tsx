@@ -30,20 +30,25 @@ interface BuildingObject {
   id: number;
   name: string;
 }
+interface Object {
+  id: number;
+  title: string;
+}
 export type EmployeeValues = {
-  ProfileImage: string;
-  name: string;
-  surname: string;
-  patrionimyc: string;
-  hasCompany: string | null;
-  jobPosition: string;
-  vendorCompanyId: number | null;
-  vendorObjectsId: number[];
-  vendorBuildingsId: any[];
-  roleId: string;
-  voen: string;
-  email: string;
-  phoneNumber: string;
+  ProfileImage: any;
+  Name: string;
+  Surname: string;
+  Patrionimyc: string;
+  HasCompany: string | null;
+  JobPosition: string;
+  VendorCompanyId: number | null;
+  VendorObjectsId: number[];
+  VendorBuildingsId: any[];
+  RoleId: string;
+  Voen: string;
+  Email: string;
+  PhoneNumber: string;
+  UserName: string;
 };
 
 const EmployeesModal = ({
@@ -54,8 +59,29 @@ const EmployeesModal = ({
   selectedRow,
   mutate,
 }: Props) => {
-  // const [selectedValues, setSelectedValues] = useState<string[]>([]);
+  console.log(selectedRow, "selectedRow");
+  const [options, setOptions] = useState<Array<{ value: any; label: string }>>(
+    []
+  );
+  const [optionsObject, setOptionsObject] = useState<
+    Array<{ value: any; label: string }>
+  >([]);
 
+  const [selectedValues, setSelectedValues] = useState<
+    { value: any; label: string }[]
+  >([]);
+  const [selectedObjectValues, setSelectedObjectValues] = useState<
+    { value: any; label: string }[]
+  >([]);
+  const [removedOptions, setRemovedOptions] = useState<
+    { value: any; label: string }[]
+  >([]);
+  const [removedObjectOptions, setRemovedObjectOptions] = useState<
+    { value: any; label: string }[]
+  >([]);
+  const [selectedObjectsNumbers, setSelectedObjectsNumbers] = useState<
+    number[]
+  >([]);
   const {
     data: dataVendorCompany,
     error: errVendorCompany,
@@ -69,63 +95,94 @@ const EmployeesModal = ({
     error: errVendorObjects,
     isLoading: isLoadingVendorObjects,
   } = useSWR("/api/VendorObjects/GetAll", (key) => GetAll.user(key));
+
   const {
     data: dataBuildingofObjects,
     error: errorBuildingofObject,
     isLoading: isLoadingBuildingofObject,
     mutate: mutateBuildingofObjects,
   } = useSWR(
-    `/api/VendorBuildings/GetAllByObjectId?objectId=${formData.selectedObjectId}`,
+    selectedObjectsNumbers.length > 0
+      ? `/api/VendorBuildings/GetAllByObjectIds?objectIds=${selectedObjectsNumbers.join(
+          "&objectIds="
+        )}`
+      : null,
     (key) => GetAll.user(key)
   );
-  const [options, setOptions] = useState<Array<{ value: any; label: string }>>(
-    []
-  );
 
+  const handleSelectChange = (selectedList: any, selectedItem: any) => {
+    const isAlreadySelected = selectedValues.some(
+      (item) => item.value === selectedItem.value
+    );
+    if (!isAlreadySelected) {
+      setSelectedValues([...selectedValues, selectedItem]);
+    }
+  };
+  const handleObjectSelectChange = (selectedList: any, selectedItem: any) => {
+    const isAlreadySelected = selectedObjectValues.some(
+      (item) => item.value === selectedItem.value
+    );
+    if (!isAlreadySelected) {
+      setSelectedObjectValues([...selectedObjectValues, selectedItem]);
+    }
 
-  
-  const [selectedValues, setSelectedValues] = useState<{ value: any; label: string }[]>([]);
-const [removedOptions, setRemovedOptions] = useState<{ value: any; label: string }[]>([]);
+    console.log(selectedObjectValues, "selectedObjectValues");
+  };
 
+  useEffect(() => {
+    if (selectedObjectValues.length > 0) {
+      setSelectedObjectsNumbers(selectedObjectValues.map((item) => item.value));
+    } else {
+      setOptions([]);
+      setSelectedValues([]);
+    }
+  }, [selectedObjectValues]);
 
-const handleSelectChange = (selectedList: any, selectedItem: any) => {
-  const isAlreadySelected = selectedValues.some((item) => item.value === selectedItem.value);
-  if (!isAlreadySelected) {
-    setSelectedValues([...selectedValues, selectedItem]);
-  }
-};
-  console.log(selectedValues, "selectedValues");
-  const handleSelectRemove = (selectedList:any,removedItem:any) => {
+  console.log(selectedObjectsNumbers, "selectedObjectsNumbers");
+
+  const handleSelectRemove = (selectedList: any, removedItem: any) => {
     console.log(selectedList, "selectedList");
     setSelectedValues(selectedList);
     // const selectedValues = selectedList.filter((option: any) => option !== null && option !== undefined).map((option: any)=> option.id);
-    setRemovedOptions((prevRemovedOptions) => [...prevRemovedOptions, removedItem]);
+    setRemovedOptions((prevRemovedOptions) => [
+      ...prevRemovedOptions,
+      removedItem,
+    ]);
 
     console.log(selectedValues, "selectedValues");
   };
-  
+  const handleObjectSelectRemove = (selectedList: any, removedItem: any) => {
+    setSelectedObjectValues(selectedList);
+
+    setRemovedObjectOptions((prevRemovedOptions) => [
+      ...prevRemovedOptions,
+      removedItem,
+    ]);
+  };
 
   useEffect(() => {
     if (dataBuildingofObjects && dataBuildingofObjects.data) {
       const extractedOptions: { value: any; label: string }[] =
         dataBuildingofObjects.data.map((item: BuildingObject) => ({
           label: item.name,
-        value: item.id,
-      
+          value: item.id,
         }));
       setOptions(extractedOptions);
     }
   }, [dataBuildingofObjects]);
-  console.log(options, "options");
-  console.log(dataBuildingofObjects?.data, "options1");
-  const handleObjectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const objectId = e.target.value;
-    setFormData((prevFormData) => ({
-      ...prevFormData,
-      selectedObjectId: objectId,
-    }));
-    console.log(objectId, "objectId");
-  };
+
+  useEffect(() => {
+    if (dataVendorObjects && dataVendorObjects?.data) {
+      const extractedOptions: { value: any; label: string }[] =
+        dataVendorObjects?.data.map((item: Object) => ({
+          label: item.title,
+          value: item.id,
+        }));
+      setOptionsObject(extractedOptions);
+    }
+  }, [dataVendorObjects]);
+
+  
 
   useEffect(() => {
     if (selectedRow) {
@@ -161,43 +218,129 @@ const handleSelectChange = (selectedList: any, selectedItem: any) => {
 
   const [selectedImage, setSelectedImage] = useState(null);
   const handleChange = (event: any) => {
+    console.log(event.target.files[0], "event.target.files[0]");
     const file = event.target.files[0];
     setSelectedImage(file);
   };
+  console.log(selectedImage, "selectedImage1");
   const handleSubmit = async (values: EmployeeValues) => {
     console.log(values, "values");
+
     const parsedValues = {
       ...values,
-      ProfilImage: selectedImage,
+      VendorBuildingsId: selectedValues.map((item: any) => item.value),
+      VendorObjectsId: selectedObjectValues.map((item: any) => item.value),
     };
 
+    const formData = new FormData();
+    formData.append("Name", parsedValues.Name);
+    formData.append("Surname", parsedValues.Surname);
+    formData.append("Patrionimyc", parsedValues.Patrionimyc);
+    formData.append("UserName", parsedValues.UserName);
+    formData.append(
+      "HasCompany",
+      JSON.stringify(Boolean(parsedValues.HasCompany))
+    );
+    formData.append("JobPosition", parsedValues.JobPosition);
+    if (hasCompanyBoolean === "true") {
+      formData.append("VendorCompanyId", String(parsedValues.VendorCompanyId));
+    } else {
+      formData.append("VendorCompanyId", "");
+    }
+    parsedValues.VendorBuildingsId.map((item) => {
+      formData.append("VendorBuildingsId", String(item));
+    });
+
+    parsedValues.VendorObjectsId.map((item) => {
+      formData.append("VendorObjectsId", String(item));
+    });
+
+    formData.append("RoleId", parsedValues.RoleId);
+    formData.append("Voen", parsedValues.Voen);
+    formData.append("Email", parsedValues.Email);
+    formData.append("PhoneNumber", parsedValues.PhoneNumber);
+    if (selectedImage !== null) {
+      formData.append("ProfileImage", selectedImage);
+    }
+   
+
     const res = await useGetResponse(
-      CreateEmployees.user("/api/Employess/Create", {
-        arg: parsedValues,
+      CreateEmployees.user("/api/Employees/Create", {
+        arg: formData,
       }),
       mutate,
       closeModal
     );
-
-    alert(res);
-    setSelectedImage(null);
+  
+  res;
+  console.log(res,"res.statusCode");
+    if (res.statusCode === 200 || res.statusCode === 201) {
+      setSelectedImage(null);
+      setOptionsObject([]);
+      setSelectedObjectValues([]);
+      setSelectedValues([]);
+      setOptions([]);
+      setSelectedImage(null);
+    }
   };
 
   const handleEdit = async (values: EmployeeValues) => {
     const parsedValues = {
       ...values,
-      id: selectedRow.id,
+      VendorBuildingsId: selectedValues.map((item: any) => item.value),
+      VendorObjectsId: selectedObjectValues.map((item: any) => item.value),
+      Id: selectedRow.id,
     };
+    const formData = new FormData();
+    formData.append("Id", parsedValues.Id);
+    formData.append("Name", parsedValues.Name);
+    formData.append("Surname", parsedValues.Surname);
+    formData.append("Patrionimyc", parsedValues.Patrionimyc);
+    formData.append("UserName", parsedValues.UserName);
+    formData.append(
+      "HasCompany",
+      JSON.stringify(Boolean(parsedValues.HasCompany))
+    );
+    formData.append("JobPosition", parsedValues.JobPosition);
+    if (hasCompanyBoolean === "true") {
+      formData.append("VendorCompanyId", String(parsedValues.VendorCompanyId));
+    } else {
+      formData.append("VendorCompanyId", "");
+    }
+
+    parsedValues.VendorBuildingsId.map((item) => {
+      formData.append("VendorBuildingsId", String(item));
+    });
+
+    parsedValues.VendorObjectsId.map((item) => {
+      formData.append("VendorObjectsId", String(item));
+    });
+
+    formData.append("RoleId", parsedValues.RoleId);
+    formData.append("Voen", parsedValues.Voen);
+    formData.append("Email", parsedValues.Email);
+    formData.append("PhoneNumber", parsedValues.PhoneNumber);
+    if (selectedImage !== null) {
+      formData.append("ProfileImage", selectedImage);
+    } else if (selectedRow.image) {
+      console.log("else if");
+      const response = await fetch(selectedRow.image);
+      console.log(response, "response");
+      const imageBlob = await response.blob();
+      console.log(imageBlob, "imageBlob");
+      formData.append("ProfileImage", imageBlob, "image.png");
+    }
+  
 
     const res = await useGetResponse(
       EditEmployees.user("/api/Employees/Update", {
-        arg: parsedValues,
+        arg: formData,
       }),
       mutate,
       closeModal
     );
 
-    alert(res);
+    res;
   };
 
   const deleteObject = async (deleteId: string) => {
@@ -211,14 +354,20 @@ const handleSelectChange = (selectedList: any, selectedItem: any) => {
       closeModal
     );
 
-    alert(res);
+    res;
   };
 
   const handleDelete = () => {
     deleteObject(deleteId);
   };
+
   const handleClose = () => {
     closeModal();
+
+    setSelectedValues([]);
+    setSelectedObjectValues([]);
+    setOptions([]);
+    setOptionsObject([]);
     setSelectedImage(null);
     setHasCompanyBoolean("false");
   };
@@ -311,19 +460,21 @@ const handleSelectChange = (selectedList: any, selectedItem: any) => {
                     </Dialog.Title>
                     <Formik
                       initialValues={{
-                        ProfileImage: "",
-                        name: "",
-                        surname: "",
-                        patrionimyc: "",
-                        hasCompany: null,
-                        jobPosition: "",
-                        vendorCompanyId: null,
-                        vendorObjectsId: [],
-                        vendorBuildingsId: [],
-                        roleId: "",
-                        voen: "",
-                        email: "",
-                        phoneNumber: "",
+                        ProfileImage: null,
+                        Name: "",
+                        Surname: "",
+                        UserName: "",
+                        Patrionimyc: "",
+                        HasCompany: null,
+                        JobPosition: "",
+                        VendorCompanyId: null,
+                        VendorObjectsId: [],
+                        VendorBuildingsId: [],
+                        RoleId: "",
+                        Voen: "",
+                        Email: "",
+                        PhoneNumber: "",
+                        
                       }}
                       onSubmit={handleSubmit}
                     >
@@ -332,13 +483,14 @@ const handleSelectChange = (selectedList: any, selectedItem: any) => {
                           <div className="grid items-center justify-between grid-cols-2 gap-4 mt-10 font-bold font-inter text-16 leading-30 text-dark">
                             <div>
                               <label
-                                htmlFor="name"
+                                htmlFor="Name"
                                 className="inline-flex items-center w-1/2 justify-star"
                               >
                                 Name
                               </label>
                               <Field
-                                name="name"
+                                name="Name"
+                                id="Name"
                                 type="text"
                                 className="mt-3 w-[95%] rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
                                 required
@@ -347,13 +499,14 @@ const handleSelectChange = (selectedList: any, selectedItem: any) => {
 
                             <div>
                               <label
-                                htmlFor="surname"
+                                htmlFor="Surname"
                                 className="inline-flex items-center w-1/2 justify-star"
                               >
                                 Surname
                               </label>
                               <Field
-                                name="surname"
+                                name="Surname"
+                                id="Surname"
                                 type="text"
                                 className="mt-3 w-[95%] rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
                                 required
@@ -361,13 +514,14 @@ const handleSelectChange = (selectedList: any, selectedItem: any) => {
                             </div>
                             <div>
                               <label
-                                htmlFor="patrionimyc"
+                                htmlFor="Patrionimyc"
                                 className="inline-flex items-center w-1/2 justify-star"
                               >
                                 Patrionimyc
                               </label>
                               <Field
-                                name="patrionimyc"
+                                name="Patrionimyc"
+                                id="Patrionimyc"
                                 type="text"
                                 className="mt-3 w-[95%] rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
                                 required
@@ -376,43 +530,32 @@ const handleSelectChange = (selectedList: any, selectedItem: any) => {
 
                             <div>
                               <label
-                                htmlFor="username"
+                                htmlFor="UserName"
                                 className="inline-flex items-center w-1/2 justify-star"
                               >
                                 Username
                               </label>
                               <Field
-                                name="username"
+                                name="UserName"
+                                id="UserName"
                                 type="text"
                                 className="mt-3 w-[95%] rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
                                 required
                               />
                             </div>
 
-                            <div>
-                              <label
-                                htmlFor="password"
-                                className="inline-flex items-center w-1/2 justify-star"
-                              >
-                                Password
-                              </label>
-                              <Field
-                                name="password"
-                                type="text"
-                                className="mt-3 w-[95%] rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
-                                required
-                              />
-                            </div>
+                        
 
                             <div>
                               <label
-                                htmlFor="email"
+                                htmlFor="Email"
                                 className="inline-flex items-center w-1/2 justify-star"
                               >
                                 Email
                               </label>
                               <Field
-                                name="email"
+                                name="Email"
+                                id="Email"
                                 type="email"
                                 className="mt-3 w-[95%] rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
                                 required
@@ -421,13 +564,14 @@ const handleSelectChange = (selectedList: any, selectedItem: any) => {
 
                             <div>
                               <label
-                                htmlFor="jobPosition"
+                                htmlFor="JobPosition"
                                 className="inline-flex items-center w-1/2 justify-star"
                               >
                                 Job Position
                               </label>
                               <Field
-                                name="jobPosition"
+                                name="JobPosition"
+                                id="JobPosition"
                                 type="text"
                                 className="mt-3 w-[95%] rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
                                 required
@@ -436,13 +580,14 @@ const handleSelectChange = (selectedList: any, selectedItem: any) => {
 
                             <div>
                               <label
-                                htmlFor="voen"
+                                htmlFor="Voen"
                                 className="inline-flex items-center w-1/2 justify-star"
                               >
                                 Voen
                               </label>
                               <Field
-                                name="voen"
+                                name="Voen"
+                                id="Voen"
                                 type="text"
                                 className="mt-3 w-[95%] rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
                                 required
@@ -451,28 +596,128 @@ const handleSelectChange = (selectedList: any, selectedItem: any) => {
 
                             <div>
                               <label
-                                htmlFor="phoneNumber"
+                                htmlFor="PhoneNumber"
                                 className="inline-flex items-center w-1/2 justify-star"
                               >
                                 Phone Number
                               </label>
                               <Field
-                                name="phoneNumber"
+                                name="PhoneNumber"
+                                id="PhoneNumber"
                                 type="text"
                                 className="mt-3 w-[95%] rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
                                 required
                               />
                             </div>
+                            <div>
+                              <label
+                                htmlFor="VendorObjectsId"
+                                className="inline-flex items-center "
+                              >
+                                Vendor Objects
+                              </label>
+                              {/* <Field
+                                as="select"
+                                name="VendorObjectsId"
+                                id="VendorObjectsId"
+                                onChange={handleObjectChange}
+                                value={formData.selectedObjectId}
+                                className="mt-3 w-[95%] rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
+                                required
+                              >
+                                <option value="" selected disabled>
+                                  Choose
+                                </option>
+                                {vendorObjectsIds?.map(
+                                  ({
+                                    id,
+                                    title,
+                                  }: {
+                                    id: number;
+                                    title: string;
+                                  }) => (
+                                    <option key={id} value={id}>
+                                      {title}
+                                    </option>
+                                  )
+                                )}
+                              </Field> */}
+                              <Multiselect
+                                options={optionsObject}
+                                // isObject={false}
+                                onSelect={handleObjectSelectChange}
+                                onRemove={handleObjectSelectRemove}
+                                displayValue="label"
+                                closeIcon="cancel"
+                                placeholder="Select Options"
+                                selectedValues={selectedObjectValues}
+                                className="multiSelectContainer mt-3 rounded-lg  focus:outline-none font-medium text-md"
+                              />
+                            </div>
 
                             <div>
                               <label
-                                htmlFor="hasCompany"
+                                htmlFor="vendorBuildingsId"
+                                className="inline-flex items-center "
+                              >
+                                Vendor Building
+                              </label>
+
+                              <Multiselect
+                                options={options}
+                                // isObject={false}
+                                onSelect={handleSelectChange}
+                                onRemove={handleSelectRemove}
+                                displayValue="label"
+                                closeIcon="cancel"
+                                placeholder="Select Options"
+                                selectedValues={selectedValues}
+                                className="multiSelectContainer mt-3 rounded-lg  focus:outline-none font-medium text-md"
+                              />
+                            </div>
+
+                            <div>
+                              <label
+                                htmlFor="RoleId"
+                                className="inline-flex items-center "
+                              >
+                                Role Name
+                              </label>
+                              <Field
+                                as="select"
+                                name="RoleId"
+                                id="RoleId"
+                                className="mt-3 w-[95%] rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
+                                // required
+                              >
+                                <option value="" selected disabled>
+                                  Choose
+                                </option>
+                                {roleAdminIds?.map(
+                                  ({
+                                    id,
+                                    name,
+                                  }: {
+                                    id: string;
+                                    name: string;
+                                  }) => (
+                                    <option key={id} value={id}>
+                                      {name}
+                                    </option>
+                                  )
+                                )}
+                              </Field>
+                            </div>
+                            <div>
+                              <label
+                                htmlFor="HasCompany"
                                 className="inline-flex items-center w-1/2 justify-star"
                               >
                                 Has Company
                               </label>
                               <Field
-                                name="hasCompany"
+                                name="HasCompany"
+                                id="HasCompany"
                                 as="select"
                                 className="mt-3 w-[95%] rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
                                 onChange={(
@@ -480,28 +725,15 @@ const handleSelectChange = (selectedList: any, selectedItem: any) => {
                                 ) => {
                                   setHasCompanyBoolean(e.target.value);
                                   formikProps.setFieldValue(
-                                    "hasCompany",
+                                    "HasCompany",
                                     e.target.value
                                   );
                                   if (e.target.value === "true") {
-                                    console.log(
-                                      e.target.value === "true",
-                                      "bn"
-                                    );
                                     // Reset the values of building, company, and object fields
                                     formikProps.setFieldValue(
-                                      "vendorCompanyId",
+                                      "VendorCompanyId",
                                       null
                                     );
-                                    formikProps.setFieldValue(
-                                      "vendorObjectsId",
-                                      []
-                                    );
-                                    formikProps.setFieldValue(
-                                      "vendorBuildingsId",
-                                      []
-                                    );
-                                    formikProps.setFieldValue("roleId", "");
                                   }
                                 }}
                                 required
@@ -513,7 +745,41 @@ const handleSelectChange = (selectedList: any, selectedItem: any) => {
                                 <option value={"false"}>false</option>
                               </Field>
                             </div>
+                            {hasCompanyBoolean === "true" ? (
+                              <div>
+                                <label
+                                  htmlFor="VendorCompanyId"
+                                  className="inline-flex items-center "
+                                >
+                                  Vendor Company
+                                </label>
+                                <Field
+                                  as="select"
+                                  name="VendorCompanyId"
+                                  id="VendorCompanyId"
+                                  className="mt-3 w-[95%] rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
 
+                                  // required
+                                >
+                                  <option value="" selected disabled>
+                                    Choose
+                                  </option>
+                                  {vendorCompanyIds?.map(
+                                    ({
+                                      id,
+                                      companyName,
+                                    }: {
+                                      id: number;
+                                      companyName: string;
+                                    }) => (
+                                      <option key={id} value={id}>
+                                        {companyName}
+                                      </option>
+                                    )
+                                  )}
+                                </Field>
+                              </div>
+                            ) : null}
                             <div>
                               <label
                                 htmlFor="ProfileImage"
@@ -545,162 +811,6 @@ const handleSelectChange = (selectedList: any, selectedItem: any) => {
                             </div>
                           </div>
 
-                          {hasCompanyBoolean === "true" ? (
-                            <div className="grid items-center justify-between grid-cols-2 gap-4 mt-10 font-bold font-inter text-16 leading-30 text-dark">
-                              <div>
-                                <label
-                                  htmlFor="vendorCompanyId"
-                                  className="inline-flex items-center "
-                                >
-                                  Vendor Company
-                                </label>
-                                <Field
-                                  as="select"
-                                  name="vendorCompanyId"
-                                  id="vendorCompanyId"
-                                  className="flex items-center justify-center px-5 py-2 mt-3 font-medium border rounded-lg border-line bg-background focus:outline-none text-md"
-
-                                  // required
-                                >
-                                  <option value="" selected disabled>
-                                    Choose
-                                  </option>
-                                  {vendorCompanyIds?.map(
-                                    ({
-                                      id,
-                                      companyName,
-                                    }: {
-                                      id: number;
-                                      companyName: string;
-                                    }) => (
-                                      <option key={id} value={id}>
-                                        {companyName}
-                                      </option>
-                                    )
-                                  )}
-                                </Field>
-                              </div>
-
-                              <div>
-                                <label
-                                  htmlFor="vendorObjectsId"
-                                  className="inline-flex items-center "
-                                >
-                                  Vendor Objects
-                                </label>
-                                <Field
-                                  as="select"
-                                  name="vendorObjectsId"
-                                  id="vendorObjectsId"
-                                  onChange={handleObjectChange}
-                                  value={formData.selectedObjectId}
-                                  className="flex items-center justify-center px-5 py-2 mt-3 font-medium border rounded-lg border-line bg-background focus:outline-none text-md"
-                                  required
-                                >
-                                  <option value="" selected disabled>
-                                    Choose
-                                  </option>
-                                  {vendorObjectsIds?.map(
-                                    ({
-                                      id,
-                                      title,
-                                    }: {
-                                      id: number;
-                                      title: string;
-                                    }) => (
-                                      <option key={id} value={id}>
-                                        {title}
-                                      </option>
-                                    )
-                                  )}
-                                </Field>
-                              </div>
-
-                              <div>
-                                <label
-                                  htmlFor="vendorBuildingsId"
-                                  className="inline-flex items-center "
-                                >
-                                  Vendor Building
-                                </label>
-                                {/* <Field
-                                  as="select"
-                                  name="vendorBuildingsId"
-                                  id="vendorBuildingsId"
-                                  multiple
-                                  value={selectedValues}
-                                  onChange={handleSelectChange}
-                                  className="flex items-center justify-center px-5 py-2 mt-3 font-medium border rounded-lg border-line bg-background focus:outline-none text-md"
-                                  required
-                                >
-                                  <option value="" selected disabled>
-                                    Choose
-                                  </option>
-                                  {dataBuildingofObjects?.data?.map(
-                                    (item: any) => (
-                                      <option key={item.id} value={item.id}>
-                                        {item.name}
-                                      </option>
-                                    )
-                                  )}
-                                </Field> */}
-                                <Multiselect
-                                  // isObject={false}
-                                  // options={options}
-                                  // selectedValues={selectedValues}
-                                  // onSelect={handleSelectChange}
-                                  // onRemove={handleSelectRemove}
-                                  // displayValue="label"
-                                  // placeholder="Select options"
-                                  // showCheckbox
-
-                                  options={options}
-                                  // isObject={false}
-                                  onSelect={handleSelectChange}
-                                  onRemove={handleSelectRemove}
-                                  displayValue="label"
-                                  closeIcon="cancel"
-                                  placeholder="Select Options"
-                                  selectedValues={selectedValues}
-                                  className="multiSelectContainer"
-                                />
-                              </div>
-
-                              <div>
-                                <label
-                                  htmlFor="roleId"
-                                  className="inline-flex items-center "
-                                >
-                                  Role Name
-                                </label>
-                                <Field
-                                  as="select"
-                                  name="roleId"
-                                  id="roleId"
-                                  className="flex items-center justify-center px-5 py-2 mt-3 font-medium border rounded-lg border-line bg-background focus:outline-none text-md"
-                                  // required
-                                >
-                                  <option value="" selected disabled>
-                                    Choose
-                                  </option>
-                                  {roleAdminIds?.map(
-                                    ({
-                                      id,
-                                      name,
-                                    }: {
-                                      id: string;
-                                      name: string;
-                                    }) => (
-                                      <option key={id} value={id}>
-                                        {name}
-                                      </option>
-                                    )
-                                  )}
-                                </Field>
-                              </div>
-                            </div>
-                          ) : null}
-
                           <div className="flex items-center justify-around w-full mt-10 font-bold font-inter text-16 leading-30 text-dark">
                             <button
                               type="submit"
@@ -727,20 +837,24 @@ const handleSelectChange = (selectedList: any, selectedItem: any) => {
                     </Dialog.Title>
                     <Formik
                       initialValues={
-                        selectedRow || {
-                          ProfileImage: "",
-                          name: "",
-                          surname: "",
-                          patrionimyc: "",
-                          hasCompany: null,
-                          jobPosition: "",
-                          vendorCompanyId: null,
-                          vendorObjectsId: [],
-                          vendorBuildingsId: [],
-                          roleId: "",
-                          voen: "",
-                          email: "",
-                          phoneNumber: "",
+                     {
+                      ProfileImage: null,
+                      Name:selectedRow?.name || "",
+                      Surname:selectedRow?.surname || "",
+                      UserName:selectedRow?.username || "",
+                      Patrionimyc:selectedRow?.patrionimyc || "",
+                      HasCompany:selectedRow?.hasCompany || null,
+                      JobPosition:selectedRow.jobPosition || "",
+                      VendorCompanyId: null,
+                      VendorObjectsId: [],
+                      VendorBuildingsId: [],
+                      RoleId: dataRoleAdmin?.data?.find(
+                        (item:any) => item.name === selectedRow?.roleName
+                      )?.id || "",
+                      Voen:selectedRow?.voen || "",
+                      Email:selectedRow?.email || "",
+                      PhoneNumber:selectedRow?.phoneNumber || "",
+                     
                         }
                       }
                       onSubmit={handleEdit}
@@ -750,13 +864,14 @@ const handleSelectChange = (selectedList: any, selectedItem: any) => {
                           <div className="grid items-center justify-between grid-cols-2 gap-4 mt-10 font-bold font-inter text-16 leading-30 text-dark">
                             <div>
                               <label
-                                htmlFor="name"
+                                htmlFor="Name"
                                 className="inline-flex items-center w-1/2 justify-star"
                               >
                                 Name
                               </label>
                               <Field
-                                name="name"
+                                name="Name"
+                                id="Name"
                                 type="text"
                                 className="mt-3 w-[95%] rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
                                 required
@@ -765,13 +880,14 @@ const handleSelectChange = (selectedList: any, selectedItem: any) => {
 
                             <div>
                               <label
-                                htmlFor="surname"
+                                htmlFor="Surname"
                                 className="inline-flex items-center w-1/2 justify-star"
                               >
                                 Surname
                               </label>
                               <Field
-                                name="surname"
+                                name="Surname"
+                                id="Surname"
                                 type="text"
                                 className="mt-3 w-[95%] rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
                                 required
@@ -779,13 +895,14 @@ const handleSelectChange = (selectedList: any, selectedItem: any) => {
                             </div>
                             <div>
                               <label
-                                htmlFor="patrionimyc"
+                                htmlFor="Patrionimyc"
                                 className="inline-flex items-center w-1/2 justify-star"
                               >
                                 Patrionimyc
                               </label>
                               <Field
-                                name="patrionimyc"
+                                name="Patrionimyc"
+                                id="Patrionimyc"
                                 type="text"
                                 className="mt-3 w-[95%] rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
                                 required
@@ -794,57 +911,47 @@ const handleSelectChange = (selectedList: any, selectedItem: any) => {
 
                             <div>
                               <label
-                                htmlFor="username"
+                                htmlFor="UserName"
                                 className="inline-flex items-center w-1/2 justify-star"
                               >
                                 Username
                               </label>
                               <Field
-                                name="username"
+                                name="UserName"
+                                id="UserName"
                                 type="text"
                                 className="mt-3 w-[95%] rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
                                 required
                               />
                             </div>
 
+                        
                             <div>
                               <label
-                                htmlFor="password"
-                                className="inline-flex items-center w-1/2 justify-star"
-                              >
-                                Password
-                              </label>
-                              <Field
-                                name="password"
-                                type="text"
-                                className="mt-3 w-[95%] rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
-                                required
-                              />
-                            </div>
-
-                            <div>
-                              <label
-                                htmlFor="email"
+                                htmlFor="Email"
                                 className="inline-flex items-center w-1/2 justify-star"
                               >
                                 Email
                               </label>
                               <Field
-                                name="email"
+                                name="Email"
+                                id="Email"
                                 type="email"
                                 className="mt-3 w-[95%] rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
                                 required
                               />
                             </div>
+
                             <div>
                               <label
-                                htmlFor="jobPosition"
+                                htmlFor="JobPosition"
                                 className="inline-flex items-center w-1/2 justify-star"
                               >
                                 Job Position
                               </label>
                               <Field
-                                name="jobPosition"
+                                name="JobPosition"
+                                id="JobPosition"
                                 type="text"
                                 className="mt-3 w-[95%] rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
                                 required
@@ -853,13 +960,14 @@ const handleSelectChange = (selectedList: any, selectedItem: any) => {
 
                             <div>
                               <label
-                                htmlFor="voen"
+                                htmlFor="Voen"
                                 className="inline-flex items-center w-1/2 justify-star"
                               >
                                 Voen
                               </label>
                               <Field
-                                name="voen"
+                                name="Voen"
+                                id="Voen"
                                 type="text"
                                 className="mt-3 w-[95%] rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
                                 required
@@ -868,278 +976,74 @@ const handleSelectChange = (selectedList: any, selectedItem: any) => {
 
                             <div>
                               <label
-                                htmlFor="phoneNumber"
+                                htmlFor="PhoneNumber"
                                 className="inline-flex items-center w-1/2 justify-star"
                               >
                                 Phone Number
                               </label>
                               <Field
-                                name="phoneNumber"
+                                name="PhoneNumber"
+                                id="PhoneNumber"
                                 type="text"
                                 className="mt-3 w-[95%] rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
                                 required
                               />
                             </div>
-
                             <div>
                               <label
-                                htmlFor="hasCompany"
-                                className="inline-flex items-center w-1/2 justify-star"
-                              >
-                                Has Company
-                              </label>
-                              <Field
-                                name="hasCompany"
-                                as="select"
-                                className="mt-3 w-[95%] rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
-                                required
-                              >
-                                <option value="" selected disabled>
-                                  Select
-                                </option>
-                                <option value="true">true</option>
-                                <option value="false">false</option>
-                              </Field>
-                            </div>
-
-                            <div>
-                              <label
-                                htmlFor="ProfileImage"
-                                className="inline-flex items-center w-1/2 justify-star"
-                              >
-                                ProfileImage
-                              </label>
-
-                              <input
-                                type="file"
-                                id="ProfileImage"
-                                name="ProfileImage"
-                                accept="ProfileImage/*"
-                                onChange={(event) => {
-                                  const file = (
-                                    event.currentTarget as HTMLInputElement
-                                  ).files?.[0];
-                                  formikProps.setFieldValue(
-                                    "ProfileImage",
-                                    file
-                                  );
-                                }}
-                                className="mt-3 w-[95%] rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
-                                required
-                              />
-                            </div>
-                          </div>
-
-                          <div className="grid items-center justify-between grid-cols-2 gap-4 mt-10 font-bold font-inter text-16 leading-30 text-dark">
-                            <div>
-                              <label
-                                htmlFor="vendorCompanyId"
-                                className="inline-flex items-center "
-                              >
-                                Vendor Company
-                              </label>
-                              <Field
-                                as="select"
-                                name="vendorCompanyId"
-                                id="vendorCompanyId"
-                                className="flex items-center justify-center px-5 py-2 mt-3 font-medium border rounded-lg border-line bg-background focus:outline-none text-md"
-                                required
-                              >
-                                <option value="" selected disabled>
-                                  Choose
-                                </option>
-                                {vendorCompanyIds?.map(
-                                  ({
-                                    id,
-                                    companyName,
-                                  }: {
-                                    id: number;
-                                    companyName: string;
-                                  }) => (
-                                    <option key={id} value={id}>
-                                      {companyName}
-                                    </option>
-                                  )
-                                )}
-                              </Field>
-                            </div>
-
-                            <div>
-                              <label
-                                htmlFor="vendorObjectsId"
+                                htmlFor="VendorObjectsId"
                                 className="inline-flex items-center "
                               >
                                 Vendor Objects
                               </label>
-                              <Field
-                                as="select"
-                                name="vendorObjectsId"
-                                id="vendorObjectsId"
-                                className="flex items-center justify-center px-5 py-2 mt-3 font-medium border rounded-lg border-line bg-background focus:outline-none text-md"
-                                required
-                              >
-                                <option value="" selected disabled>
-                                  Choose
-                                </option>
-                                {vendorObjectsIds?.map(
-                                  ({
-                                    id,
-                                    title,
-                                  }: {
-                                    id: number;
-                                    title: string;
-                                  }) => (
-                                    <option key={id} value={id}>
-                                      {title}
-                                    </option>
-                                  )
-                                )}
-                              </Field>
+
+                              <Multiselect
+                                options={optionsObject}
+                                // isObject={false}
+                                onSelect={handleObjectSelectChange}
+                                onRemove={handleObjectSelectRemove}
+                                displayValue="label"
+                                closeIcon="cancel"
+                                placeholder="Select Options"
+                                selectedValues={selectedObjectValues}
+                                className="multiSelectContainer mt-3 rounded-lg  focus:outline-none font-medium text-md"
+                              />
                             </div>
-
-                            {formikProps.values.hasCompany === "true" ? (
-                              <div className="grid items-center justify-between grid-cols-2 gap-4 mt-10 font-bold font-inter text-16 leading-30 text-dark">
-                                <div>
-                                  <label
-                                    htmlFor="vendorCompanyId"
-                                    className="inline-flex items-center "
-                                  >
-                                    Vendor Company
-                                  </label>
-                                  <Field
-                                    as="select"
-                                    name="vendorCompanyId"
-                                    id="vendorCompanyId"
-                                    className="flex items-center justify-center px-5 py-2 mt-3 font-medium border rounded-lg border-line bg-background focus:outline-none text-md"
-                                    // required
-                                  >
-                                    <option value="" selected disabled>
-                                      Choose
-                                    </option>
-                                    {vendorCompanyIds?.map(
-                                      ({
-                                        id,
-                                        companyName,
-                                      }: {
-                                        id: number;
-                                        companyName: string;
-                                      }) => (
-                                        <option key={id} value={id}>
-                                          {companyName}
-                                        </option>
-                                      )
-                                    )}
-                                  </Field>
-                                </div>
-
-                                <div>
-                                  <label
-                                    htmlFor="vendorObjectsId"
-                                    className="inline-flex items-center "
-                                  >
-                                    Vendor Objects
-                                  </label>
-                                  <Field
-                                    as="select"
-                                    name="vendorObjectsId"
-                                    id="vendorObjectsId"
-                                    className="flex items-center justify-center px-5 py-2 mt-3 font-medium border rounded-lg border-line bg-background focus:outline-none text-md"
-                                    required
-                                  >
-                                    <option value="" selected disabled>
-                                      Choose
-                                    </option>
-                                    {vendorObjectsIds?.map(
-                                      ({
-                                        id,
-                                        title,
-                                      }: {
-                                        id: number;
-                                        title: string;
-                                      }) => (
-                                        <option key={id} value={id}>
-                                          {title}
-                                        </option>
-                                      )
-                                    )}
-                                  </Field>
-                                </div>
-
-                                <div>
-                                  <label
-                                    htmlFor="vendorBuildingsId"
-                                    className="inline-flex items-center "
-                                  >
-                                    Vendor Building
-                                  </label>
-                                  <Field
-                                    as="select"
-                                    name="vendorBuildingsId"
-                                    id="vendorBuildingsId"
-                                    className="flex items-center justify-center px-5 py-2 mt-3 font-medium border rounded-lg border-line bg-background focus:outline-none text-md"
-                                    required
-                                  >
-                                    <option value="" selected disabled>
-                                      Choose
-                                    </option>
-                                    {vendorBuildingsIds?.map(
-                                      ({ id }: { id: number }) => (
-                                        <option key={id} value={id}>
-                                          {id}
-                                        </option>
-                                      )
-                                    )}
-                                  </Field>
-                                </div>
-
-                                <div>
-                                  <label
-                                    htmlFor="roleId"
-                                    className="inline-flex items-center "
-                                  >
-                                    Role Name
-                                  </label>
-                                  <Field
-                                    as="select"
-                                    name="roleId"
-                                    id="roleId"
-                                    className="flex items-center justify-center px-5 py-2 mt-3 font-medium border rounded-lg border-line bg-background focus:outline-none text-md"
-                                    required
-                                  >
-                                    <option value="" selected disabled>
-                                      Choose
-                                    </option>
-                                    {roleAdminIds?.map(
-                                      ({
-                                        id,
-                                        name,
-                                      }: {
-                                        id: string;
-                                        name: string;
-                                      }) => (
-                                        <option key={id} value={id}>
-                                          {name}
-                                        </option>
-                                      )
-                                    )}
-                                  </Field>
-                                </div>
-                              </div>
-                            ) : null}
 
                             <div>
                               <label
-                                htmlFor="roleId"
+                                htmlFor="vendorBuildingsId"
+                                className="inline-flex items-center "
+                              >
+                                Vendor Building
+                              </label>
+
+                              <Multiselect
+                                options={options}
+                                // isObject={false}
+                                onSelect={handleSelectChange}
+                                onRemove={handleSelectRemove}
+                                displayValue="label"
+                                closeIcon="cancel"
+                                placeholder="Select Options"
+                                selectedValues={selectedValues}
+                                className="multiSelectContainer mt-3 rounded-lg  focus:outline-none font-medium text-md"
+                              />
+                            </div>
+
+                            <div>
+                              <label
+                                htmlFor="RoleId"
                                 className="inline-flex items-center "
                               >
                                 Role Name
                               </label>
                               <Field
                                 as="select"
-                                name="roleId"
-                                id="roleId"
-                                className="flex items-center justify-center px-5 py-2 mt-3 font-medium border rounded-lg border-line bg-background focus:outline-none text-md"
-                                required
+                                name="RoleId"
+                                id="RoleId"
+                                className="mt-3 w-[95%] rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
+                                // required
                               >
                                 <option value="" selected disabled>
                                   Choose
@@ -1158,6 +1062,111 @@ const handleSelectChange = (selectedList: any, selectedItem: any) => {
                                   )
                                 )}
                               </Field>
+                            </div>
+                            <div>
+                              <label
+                                htmlFor="HasCompany"
+                                className="inline-flex items-center w-1/2 justify-star"
+                              >
+                                Has Company
+                              </label>
+                              <Field
+                                name="HasCompany"
+                                id="HasCompany"
+                                as="select"
+                                className="mt-3 w-[95%] rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
+                                onChange={(
+                                  e: React.ChangeEvent<HTMLSelectElement>
+                                ) => {
+                                  setHasCompanyBoolean(e.target.value);
+                                  formikProps.setFieldValue(
+                                    "HasCompany",
+                                    e.target.value
+                                  );
+                                  if (e.target.value === "true") {
+                                    // Reset the values of building, company, and object fields
+                                    formikProps.setFieldValue(
+                                      "VendorCompanyId",
+                                      null
+                                    );
+                                  }
+                                }}
+                                required
+                              >
+                                <option value="" selected disabled>
+                                  Select
+                                </option>
+                                <option value={"true"}>true</option>
+                                <option value={"false"}>false</option>
+                              </Field>
+                            </div>
+                            {hasCompanyBoolean === "true" ? (
+                              <div>
+                                <label
+                                  htmlFor="VendorCompanyId"
+                                  className="inline-flex items-center "
+                                >
+                                  Vendor Company
+                                </label>
+                                <Field
+                                  as="select"
+                                  name="VendorCompanyId"
+                                  id="VendorCompanyId"
+                                  className="mt-3 w-[95%] rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
+
+                                  // required
+                                >
+                                  <option value="" selected disabled>
+                                    Choose
+                                  </option>
+                                  {vendorCompanyIds?.map(
+                                    ({
+                                      id,
+                                      companyName,
+                                    }: {
+                                      id: number;
+                                      companyName: string;
+                                    }) => (
+                                      <option key={id} value={id}>
+                                        {companyName}
+                                      </option>
+                                    )
+                                  )}
+                                </Field>
+                              </div>
+                            ) : null}
+                            <div>
+                              <label
+                                htmlFor="ProfileImage"
+                                className="inline-flex items-center w-1/2 justify-star"
+                              >
+                                ProfileImage
+                              </label>
+
+                              <input
+                                type="file"
+                                id="ProfileImage"
+                                name="ProfileImage"
+                                accept="ProfileImage/*"
+                                onChange={handleChange}
+                                className="mt-3 w-[95%] rounded-lg border-line border flex justify-center items-center px-5 py-2 bg-background focus:outline-none font-medium text-md"
+                                required
+                              />
+                            </div>
+                            <div className="w-[48%] flex items-center justify-center">
+                              <div className="w-[140px] h-[100px] rounded-lg  object-cover object-center">
+                              {selectedImage && selectedImage ? (
+                                  <img
+                                    src={URL.createObjectURL(selectedImage)}
+                                    alt="Selected Image"
+                                    className="object-contain w-full h-full "
+                                  />
+                                ): <img
+                                className="w-full h-full"
+                                src={selectedRow.image}
+                                alt=""
+                              />}
+                              </div>
                             </div>
                           </div>
                           <div className="flex items-center justify-around w-full mt-10 font-bold font-inter text-16 leading-30 text-dark">

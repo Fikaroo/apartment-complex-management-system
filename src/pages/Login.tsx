@@ -3,10 +3,12 @@ import OtpModal from "../components/Modals/OtpModal";
 import loginFrame from "../assets/login-frame.png";
 import useSWRMutation from "swr/mutation";
 import { LoginApi } from "../api";
-
+import { toast } from "react-toastify";
+import Spinner from "../components/Spinner";
 const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [loading,setLoading]=useState(false);
 
   const handleUsername = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = e.target.value;
@@ -34,28 +36,30 @@ const Login = () => {
   );
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+   setLoading(true);
     e.preventDefault();
     trigger({ username, password });
   };
 
   useEffect(() => {
+    setLoading(false)
      if (data?.statusCode === 202) {
       openModal();
     
-      alert (data?.message?.[0]);
+  toast.success(data?.message?.[0]);
     } else if (data?.statusCode === 200) {
       openModal();
       
-      alert(data?.message?.[0]);
+      toast.success(data?.message?.[0]);
     } else if (data?.statusCode === 400) {
-      alert(data?.message?.[0]);
+      toast.error (data?.message?.[0]);
     }
     else if (data?.statusCode === 404) {
-   alert(data?.message?.[0]);
+   toast.error(data?.message?.[0]);
     
     }
   }, [data]);
-
+  
   return (
     <div className="relative flex min-h-screen">
       <div className="relative items-center justify-center hidden w-full max-w-4xl xl:flex ">
@@ -207,14 +211,24 @@ const Login = () => {
                   Şifrəni unutmuşam
                 </span>
               </div>
-
-              <button
+{
+  loading && loading ?(
+    <button
                 type="submit"
                 className="w-full bg-primary hover:bg-primary/95 rounded-lg text-[#FCFCFC] font-semibold text-sm py-3.5 mt-16"
                 disabled={isMutating}
               >
-                Daxil ol
+              <Spinner/>
               </button>
+  ):(
+    <button
+      type="submit"
+      className="w-full bg-primary hover:bg-primary/95 rounded-lg text-[#FCFCFC] font-semibold text-sm py-3.5 mt-16"
+      disabled={isMutating}
+    >
+      Daxil ol
+    </button>)
+}
             </div>
           </form>
         </div>

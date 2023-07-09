@@ -12,6 +12,8 @@ import { Delete } from "../../api";
 import { CreateResident } from "../../api";
 import { EditResidents } from "../../api";
 import { GetAll } from "../../api";
+import { useTranslation } from "react-i18next";
+import Swal from "sweetalert2";
 
 type Props = {
   isOpen: boolean;
@@ -39,6 +41,7 @@ const ResidentsModal = ({
   selectedRow,
   mutate,
 }: Props) => {
+  const {t}=useTranslation();
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
   const handleChange = (event: any) => {
@@ -81,7 +84,7 @@ const ResidentsModal = ({
       closeModal
     );
 
-    alert(res);
+  res;
     setIsButtonDisabled(false);
 
   };
@@ -117,7 +120,7 @@ const ResidentsModal = ({
       closeModal
     );
 
-    alert(res);
+    res;
     setIsButtonDisabled(false);
   };
 
@@ -130,12 +133,24 @@ const ResidentsModal = ({
       closeModal
     );
 
-    alert(res);
+    res;
   };
 
   const handleDelete = () => {
     console.log(deleteId, "deleteId");
-    deleteObject(deleteId);
+    Swal.fire({
+      title: t("confirm"),
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#7066e0',
+      cancelButtonColor: '#d33',
+      confirmButtonText: t('yes'),
+      cancelButtonText: t('cancel'),
+    }).then((result) => {
+      if (result.isConfirmed) {
+        deleteObject(deleteId);
+      }
+    })
   };
 
   return (

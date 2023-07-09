@@ -12,6 +12,8 @@ import { Delete } from "../../api";
 import { AddVendorRooms } from "../../api";
 import { EditVendorRoom } from "../../api";
 import { GetAll } from "../../api";
+import Swal from "sweetalert2";
+import { useTranslation } from "react-i18next";
 
 type Props = {
   isOpen: boolean;
@@ -44,6 +46,7 @@ const VendorRoomsModal = ({
   setSelectedRow,
   mutate,
 }: Props) => {
+  const {t}=useTranslation();
 const [formData, setFormData] = useState({
   selectedBuildingId: "",
   selectedObjectId: "",
@@ -166,7 +169,7 @@ const handleBuildingChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
       closeModal
     );
 
-    alert(res);
+    res;
   };
 
   const handleEdit = async (values: Values) => {
@@ -189,7 +192,7 @@ const handleBuildingChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
       closeModal
     );
 
-    alert(res);
+    res;
   };
 
   const deleteObject = async (deleteId: any) => {
@@ -201,11 +204,23 @@ const handleBuildingChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
       closeModal
     );
 
-    alert(res);
+    res;
   };
 
   const handleDelete = () => {
-    deleteObject(deleteId);
+    Swal.fire({
+      title: t("confirm"),
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#7066e0',
+      cancelButtonColor: '#d33',
+      confirmButtonText: t('yes'),
+      cancelButtonText: t('cancel'),
+    }).then((result) => {
+      if (result.isConfirmed) {
+        deleteObject(deleteId);
+      }
+    });
   };
   const handleCloseModal = () => {
     setFormData({

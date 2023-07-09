@@ -2,6 +2,7 @@ import { Dialog, Transition } from "@headlessui/react";
 import { Fragment, useState } from "react";
 import SosModal from "../Modals/SosModal";
 import { Link, useNavigate } from "react-router-dom";
+
 export interface IHeaders {
   isStatus?: boolean;
   isAvatar?: boolean;
@@ -17,7 +18,7 @@ type PropsType = {
   openModal: () => void;
   data: any;
   setProcess: React.Dispatch<React.SetStateAction<string>>;
-  setOrderId: React.Dispatch<React.SetStateAction<number>>;
+  setTransportId: React.Dispatch<React.SetStateAction<number>>;
   setSelectedRow: React.Dispatch<React.SetStateAction<any>>;
 };
 
@@ -27,23 +28,16 @@ const Tables = ({
   openModal,
   data,
   setProcess,
-  setOrderId,
+  setTransportId,
   setSelectedRow,
 }: PropsType) => {
   const nav = useNavigate();
 
   const optionsStatus = [
-    { id: 0, name: "NewOrder+" },
-    { id: 1, name: "Appointed" },
-    { id: 2, name: "Inprogress" },
-    { id: 3, name: "OnPause" },
-    { id: 4, name: "OnConfirmation" },
-    { id: 5, name: "Completed" },
-    { id: 6, name: "Rejected" },
-    { id: 7, name: "Returned" },
-    { id: 8, name: "Cancelled" },
-    { id: 9, name: "Closed" },
-    { id: 10, name: "EnteredIncorrectly" },
+    { id: 1, name: "Pending" },
+    { id: 2, name: "Allowed" },
+    { id: 3, name: "NotAllowed" },
+    
   ];
 
   function isValidDate(dateString: any) {
@@ -117,27 +111,9 @@ const Tables = ({
                   onClick={() => {
                     openModal();
                     setProcess("Edit");
-                    setOrderId(item.id);
+                    setTransportId(item.id);
                     setSelectedRow({
-                      ...item,
-                      actualDeadline: new Date(item.actualDeadline)
-                        .toLocaleDateString("en-GB", {
-                          day: "2-digit",
-                          month: "2-digit",
-                          year: "numeric",
-                        })
-                        .split("/")
-                        .reverse()
-                        .join("-"),
-                      normativeDeadline: new Date(item.normativeDeadline)
-                        .toLocaleDateString("en-GB", {
-                          day: "2-digit",
-                          month: "2-digit",
-                          year: "numeric",
-                        })
-                        .split("/")
-                        .reverse()
-                        .join("-"),
+                      item
                     });
                   }}
                   className="cursor-pointer"

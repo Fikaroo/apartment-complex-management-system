@@ -13,6 +13,8 @@ import { Delete } from "../../api";
 import { EditDeal } from "../../api";
 import useGetResponse from "../../hooks/useGetResponse";
 import { GetAll } from "../../api";
+import { useTranslation } from "react-i18next";
+import Swal from "sweetalert2";
 
 type Props = {
   isOpen: boolean;
@@ -44,6 +46,7 @@ const DealsModal: React.FC<Props> = ({
   selectedRow,
   mutate,
 }) => {
+  const {t}= useTranslation();
   const [isOpenSub, setIsOpenSub] = useState<boolean>(false);
   const [selectedImage, setSelectedImage] = useState(null);
   const handleChange = (event: any) => {
@@ -117,7 +120,7 @@ const DealsModal: React.FC<Props> = ({
       closeModal
     );
 
-    alert(res);
+    res;
     setEmployee({});
   };
   const handleEdit = async (values: Values) => {
@@ -178,7 +181,7 @@ const DealsModal: React.FC<Props> = ({
       closeModal
     );
 
-    alert(res);
+    res;
   };
   const deleteObject = async (deleteId: any) => {
     const res = await useGetResponse(
@@ -189,11 +192,24 @@ const DealsModal: React.FC<Props> = ({
       closeModal
     );
 
-    alert(res);
+  res;
   };
 
   const handleDelete = () => {
-    deleteObject(deleteId);
+    Swal.fire({
+      title: t("confirm"),
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#7066e0',
+      cancelButtonColor: '#d33',
+      confirmButtonText: t('yes'),
+      cancelButtonText: t('cancel'),
+    }).then((result) => {
+      if (result.isConfirmed) {
+        deleteObject(deleteId);
+      }
+    })
+  
   };
   const {
     data: dataOrderType,

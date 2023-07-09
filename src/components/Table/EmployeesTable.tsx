@@ -107,7 +107,7 @@ const Tables = ({
                 onClick={(e) => {
                   e.stopPropagation();
                   trigger(item.id);
-                  setSelectedRow(EmployeesById?.data);
+                  setSelectedRow(item);
                 }}
               >
                 <img

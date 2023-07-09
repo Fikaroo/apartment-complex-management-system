@@ -6,8 +6,10 @@ import OrderDate from "../../components/OrderDate";
 import Filter from "../../components/Filter";
 import Tables, { IHeaders } from "../../components/Table/EmployeesTable";
 import EmployeesModal from "../../components/Modals/EmployeesModal";
+import { useTranslation } from "react-i18next";
 
 const Employees = () => {
+  const {t} = useTranslation();
   let [isOpen, setIsOpen] = useState<boolean>(false);
   let [isOpenAdd, setIsOpenAdd] = useState<boolean>(false);
   const [process, setProcess] = useState("");
@@ -86,7 +88,7 @@ const Employees = () => {
     <Fragment>
       <div className="flex items-center justify-between">
       <p className="font-bold font-inter text-16 leading-30 text-dark">
-          Ümumi: {data?.data?.length} İşçi
+          {t("general")}: {data?.data?.length} {t("employee")}
         </p>
         <div className="flex items-center gap-4">
           <AddBtn

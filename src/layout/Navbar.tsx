@@ -172,6 +172,7 @@ const Navbar = () => {
       iconSolid: <Cog6ToothIconSolid className="w-5 h-5 fill-white" />,
       children: [
         { name: "OrderType", path: "/settings/ordertype" },
+        { name: "RoomType", path: "/settings/roomtype" },
         { name: "Parking", path: "/settings/parking" },
       ],
     },

@@ -33,7 +33,7 @@ const Tables = ({
   const nav = useNavigate();
 
 
-  //   const handleTableRow = ({id}:any) => nav(`/control-panel/deals/${id}`);
+  const handleTableRow = ({id}:any) => nav(`/references/users/${id}`);
 
   return (
     <div className="w-full mt-8 overflow-x-auto">
@@ -55,7 +55,7 @@ const Tables = ({
             <tr
               key={item.id}
               className="cursor-pointer hover:bg-gray-200"
-              //   onClick={() => handleTableRow({ id: item.id })}
+                onClick={() => handleTableRow({ id: item.id })}
             >
               <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
                 <div className="flex items-center flex-shrink-0 w-10 h-10">
